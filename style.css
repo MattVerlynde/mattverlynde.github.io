@@ -731,11 +731,11 @@
     margin-right: -0.125em;
     line-height: 1ex;
   }
-  
+
   /* Format the icons */
   .icon {
-    width: 2em;
-    height: 2em;
+    width: 1em;
+    height: 1em;
     vertical-align: -0.125em;
   }
   
