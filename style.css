@@ -732,6 +732,13 @@
     line-height: 1ex;
   }
   
+  /* Format the icons */
+  .icon {
+    width: 2em;
+    height: 2em;
+    vertical-align: -0.125em;
+  }
+  
   /* Prevent line breaks inside an element */
   .whitespace-nowrap {
     white-space: nowrap;
