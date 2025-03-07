@@ -825,13 +825,13 @@
   box-shadow: inset 0px 0px 1px #222;
   border: 1px solid #333;
   z-index: 1;
-  -webkit-animation: falling 5s 0s infinite;
+  -webkit-animation: falling 10s 0s infinite;
 }
 
 #leaves i:before {
   position: absolute;
   content: '';
-  top: 117px;
+  top: 217px;
   right: 9px;
   height: 27px;
   width: 32px;
