@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="tm5Y6ZNTf-lBqbwniGjQPv1q02o2TuUQZ9GTYa4SMLg" />
+  <title>Matthieu Verlynde</title>
+
+  <meta name="description"
+    content="Contact info for Matthieu Verlynde." />
+  <meta name="keywords" content="latex.css,css library,class-less css,latex css" />
+  <meta property="og:title" content="MatthieuVerlynde" />
+  <meta property="og:url" content="https://mattverlynde.github.io/" />
+  <meta property="og:description"
+    content="Personal page for Matthieu Verlynde." />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body id="top" class="text-justify">
+  <!-- <div id="leaves">
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i> 
+  </div> -->
+
+  <header>
+    <h1>
+    <div class="profile-picture">
+      <img src="https://avatars.githubusercontent.com/u/125992867?v=4"
+        loading="lazy" alt="Profile picture" />
+    </div>
+    </h1>
+    <p class="author">
+      Matthieu Verlynde
+    </p>
+  </header>
+
+  <!-- <div class="abstract">
+    <p>
+      <a href="https://github.com/MattVerlynde"><span class="fa-brands fa-github fa-2x" style="margin-right: 10px;"></span></a>
+      <a href="https://www.linkedin.com/in/matthieu-verlynde/"><span class="fa-brands fa-linkedin fa-2x" style="margin-right: 10px;"></span></a>
+      <a href="mailto:matthieu.verlynde@univ-smb.fr"><span class="fa-solid fa-envelope fa-2x" style="margin-right: 10px;"></span></a>
+      <a href="https://x.com/MattVerlynde"><span class="fa-brands fa-square-x-twitter fa-2x" style="margin-right: 10px;"></span></a>
+      <a href="https://bsky.app/profile/mattverlynde.bsky.social"><span class="fa-brands fa-bluesky fa-2x" style="margin-right: 10px;"></span></a>
+      <a href="https://orcid.org/0009-0009-9624-1223"><span class="fa-brands fa-orcid fa-2x"></span></a><br/>
+      Hello there! &#128075;
+    </p>
+  </div> -->
+
+  <!-- <nav role="navigation" class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#about-me">About me</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#pro-experience">Professional experience</a></li>
+    </ol>
+  </nav> -->
+
+  <main>
+    <article>
+        
+      <h2 id="contact-me">Contact me</h2>
+      <li>
+        <span class="fa-solid fa-envelope fa-2x" style="margin-right: 10px;"></span><a href="mailto:matthieu.verlynde@univ-smb.fr">matthieu.verlynde@univ-smb.fr</a>
+      </li>
+      <li>
+        <span class="fa-brands fa-github fa-2x" style="margin-right: 10px;"></span><a href="https://github.com/MattVerlynde">https://github.com/MattVerlynde</a>
+      </li>
+      <li>
+        <span class="fa-brands fa-linkedin fa-2x" style="margin-right: 10px;"></span><a href="https://www.linkedin.com/in/matthieu-verlynde/">matthieu-verlynde</a>
+      </li>
+      <li>
+        <span class="fa-brands fa-square-x-twitter fa-2x" style="margin-right: 10px;"></span><a href="https://x.com/MattVerlynde">MattVerlynde</a>
+      </li>
+      <li>
+        <span class="fa-brands fa-bluesky fa-2x" style="margin-right: 10px;"></span><a href="https://bsky.app/profile/mattverlynde.bsky.social">mattverlynde.bsky.social</a>
+      </li>
+      <li>
+        <span class="fa-brands fa-orcid fa-2x"></span><a href="https://orcid.org/0009-0009-9624-1223">0009-0009-9624-1223</a>
+      </li>
+      <li>
+        <span class="fa-google-scholar" style="margin-right: 10px;"></span><a href="https://scholar.google.com/citations?user=WVXWv44AAAAJ&hl=fr">Google scholar</a>    
+      </li>
+
+      <a href="https://mattverlynde.github.io/">
+        <button><span class="fa-solid fa-arrow-left" style="color: black;"></span> Return to main page</button>
+      </a>
+
+      
+
+    </article>
+  </main>
+
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'],],
+      },
+    }
+    const typeFaceToggle = document.getElementById('typeface-toggle')
+    const typeface = document.getElementById('typeface')
+    typeFaceToggle.addEventListener('click', () => {
+      document.body.classList.toggle('libertinus')
+      typeface.textContent = document.body.classList.contains('libertinus') ? 'Libertinus' : 'Latin Modern'
+    })
+
+    const darkModeToggle = document.getElementById('dark-mode-toggle')
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('latex-dark')
+    })
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script async src="prism/prism.js"></script>
+
+</body>
+
+</html>
