@@ -104,7 +104,8 @@
     --body-color: hsl(0, 5%, 10%);
     --body-bg-color: hsl(210, 20%, 98%);
     --link-visited: hsl(0, 100%, 33%);
-    --link-focus-outline: hsl(220, 90%, 52%);
+    /* --link-focus-outline: hsl(220, 90%, 52%); */
+    --link-focus-outline: hsl(210, 20%, 98%);
     --pre-bg-color: hsl(210, 28%, 93%);
     --kbd-bg-color: hsl(210, 5%, 100%);
     --kbd-border-color: hsl(210, 5%, 70%);
@@ -246,8 +247,8 @@
   
   a:focus {
     outline-offset: 2px;
-    /* outline: 2px solid var(--link-focus-outline); */
-    outline: none;
+    outline: 2px solid var(--link-focus-outline);
+    /* outline: none; */
   }
   
   /* Allow line breaks between any two characters */
