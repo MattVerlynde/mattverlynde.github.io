@@ -956,11 +956,11 @@ button {
     border-width: 1px;
     border-style: solid;
     color: var(--link-visited);
-    padding: 16px 32px;
+    padding: 14px 28px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 18px;
     margin: 2px 1px;
     cursor: pointer;
 }
