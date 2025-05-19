@@ -949,14 +949,14 @@
 
 button {
     background-color: var(--body-bg-color);
-    border: none;
+    border: var(--link-visited);
     color: var(--link-visited);
-    padding: 15px 32px;
+    padding: 2px 4px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    font-size: 20px;
+    margin: 2px 1px;
     cursor: pointer;
 }
 
