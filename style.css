@@ -246,7 +246,8 @@
   
   a:focus {
     outline-offset: 2px;
-    outline: 2px solid var(--link-focus-outline);
+    /* outline: 2px solid var(--link-focus-outline); */
+    outline: none;
   }
   
   /* Allow line breaks between any two characters */
