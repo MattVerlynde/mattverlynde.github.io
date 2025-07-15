@@ -185,6 +185,11 @@
   .text-justify {
     text-align: justify;
   }
+
+  .backgound-justify {
+    text-align: justify;
+    background: red;
+  }
   
   body {
     font-family: 'Latin Modern', Georgia, Cambria, 'Times New Roman', Times, serif;
@@ -975,4 +980,27 @@ button:active {
     background-color: var(--link-visited);
     color: white;
     transform: translateY(4px);
+}
+
+.container { /*add characteristics of body*/
+    font-family: 'Latin Modern', Georgia, Cambria, 'Times New Roman', Times, serif;
+    line-height: 1.8;
+  
+    max-width: 80ch;
+    min-height: 100vh;
+    overflow-x: hidden;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+  
+    counter-reset: theorem definition sidenote-counter;
+  
+    color: var(--body-color);
+    background-color: var(--body-bg-color);
+  
+    text-rendering: optimizeLegibility;
+  
+    /* Allow automatic hyphenation for all text in the document */
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
 }
