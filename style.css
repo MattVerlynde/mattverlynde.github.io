@@ -1011,7 +1011,7 @@ button:active {
    ======================= */
 
 :root {
-  --side-band-width: 160px; /* adjust width here */
+  --side-band-width: 200px; /* adjust width here */
 }
 
 /* Make room so content isn't covered by bands */
