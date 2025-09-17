@@ -1011,13 +1011,13 @@ button:active {
    ======================= */
 
 :root {
-  --side-band-width: 140px; /* adjust width here */
+  --side-band-width: 160px; /* adjust width here */
 }
 
 /* Make room so content isn't covered by bands */
 body {
-  padding-left: calc(var(--side-band-width) + 15px);
-  padding-right: calc(var(--side-band-width) + 15px);
+  padding-left: calc(var(--side-band-width) + 12px);
+  padding-right: calc(var(--side-band-width) + 12px);
 }
 
 /* Common side band styles */
@@ -1047,11 +1047,19 @@ body {
   pointer-events: none;
 }
 
+.side-band.left img {
+  object-position: left center; /* show left edge */
+}
+
+.side-band.right img {
+  object-position: right center; /* show right edge */
+}
+
 /* Optional: hide bands on small screens */
 @media (max-width: 900px) {
   .side-band { display: none; }
   body {
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
