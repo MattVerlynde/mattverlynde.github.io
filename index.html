@@ -18,18 +18,73 @@
 
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    /* Width of each band */
+    :root { --side-band-width: 140px; }
+
+    /* Make room so page content isn't covered */
+    body {
+      padding-left: calc(var(--side-band-width) + 12px);
+      padding-right: calc(var(--side-band-width) + 12px);
+    }
+
+    /* Side band common styles */
+    .side-band {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      width: var(--side-band-width);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: rgba(255,255,255,0.0); /* tweak if you want a tint */
+      pointer-events: none; /* so they don't block clicks — set to 'auto' if you need them interactive */
+    }
+
+    /* Left / right placement */
+    .side-band.left  { left: 0;  }
+    .side-band.right { right: 0; }
+
+    /* Image inside band: cover vertically, centered horizontally */
+    .side-band img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      pointer-events: none; /* ensures clicks pass through */
+    }
+
+    /* Optional: subtle fade using gradient so the band doesn't feel harsh */
+    .side-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(to center, rgba(255,255,255,0.10), rgba(255,255,255,0.00) 40%);
+    }
+
+    /* Responsive: hide on small screens */
+    @media (max-width: 900px) {
+      .side-band { display: none; }
+      body { padding-left: 12px; padding-right: 12px; }
+    }
+  </style>
 </head>
 
 <body id="top" class="text-justify">
-  <!-- <div class="side-band left" aria-hidden="true">-->
+  <div class="side-band left" aria-hidden="true">
     <!-- replace src with your preferred image -->
-    <!-- <img src="https://avatars.githubusercontent.com/u/125992867?v=4" alt="">-->
-  <!-- </div>-->
+    <img src="https://avatars.githubusercontent.com/u/125992867?v=4" alt="">
+  </div>
 
-  <!-- <div class="side-band right" aria-hidden="true">-->
+  <div class="side-band right" aria-hidden="true">
     <!-- same image mirrored; you can use a different image or SVG -->
-    <!-- <img src="https://avatars.githubusercontent.com/u/125992867?v=4" alt="">-->
-  <!-- </div> -->
+    <img src="https://avatars.githubusercontent.com/u/125992867?v=4" alt="">
+  </div>
   <!-- <div class="container"> -->
   <!-- <div id="leaves">
     <i></i>
