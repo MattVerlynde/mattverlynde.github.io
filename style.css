@@ -1015,10 +1015,10 @@ button:active {
 }
 
 /* Make room so content isn't covered by bands */
-body {
+/* body {
   padding-left: calc(var(--side-band-width) + 12px);
   padding-right: calc(var(--side-band-width) + 12px);
-}
+} */
 
 /* Common side band styles */
 .side-band {
