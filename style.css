@@ -1005,3 +1005,53 @@ button:active {
     -webkit-hyphens: auto;
     -moz-hyphens: auto;
 }
+
+/* =======================
+   Fixed Side Bands
+   ======================= */
+
+:root {
+  --side-band-width: 140px; /* adjust width here */
+}
+
+/* Make room so content isn't covered by bands */
+body {
+  padding-left: calc(var(--side-band-width) + 12px);
+  padding-right: calc(var(--side-band-width) + 12px);
+}
+
+/* Common side band styles */
+.side-band {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: var(--side-band-width);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: transparent; /* change to rgba if you want tint */
+  pointer-events: none; /* lets clicks pass through */
+}
+
+.side-band.left  { left: 0; }
+.side-band.right { right: 0; }
+
+.side-band img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  pointer-events: none;
+}
+
+/* Optional: hide bands on small screens */
+@media (max-width: 900px) {
+  .side-band { display: none; }
+  body {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
