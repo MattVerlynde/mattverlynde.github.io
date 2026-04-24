@@ -1,0 +1,3 @@
+[submodule "frugalityscore"]
+	path = frugalityscore
+	url = https://github.com/MattVerlynde/frugalityscore.git

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>System Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <h2>Parameters</h2>
+
+        <!-- Systems -->
+        <div class="control">
+            <label>System Type</label>
+            <label><input type="checkbox" value="A" checked> A</label>
+            <label><input type="checkbox" value="B"> B</label>
+            <label><input type="checkbox" value="C"> C</label>
+        </div>
+
+        <!-- GPU -->
+        <div class="control">
+            <label for="gpu">GPU Model</label>
+            <select id="gpu">
+                <option value="GPU1">GPU1</option>
+                <option value="GPU2">GPU2</option>
+                <option value="GPU3">GPU3</option>
+            </select>
+        </div>
+
+        <!-- Time -->
+        <div class="control">
+            <label for="time">Time (s)</label>
+            <input type="range" id="time" min="0" max="60" value="30">
+            <span id="timeValue">30</span>
+        </div>
+
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <div id="plot"></div>
+    </div>
+
+</div>
+
+<script>
+function getSelectedSystems() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function generateTrace(system, time, gpu) {
+    let x = [];
+    let y = [];
+
+    for (let i = 0; i <= time; i++) {
+        x.push(i);
+
+        // Fake data logic depending on system + GPU
+        let factor = 1;
+        if (system === "A") factor = 1;
+        if (system === "B") factor = 1.5;
+        if (system === "C") factor = 2;
+
+        if (gpu === "GPU2") factor *= 1.2;
+        if (gpu === "GPU3") factor *= 1.5;
+
+        y.push(Math.sin(i / 5) * factor + Math.random());
+    }
+
+    return {
+        x: x,
+        y: y,
+        mode: 'lines',
+        name: `System ${system}`
+    };
+}
+
+function updatePlot() {
+    const systems = getSelectedSystems();
+    const gpu = document.getElementById("gpu").value;
+    const time = parseInt(document.getElementById("time").value);
+
+    let traces = systems.map(sys => generateTrace(sys, time, gpu));
+
+    const layout = {
+        title: `Performance over Time (${gpu})`,
+        xaxis: { title: "Time (s)" },
+        yaxis: { title: "Value" }
+    };
+
+    Plotly.newPlot('plot', traces, layout);
+}
+
+// Update slider label
+document.getElementById("time").addEventListener("input", function() {
+    document.getElementById("timeValue").textContent = this.value;
+    updatePlot();
+});
+
+// Update on interactions
+document.querySelectorAll("input[type=checkbox]").forEach(cb => {
+    cb.addEventListener("change", updatePlot);
+});
+
+document.getElementById("gpu").addEventListener("change", updatePlot);
+
+// Initial plot
+updatePlot();
+</script>
+
+</body>
+</html>
