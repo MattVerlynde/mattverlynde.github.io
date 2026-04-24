@@ -75,6 +75,7 @@ async function loadCPUs() {
 function getSelectedSystems() {
     const checkboxes = document.querySelectorAll('#systems-container input[type="checkbox"]:checked');
     return Array.from(checkboxes).map(cb => cb.value);
+}
 
 function generateTrace(system, time, gpu) {
     let x = [];
