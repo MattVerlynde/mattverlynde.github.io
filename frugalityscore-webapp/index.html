@@ -77,7 +77,7 @@ function getSelectedSystems() {
     return Array.from(checkboxes).map(cb => cb.value);
 }
 
-function generateTrace(system, time, gpu) {
+function generateTrace(system, time, systemscontainer) {
     let x = [];
     let y = [];
 
@@ -90,8 +90,8 @@ function generateTrace(system, time, gpu) {
         if (system === "B") factor = 1.5;
         if (system === "C") factor = 2;
 
-        if (gpu === "GPU2") factor *= 1.2;
-        if (gpu === "GPU3") factor *= 1.5;
+        if (systemscontainer === "GPU2") factor *= 1.2;
+        if (systemscontainer === "GPU3") factor *= 1.5;
 
         y.push(Math.sin(i / 5) * factor + Math.random());
     }
@@ -106,13 +106,13 @@ function generateTrace(system, time, gpu) {
 
 function updatePlot() {
     const systems = getSelectedSystems();
-    const gpu = document.getElementById("gpu").value;
+    const systemscontainer = document.getElementById("systems-container").value;
     const time = parseInt(document.getElementById("time").value);
 
-    let traces = systems.map(sys => generateTrace(sys, time, gpu));
+    let traces = systems.map(sys => generateTrace(sys, time, systemscontainer));
 
     const layout = {
-        title: `Performance over Time (${gpu})`,
+        title: `Performance over Time (${systemscontainer})`,
         xaxis: { title: "Time (s)" },
         yaxis: { title: "Value" }
     };
@@ -131,10 +131,9 @@ document.querySelectorAll("input[type=checkbox]").forEach(cb => {
     cb.addEventListener("change", updatePlot);
 });
 
-document.getElementById("gpu").addEventListener("change", updatePlot);
+document.getElementById("systems-container").addEventListener("change", updatePlot);
 
 // Initial plot
-// Initialize
 loadCPUs().then(() => updatePlot());
 </script>
 
