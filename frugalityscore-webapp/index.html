@@ -60,7 +60,7 @@
 let performanceData = {};
 
 async function loadPerformanceData() {
-    const response = await fetch('referencePerformance.json');
+    const response = await fetch('../frugalityscore/src/data/referencePerformance.json');
     performanceData = await response.json();
 
     const metricSelect = document.getElementById("metric");
