@@ -140,7 +140,7 @@ function computeMembership(metric, x) {
     return results;
 }
 
-function generateTrace(system, time, cpuFactor, cores, minVal, maxVal) {
+function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     let x = [];
     let y = [];
 
@@ -182,6 +182,7 @@ function updatePlot() {
     const systems = getSelectedSystems();
 
     const metric = document.getElementById("metric").value;
+    if (!performanceData.performance_minmax) return;
     const [minVal, maxVal] = performanceData.performance_minmax[metric];
 
     const select = document.getElementById("cpu-select");
@@ -193,7 +194,7 @@ function updatePlot() {
     const cores = parseInt(document.getElementById("cores").value) || 1;
     const time = parseInt(document.getElementById("time").value);
 
-    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal));
+    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
 
     const layout = {
         title: `Performance over Time (${cpu})`,
