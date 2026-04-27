@@ -98,12 +98,12 @@ function generateTrace(system, time, cpuFactor) {
 
 function updatePlot() {
     const systems = getSelectedSystems();
-    
+
     const select = document.getElementById("cpu-select");
     const selectedOption = select.options[select.selectedIndex];
     if (!selectedOption) return;
 
-    const cpu = selectedOption.value;
+    const cpu = selectedOption.textContent;
     const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core);
     const time = parseInt(document.getElementById("time").value);
 
