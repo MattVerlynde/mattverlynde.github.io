@@ -83,7 +83,7 @@ function generateTrace(system, time, cpuFactor) {
         if (system === "B") factor = 1.5;
         if (system === "C") factor = 2;
 
-        // factor *= cpuFactor;
+        factor *= cpuFactor;
 
         y.push(Math.sin(i / 5) * factor + Math.random());
     }
@@ -116,6 +116,11 @@ function updatePlot() {
     };
 
     Plotly.newPlot('plot', traces, layout);
+}
+
+function getSelectedSystems() {
+    const checkboxes = document.querySelectorAll('.left-panel input[type="checkbox"]:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
 }
 
 // Update slider label
