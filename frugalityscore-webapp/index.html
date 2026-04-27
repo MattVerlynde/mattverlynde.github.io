@@ -28,6 +28,12 @@
             <select id="cpu-select"></select>
         </div>
 
+        <!-- Number of cores -->
+        <div class="control">
+            <label for="cores">Number of cores</label>
+            <input type="number" id="cores" min="1" value="1">
+        </div>
+
         <!-- Time -->
         <div class="control">
             <label for="time">Time (s)</label>
@@ -70,7 +76,7 @@ async function loadCPUs() {
     });
 }
 
-function generateTrace(system, time, cpuFactor) {
+function generateTrace(system, time, cpuFactor, cores) {
     let x = [];
     let y = [];
 
@@ -83,7 +89,7 @@ function generateTrace(system, time, cpuFactor) {
         if (system === "B") factor = 1.5;
         if (system === "C") factor = 2;
 
-        factor *= cpuFactor;
+        factor *= cpuFactor * cores;
 
         y.push(Math.sin(i / 5) * factor + Math.random());
     }
@@ -105,9 +111,10 @@ function updatePlot() {
 
     const cpu = selectedOption.textContent;
     const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core);
+    const cores = parseInt(document.getElementById("cores").value) || 1;
     const time = parseInt(document.getElementById("time").value);
 
-    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor));
+    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores));
 
     const layout = {
         title: `Performance over Time (${cpu})`,
@@ -135,6 +142,7 @@ document.querySelectorAll("input[type=checkbox]").forEach(cb => {
 });
 
 document.getElementById("cpu-select").addEventListener("change", updatePlot);
+document.getElementById("cores").addEventListener("input", updatePlot);
 
 // Initial plot
 loadCPUs().then(() => updatePlot());
