@@ -22,6 +22,11 @@
             <label><input type="checkbox" value="C"> C</label>
         </div>
 
+        <div class="control">
+            <label for="metric">Performance metric</label>
+            <select id="metric"></select>
+        </div>
+
         <!-- CPU -->
        <div class="control">
             <label for="cpu-select">CPU Model</label>
@@ -51,7 +56,26 @@
 </div>
 
 <script>
-// Populate GPU dropdown from CSV
+let performanceData = {};
+
+async function loadPerformanceData() {
+    const response = await fetch('referencePerformance.json');
+    performanceData = await response.json();
+
+    const metricSelect = document.getElementById("metric");
+
+    Object.keys(performanceData.performance_minmax).forEach((metric, index) => {
+        const option = document.createElement("option");
+        option.value = metric;
+        option.textContent = metric;
+
+        if (index === 0) option.selected = true;
+
+        metricSelect.appendChild(option);
+    });
+}
+
+// Populate CPU dropdown from CSV
 async function loadCPUs() {
     const response = await fetch('../frugalityscore/src/data/CPUs.csv');
     const text = await response.text();
@@ -76,7 +100,46 @@ async function loadCPUs() {
     });
 }
 
-function generateTrace(system, time, cpuFactor, cores) {
+function trimf(x, [a, b, c]) {
+    if (a === b && x === a) return 1;
+    if (b === c && x === c) return 1;
+
+    if (x <= a || x >= c) return 0;
+    if (x === b) return 1;
+
+    if (x < b) return (b === a) ? 1 : (x - a) / (b - a);
+    return (c === b) ? 1 : (c - x) / (c - b);
+}
+
+function trapmf(x, [a, b, c, d]) {
+    if (b === a && x === a) return 1;
+    if (c === d && x === d) return 1;
+
+    if (x <= a || x >= d) return 0;
+    if (x >= b && x <= c) return 1;
+
+    if (x > a && x < b) return (b === a) ? 1 : (x - a) / (b - a);
+    return (d === c) ? 1 : (d - x) / (d - c);
+}
+
+function computeMembership(metric, x) {
+    const funcs = performanceData.performance_functions[metric];
+    const params = performanceData.performance_params[metric];
+
+    let results = [];
+
+    for (let i = 0; i < funcs.length; i++) {
+        if (funcs[i] === "trimf") {
+            results.push(trimf(x, params[i]));
+        } else if (funcs[i] === "trapmf") {
+            results.push(trapmf(x, params[i]));
+        }
+    }
+
+    return results;
+}
+
+function generateTrace(system, time, cpuFactor, cores, minVal, maxVal) {
     let x = [];
     let y = [];
 
@@ -91,7 +154,19 @@ function generateTrace(system, time, cpuFactor, cores) {
 
         factor *= cpuFactor * cores;
 
-        y.push(Math.sin(i / 5) * factor + Math.random());
+        let raw = Math.sin(i / 5) * factor + Math.random();
+
+        // normalize to metric range
+        let normalized = (raw + 1) / 2;
+        let scaled = minVal + normalized * (maxVal - minVal);
+
+        // compute fuzzy memberships
+        let memberships = computeMembership(metric, scaled);
+
+        // example: take max membership
+        let score = Math.max(...memberships);
+
+        y.push(score);
     }
 
     return {
@@ -105,6 +180,9 @@ function generateTrace(system, time, cpuFactor, cores) {
 function updatePlot() {
     const systems = getSelectedSystems();
 
+    const metric = document.getElementById("metric").value;
+    const [minVal, maxVal] = performanceData.performance_minmax[metric];
+
     const select = document.getElementById("cpu-select");
     const selectedOption = select.options[select.selectedIndex];
     if (!selectedOption) return;
@@ -114,7 +192,7 @@ function updatePlot() {
     const cores = parseInt(document.getElementById("cores").value) || 1;
     const time = parseInt(document.getElementById("time").value);
 
-    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores));
+    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal));
 
     const layout = {
         title: `Performance over Time (${cpu})`,
@@ -143,9 +221,13 @@ document.querySelectorAll("input[type=checkbox]").forEach(cb => {
 
 document.getElementById("cpu-select").addEventListener("change", updatePlot);
 document.getElementById("cores").addEventListener("input", updatePlot);
+document.getElementById("metric").addEventListener("change", updatePlot);
 
 // Initial plot
-loadCPUs().then(() => updatePlot());
+Promise.all([
+    loadCPUs(),
+    loadPerformanceData()
+]).then(() => updatePlot());
 </script>
 
 </body>
