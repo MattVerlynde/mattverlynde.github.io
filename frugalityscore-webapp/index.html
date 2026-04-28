@@ -533,7 +533,7 @@ function updatePlot() {
 
     const x_vals = trace_agg.x;
     const y_vals = trace_agg.y;
-    const crispScore = centroid(x_vals, y_vals);
+    const crispScore = centroid(x_vals, y_vals) || 0;
 
     document.getElementById("score_display").textContent =
         'Crisp Score: ' + crispScore.toFixed(2);
