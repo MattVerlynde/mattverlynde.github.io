@@ -26,9 +26,9 @@
         <div class="control">
             <form>
             <label>System Type</label>
-            <label><input type="radio" value="Non ML" checked> Non ML</label>
-            <label><input type="radio" value="ML"> ML</label>
-            <label><input type="radio" value="DL"> DL</label>
+            <label><input type="radio" name="systemType" value="Non ML" checked> Non ML</label>
+            <label><input type="radio" name="systemType" value="ML"> ML</label>
+            <label><input type="radio" name="systemType" value="DL"> DL</label>
             </form>
         </div>
 
@@ -97,11 +97,11 @@
         <div id="defuzz_display">
             <form>
             <label>Defuzzification Type</label>
-            <label><input type="radio" value="centroid" checked> Centroid</label>
-            <label><input type="radio" value="bisector"> Bisector</label>
-            <label><input type="radio" value="som"> SOM</label>
-            <label><input type="radio" value="mom"> MOM</label>
-            <label><input type="radio" value="lom"> LOM</label>
+            <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
+            <label><input type="radio" name="defuzz" value="bisector"> Bisector</label>
+            <label><input type="radio" name="defuzz" value="som"> SOM</label>
+            <label><input type="radio" name="defuzz" value="mom"> MOM</label>
+            <label><input type="radio" name="defuzz" value="lom"> LOM</label>
             </form>
         </div>
     </div>
@@ -570,11 +570,8 @@ function updatePlot() {
     Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
     Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score);
 
-    document.getElementById("score_display").textContent =
-        'Crisp Score: ' + crispScore.toFixed(2);
-
-    const x_vals = trace_agg.x;
-    const y_vals = trace_agg.y;
+    const x_vals = trace_membership_agg.x;
+    const y_vals = trace_membership_agg.y;
     const defuzz = getSelectedDefuzzType();
     let defuzzValue;
     if (defuzz === "centroid") {
@@ -591,6 +588,9 @@ function updatePlot() {
         defuzzValue = 0;
     }
 
+    document.getElementById("score_display").textContent =
+        'Crisp Score: ' + defuzzValue.toFixed(2);
+
 }
 
 function getSelectedSystems() {
@@ -599,13 +599,13 @@ function getSelectedSystems() {
 }
 
 function getSelectedSystemType() {
-    const radios = document.querySelectorAll('.left-panel input[type="radio"]');
+    const radios = document.querySelectorAll('input[name="systemType"]');
     const selected = Array.from(radios).find(r => r.checked);
     return selected ? selected.value : null;
 }
 
 function getSelectedDefuzzType() {
-    const radios = document.querySelectorAll('#defuzz_display input[type="radio"]');
+    const radios = document.querySelectorAll('input[name="defuzz"]');
     const selected = Array.from(radios).find(r => r.checked);
     return selected ? selected.value : null;
 }
@@ -633,6 +633,12 @@ document.getElementById("energy_high").addEventListener("input", function() {
 // Update on interactions
 document.querySelectorAll("input[type=checkbox]").forEach(cb => {
     cb.addEventListener("change", updatePlot);
+});
+document.querySelectorAll("input[name=systemType]").forEach(rb => {
+    rb.addEventListener("change", updatePlot);
+});
+document.querySelectorAll("input[name=defuzz]").forEach(rb => {
+    rb.addEventListener("change", updatePlot);
 });
 
 document.getElementById("cpu-select").addEventListener("change", updatePlot);
