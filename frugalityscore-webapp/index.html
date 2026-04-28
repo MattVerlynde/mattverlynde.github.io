@@ -9,21 +9,9 @@
 <body>
 
 <div class="container">
-
-    <!-- LEFT PANEL -->
-    <div class="left-panel">
-        <h2>Parameters</h2>
-
-        <!-- Systems -->
-        <!-- <div class="control">
-            <label>System Type</label>
-            <label><input type="checkbox" value="A" checked> A</label>
-            <label><input type="checkbox" value="B"> B</label>
-            <label><input type="checkbox" value="C"> C</label>
-        </div> -->
-
-        <!-- Systems -->
-        <div class="control">
+  <div class="left-panel">
+    <h2>Parameters</h2>
+    <div class="control">
             <form>
             <label>System Type</label>
             <label><input type="radio" name="systemType" value="Non ML" checked> Non ML</label>
@@ -50,13 +38,6 @@
             <input type="number" id="cores" min="1" value="1">
         </div>
 
-        <!-- Time -->
-        <!-- <div class="control">
-            <label for="time">Time (s)</label>
-            <input type="range" id="time" min="0" max="60" value="30">
-            <span id="timeValue">30</span>
-        </div> -->
-
         <!-- Energy -->
         <label>Time limits (s)</label>
         <div class="control">
@@ -79,36 +60,20 @@
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
-        <!-- <div class="output-plots"> -->
-            <!-- <div id="plot"></div> -->
-            <label>Membership Functions</label>
-            <div id="plot_membership"></div>
-            <div id="plot_membership_energy"></div>
-        <!-- </div> -->
-
-        <!-- <div class="output-displays"> -->
-            <!-- Input values -->
-            <div class="control">
-                <label>Performance
-                <input type="number" id="perf" value="0" step="0.01"></label>
-                <label>Energy Consumption (J)
-                <input type="number" id="energy" min="0" value="0" step="1"></label>
-            </div>
-            <div id="plot_membership_score"></div>
-            <div id="plot_membership_score_agg"></div>
-            <div id="score_display"></div>
-            <div id="defuzz_display">
-                <form>
-                <label>Defuzzification Type</label>
-                <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
-                <label><input type="radio" name="defuzz" value="bisector"> Bisector</label>
-                <label><input type="radio" name="defuzz" value="som"> SOM</label>
-                <label><input type="radio" name="defuzz" value="mom"> MOM</label>
-                <label><input type="radio" name="defuzz" value="lom"> LOM</label>
-                </form>
-            </div>
-        <!-- </div> -->
+    <div class="visual-section">
+      <div id="plot" class="plot"></div>
+      <div id="plot_membership" class="plot"></div>
+      <div id="plot_membership_energy" class="plot"></div>
     </div>
+    <div class="output-summary">
+      <div id="plot_membership_score" class="plot"></div>
+      <div id="plot_membership_score_agg" class="plot"></div>
+    </div>
+    <div class="output-summary">
+      <div id="score_display" class="score-display">Final Score</div>
+      <div id="defuzz_display" class="score-display">Defuzz Selection</div>
+    </div>
+  </div>
 </div>
 
 <script>
