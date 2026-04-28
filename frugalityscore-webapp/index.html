@@ -452,7 +452,8 @@ function updatePlot() {
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, time_high, metric);
 
-    let trace_membership_score = generateTraceMembershipScoreAggregated(scoreMembership);
+    let trace_membership_score = generateTraceMembershipScore();
+    let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
 
     // const layout_plot = {
     //     title: `Performance over Time (${cpu})`,
@@ -520,7 +521,7 @@ function updatePlot() {
     // Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
-    Plotly.newPlot('plot_membership_score', trace_membership_score, layout_membership_score);
+    Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
 
     const x_vals = trace_agg.x;
     const y_vals = trace_agg.y;
