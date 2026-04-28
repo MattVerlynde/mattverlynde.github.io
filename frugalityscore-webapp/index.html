@@ -215,7 +215,83 @@ function generateTraceMembership(minVal, maxVal, metric) {
     }));
 }
 
-function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric) {
+function computeEnergyMembership(cpuFactor, cores, time_low, time_medium, time_high, energy) {
+    const power = cpuFactor * cores;
+    const energy_low = power * time_low;
+    const energy_medium = power * time_medium;
+    const energy_high = power * time_high;
+
+    let memberships = [];
+    memberships.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
+    memberships.push(trimf(energy, [energy_low, energy_medium, energy_high]));
+    memberships.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
+
+    return memberships;
+}   
+
+function computePerfMembership(metric, perf) {
+    const [minVal, maxVal] = performanceData.performance_minmax[metric];
+    return computeMembership(metric, perf);
+}
+
+function computeScore(perf, energy, metric, cpuFactor, cores, time_low, time_medium, time_high) {
+    const perfMembership = computePerfMembership(metric, perf);
+    const energyMembership = computeEnergyMembership(cpuFactor, cores, time_low, time_medium, time_high, energy);
+
+    // Example: score has 5 triangular memberships functions: very low, low, medium, high, very high
+    // Association rules are defined as follows:
+    // - If perf is low and energy is low, then score is medium
+    // - If perf is medium and energy is low, then score is high
+    // - If perf is high and energy is low, then score is very high
+    // - If perf is low and energy is medium, then score is low
+    // - If perf is medium and energy is medium, then score is medium
+    // - If perf is high and energy is medium, then score is high
+    // - If perf is low and energy is high, then score is very low
+    // - If perf is medium and energy is high, then score is low
+    // - If perf is high and energy is high, then score is medium
+
+    const rules = [
+        [0, 0, 1, 0, 0], // low perf, low energy -> medium score
+        [0, 0, 0, 1, 0], // medium perf, low energy -> high score
+        [0, 0, 0, 0, 1], // high perf, low energy -> very high score
+        [1, 0, 0, 0, 0], // low perf, medium energy -> low score
+        [0, 1, 0, 0, 0], // medium perf, medium energy -> medium score
+        [0, 0, 1, 0, 0], // high perf, medium energy -> high score
+        [1, 0, 0, 0, 0], // low perf, high energy -> very low score
+        [0, 1, 0, 0, 0], // medium perf, high energy -> low score
+        [0, 0, 1, 0, 0] // high perf, high energy -> medium score
+    ];
+
+    let scoreMembership = [0, 0, 0, 0, 0]; // very low, low, medium, high, very high
+    for (let i = 0; i < perfMembership.length; i++) {
+        for (let j = 0; j < energyMembership.length; j++) {
+            const ruleStrength = Math.min(perfMembership[i], energyMembership[j]);
+            for (let k = 0; k < scoreMembership.length; k++) {
+                scoreMembership[k] = Math.max(scoreMembership[k], Math.min(ruleStrength, rules[i * energyMembership.length + j][k]));
+            }
+        }
+    }
+
+    return scoreMembership;
+}
+
+function generateTraceMembershipEnergy(scoreMembership) {
+    membershipsFunc = [trimf(energy, [energy_low, energy_medium, energy_high])];
+
+    const labels = ["very low", "low", "medium", "high", "very high"];
+
+
+    return scoreMembership.map((m, idx) => ({
+        x: [0, 1],
+        y: [m, m],
+        mode: 'lines',
+        name: labels[idx]
+    }));
+}
+
+
+
+function generateTraceMembershipScore(cpuFactor, cores, time_low, time_high, metric) {
     let x = [];
     let ys = [[], [], []]; // low, medium, high
 
