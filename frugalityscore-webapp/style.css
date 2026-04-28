@@ -75,3 +75,10 @@ label {
   /* transition: background-color 0.3s ease; */
   font-weight: bold;
 }
+
+.radio-group {
+  display: flex;
+  gap: 15px;           /* space between buttons */
+  align-items: center; /* vertical alignment */
+  flex-wrap: wrap;     /* optional: wrap if screen is small */
+}
