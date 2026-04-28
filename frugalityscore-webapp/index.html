@@ -92,6 +92,7 @@
             <input type="number" id="energy" min="0" value="0" step="1"></label>
         </div>
         <div id="plot_membership_score"></div>
+        <div id="plot_membership_score_agg"></div>
         <div id="score_display"></div>
         <div id="defuzz_display"></div>
     </div>
@@ -521,14 +522,15 @@ function updatePlot() {
     // Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
-    Plotly.newPlot('plot_membership_score', [trace_membership_agg], layout_membership_score);
+    Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
+    Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score);
 
     const x_vals = trace_agg.x;
     const y_vals = trace_agg.y;
     const crispScore = centroid(x_vals, y_vals);
 
-    document.getElementById("defuzz_display").textContent =
-        crispScore.toFixed(2);
+    document.getElementById("score_display").textContent =
+        'Crisp Score: ' + crispScore.toFixed(2);
 }
 
 function getSelectedSystems() {
