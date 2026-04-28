@@ -144,10 +144,13 @@ function computeMembership(metric, x) {
 }
 
 function generateTraceMembership(minVal, maxVal, metric) {
+    const funcs = performanceData.performance_functions[metric];
     let x = [];
-    let y = [];
+    let ys = funcs.map(() => []);
 
-    for (let i = minVal; i <= maxVal; i++) {
+    const step = (maxVal - minVal) / 100;
+
+    for (let i = minVal; i <= maxVal; i+= step) {
         x.push(i);
 
         let memberships = computeMembership(metric, i);
