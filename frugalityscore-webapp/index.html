@@ -89,7 +89,7 @@
             <label>Performance
             <input type="number" id="perf" value="0" step="0.01"></label>
             <label>Energy Consumption (J)
-            <input type="number" id="energy" min="0" value="0" step="0.01"></label>
+            <input type="number" id="energy" min="0" value="0" step="1"></label>
         </div>
         <div id="plot_membership_score"></div>
         <div id="score_display"></div>
@@ -521,7 +521,7 @@ function updatePlot() {
     // Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
-    Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
+    Plotly.newPlot('plot_membership_score', [trace_membership_agg], layout_membership_score);
 
     const x_vals = trace_agg.x;
     const y_vals = trace_agg.y;
