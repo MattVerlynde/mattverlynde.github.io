@@ -325,7 +325,7 @@ function updatePlot() {
     // };
     const layout_membership = {
         xaxis: { title: metric },
-        yaxis: { title: "Membership value" },
+        yaxis: { title: "Membership value", range: [0, 1] },
         shapes: [
             {
                 type: 'line',
@@ -351,7 +351,7 @@ function updatePlot() {
     };
     const layout_membership_energy = {
         xaxis: { title: "Energy (J)" },
-        yaxis: { title: "Membership value" },
+        yaxis: { title: "Membership value", range: [0, 1] },
         shapes: [
             {
                 type: 'line',
