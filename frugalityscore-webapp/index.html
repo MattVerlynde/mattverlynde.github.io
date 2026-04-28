@@ -362,7 +362,7 @@ function generateTraceMembershipScoreAggregated(scoreMembership) {
         results.push(Math.min(trimf(score, [25, 50, 75]), scoreMembership[2]));
         results.push(Math.min(trimf(score, [50, 75, 100]), scoreMembership[3]));
         results.push(Math.min(trimf(score, [75, 100, 100]), scoreMembership[4]));
-        y.push(Math.max(results)); // aggregate using max (OR)
+        y.push(Math.max(...results)); // aggregate using max (OR)
 
     };
 
@@ -522,6 +522,12 @@ function updatePlot() {
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
     Plotly.newPlot('plot_membership_score', trace_membership_score, layout_membership_score);
 
+    const x_vals = trace_agg.x;
+    const y_vals = trace_agg.y;
+    const crispScore = centroid(x_vals, y_vals);
+
+    document.getElementById("defuzz_display").textContent =
+        crispScore.toFixed(2);
 }
 
 function getSelectedSystems() {
