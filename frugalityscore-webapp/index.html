@@ -152,15 +152,27 @@ function generateTraceMembership(minVal, maxVal, metric) {
 
         let memberships = computeMembership(metric, i);
 
-        y.push(memberships);
+        memberships.forEach((m, idx) => {
+            ys[idx].push(m);
+        });
     }
 
-    return {
+    // choose labels based on number of sets
+    let labels;
+    if (funcs.length === 3) {
+        labels = ["low", "medium", "high"];
+    } else if (funcs.length === 2) {
+        labels = ["low", "high"];
+    } else {
+        labels = funcs.map((_, i) => `set ${i + 1}`);
+    }
+
+    return ys.map((yVals, idx) => ({
         x: x,
-        y: y,
+        y: yVals,
         mode: 'lines',
-        name: `System ${system}`
-    };
+        name: labels[idx]
+    }));
 }
 
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
@@ -213,7 +225,7 @@ function updatePlot() {
     if (!selectedOption) return;
 
     const cpu = selectedOption.textContent;
-    const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core);
+    const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
     const time = parseInt(document.getElementById("time").value);
 
@@ -226,7 +238,7 @@ function updatePlot() {
         yaxis: { title: "Value" }
     };
     const layout_membership = {
-        title: `Performance over Time (${cpu})`,
+        title: `Membership functions (${metric})`,
         xaxis: { title: "Time (s)" },
         yaxis: { title: "Value" }
     };
