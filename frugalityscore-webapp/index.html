@@ -85,6 +85,14 @@
         <div id="plot_membership_energy"></div>
     </div>
 
+    <!-- Number of cores -->
+        <div class="control">
+            <label>Performance
+            <input type="number" id="perf" value="0" step="0.01"></label>
+            <label>Energy Consumption (J)
+            <input type="number" id="energy" min="0" value="0" step="0.01"></label>
+        </div>
+
 </div>
 
 <script>
@@ -302,6 +310,9 @@ function updatePlot() {
     const time_medium = parseInt(document.getElementById("energy_medium").value);
     const time_high = parseInt(document.getElementById("energy_high").value);
 
+    const perf = parseFloat(document.getElementById("perf").value) || 0;
+    const energy = parseFloat(document.getElementById("energy").value) || 0;
+
     // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric);
@@ -365,6 +376,8 @@ document.querySelectorAll("input[type=checkbox]").forEach(cb => {
 document.getElementById("cpu-select").addEventListener("change", updatePlot);
 document.getElementById("cores").addEventListener("input", updatePlot);
 document.getElementById("metric").addEventListener("change", updatePlot);
+document.getElementById("perf").addEventListener("input", updatePlot);
+document.getElementById("energy").addEventListener("input", updatePlot);
 
 // Initial plot
 Promise.all([
