@@ -65,6 +65,7 @@
         <div id="plot"></div>
         <label>Membership Functions</label>
         <div id="plot_membership"></div>
+        <div id="plot_membership_energy"></div>
     </div>
 
 </div>
@@ -190,6 +191,41 @@ function generateTraceMembership(minVal, maxVal, metric) {
     }));
 }
 
+function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric) {
+    let x = [];
+    let ys = [[], [], []]; // low, medium, high
+
+    const power = cpuFactor * cores;
+    const energy_low = power * time_low;
+    const energy_medium = power * time_high / 2;
+    const energy_high = power * time_high;
+
+    const step = (energy_high - 0) / 100;
+
+    for (let i = 0; i <= energy_high; i+= step) {
+        x.push(i);
+
+        let results = [];
+
+        results.push(trapmf(i, [0, 0, energy_low, energy_medium]));
+        results.push(trimf(i, [energy_low, energy_medium, energy_high]));
+        results.push(trimf(i, [energy_medium, energy_high, energy_high]));
+        ys[0].push(results[0]);
+        ys[1].push(results[1]);
+        ys[2].push(results[2]);
+    };
+
+    // choose labels based on number of sets
+    const labels = ["low", "medium", "high"];
+
+    return ys.map((yVals, idx) => ({
+        x: x,
+        y: yVals,
+        mode: 'lines',
+        name: labels[idx]
+    }));
+}
+
 
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     let x = [];
@@ -244,9 +280,13 @@ function updatePlot() {
     const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
     const time = parseInt(document.getElementById("time").value);
+    const time_low = parseInt(document.getElementById("energy_low").value);
+    const time_medium = parseInt(document.getElementById("energy_medium").value);
+    const time_high = parseInt(document.getElementById("energy_high").value);
 
     let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
+    let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric);
 
     const layout_plot = {
         title: `Performance over Time (${cpu})`,
@@ -257,9 +297,14 @@ function updatePlot() {
         xaxis: { title: metric },
         yaxis: { title: "Membership value" }
     };
+    const layout_membership_energy = {
+        xaxis: { title: "Energy" },
+        yaxis: { title: "Membership value" }
+    };
 
     Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
+    Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
 
 }
 
