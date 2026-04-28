@@ -15,12 +15,12 @@
         <h2>Parameters</h2>
 
         <!-- Systems -->
-        <div class="control">
+        <!-- <div class="control">
             <label>System Type</label>
             <label><input type="checkbox" value="A" checked> A</label>
             <label><input type="checkbox" value="B"> B</label>
             <label><input type="checkbox" value="C"> C</label>
-        </div>
+        </div> -->
 
         <!-- Systems -->
         <div class="control">
@@ -51,11 +51,11 @@
         </div>
 
         <!-- Time -->
-        <div class="control">
+        <!-- <div class="control">
             <label for="time">Time (s)</label>
             <input type="range" id="time" min="0" max="60" value="30">
             <span id="timeValue">30</span>
-        </div>
+        </div> -->
 
         <!-- Energy -->
         <label>Time limits (s)</label>
@@ -472,7 +472,7 @@ function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
 }
 
 function updatePlot() {
-    const systems = getSelectedSystems();
+    // const systems = getSelectedSystems();
     const systemType = getSelectedSystemType();
 
     const metric = document.getElementById("metric").value;
@@ -486,7 +486,7 @@ function updatePlot() {
     const cpu = selectedOption.textContent;
     const cpuFactor = parseFloat(selectedOption.dataset.TDP_per_core) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
-    const time = parseInt(document.getElementById("time").value);
+    // const time = parseInt(document.getElementById("time").value);
     const time_low = parseInt(document.getElementById("energy_low").value);
     const time_medium = parseInt(document.getElementById("energy_medium").value);
     const time_high = parseInt(document.getElementById("energy_high").value);
@@ -615,10 +615,10 @@ function getSelectedDefuzzType() {
 }
 
 // Update slider label
-document.getElementById("time").addEventListener("input", function() {
-    document.getElementById("timeValue").textContent = this.value;
-    updatePlot();
-});
+// document.getElementById("time").addEventListener("input", function() {
+//     document.getElementById("timeValue").textContent = this.value;
+//     updatePlot();
+// });
 
 // Update energy slider labels
 document.getElementById("energy_low").addEventListener("input", function() {
@@ -635,9 +635,9 @@ document.getElementById("energy_high").addEventListener("input", function() {
 });
 
 // Update on interactions
-document.querySelectorAll("input[type=checkbox]").forEach(cb => {
-    cb.addEventListener("change", updatePlot);
-});
+// document.querySelectorAll("input[type=checkbox]").forEach(cb => {
+//     cb.addEventListener("change", updatePlot);
+// });
 document.querySelectorAll("input[name=systemType]").forEach(rb => {
     rb.addEventListener("change", updatePlot);
 });
