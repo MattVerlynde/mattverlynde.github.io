@@ -22,6 +22,14 @@
             <label><input type="checkbox" value="C"> C</label>
         </div>
 
+        <!-- Systems -->
+        <div class="control">
+            <label>System Type</label>
+            <label><input type="radio" value="Non ML" checked> Non ML</label>
+            <label><input type="radio" value="ML"> ML</label>
+            <label><input type="radio" value="DL"> DL</label>
+        </div>
+
         <!-- Performance -->
         <div class="control">
             <label for="metric">Performance metric</label>
@@ -48,14 +56,21 @@
         </div>
 
         <!-- Energy -->
+        <label>Time limits (s)</label>
         <div class="control">
-            <label for="energy">Energy limits (kWh)</label>
+            <label>
             <input type="range" id="energy_low" min="0" max="100" value="10">
-            <span id="energyValueLow">10</span>
+            <span id="energyValueLow">10</span> Low</label>
+        </div>
+        <div class="control">
+            <label>
             <input type="range" id="energy_medium" min="0" max="100" value="50">
-            <span id="energyValueMedium">50</span>
+            <span id="energyValueMedium">50</span> Medium</label>
+        </div>
+        <div class="control">
+            <label>
             <input type="range" id="energy_high" min="0" max="100" value="90">
-            <span id="energyValueHigh">90</span>
+            <span id="energyValueHigh">90</span> High</label>
         </div>
 
     </div>
@@ -267,6 +282,7 @@ function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
 
 function updatePlot() {
     const systems = getSelectedSystems();
+    const systemType = getSelectedSystemType();
 
     const metric = document.getElementById("metric").value;
     if (!performanceData.performance_minmax) return;
@@ -284,25 +300,25 @@ function updatePlot() {
     const time_medium = parseInt(document.getElementById("energy_medium").value);
     const time_high = parseInt(document.getElementById("energy_high").value);
 
-    let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
+    // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric);
 
-    const layout_plot = {
-        title: `Performance over Time (${cpu})`,
-        xaxis: { title: "Time (s)" },
-        yaxis: { title: "Value" }
-    };
+    // const layout_plot = {
+    //     title: `Performance over Time (${cpu})`,
+    //     xaxis: { title: "Time (s)" },
+    //     yaxis: { title: "Value" }
+    // };
     const layout_membership = {
         xaxis: { title: metric },
         yaxis: { title: "Membership value" }
     };
     const layout_membership_energy = {
-        xaxis: { title: "Energy" },
+        xaxis: { title: "Energy (J)" },
         yaxis: { title: "Membership value" }
     };
 
-    Plotly.newPlot('plot', traces, layout_plot);
+    // Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
 
@@ -311,6 +327,12 @@ function updatePlot() {
 function getSelectedSystems() {
     const checkboxes = document.querySelectorAll('.left-panel input[type="checkbox"]:checked');
     return Array.from(checkboxes).map(cb => cb.value);
+}
+
+function getSelectedSystemType() {
+    const radios = document.querySelectorAll('.left-panel input[type="radio"]');
+    const selected = Array.from(radios).find(r => r.checked);
+    return selected ? selected.value : null;
 }
 
 // Update slider label
