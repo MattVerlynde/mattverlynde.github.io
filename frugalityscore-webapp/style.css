@@ -38,10 +38,12 @@ label {
 
 .output-plots {
     width: 50%;
+    height: 100%;
 }
 
 .output-displays {
     width: 50%;
+    height: 100%;
 }
 
 #plot {
