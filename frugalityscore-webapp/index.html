@@ -94,7 +94,16 @@
         <div id="plot_membership_score"></div>
         <div id="plot_membership_score_agg"></div>
         <div id="score_display"></div>
-        <div id="defuzz_display"></div>
+        <div id="defuzz_display">
+            <form>
+            <label>Defuzzification Type</label>
+            <label><input type="radio" value="centroid" checked> Centroid</label>
+            <label><input type="radio" value="bisector"> Bisector</label>
+            <label><input type="radio" value="som"> SOM</label>
+            <label><input type="radio" value="mom"> MOM</label>
+            <label><input type="radio" value="lom"> LOM</label>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -390,6 +399,36 @@ function centroid(x, y) {
     return den === 0 ? 0 : num / den;
 }
 
+function bisector(x, y) {
+    const totalArea = y.reduce((sum, val) => sum + val, 0);
+    let cumulativeArea = 0;
+    for (let i = 0; i < x.length; i++) {
+        cumulativeArea += y[i];
+        if (cumulativeArea >= totalArea / 2) {
+            return x[i];
+        }
+    }
+    return x[x.length - 1];
+}
+
+function som(x, y) {
+    let maxMembership = Math.max(...y);
+    let candidates = x.filter((_, i) => y[i] === maxMembership);
+    return Math.min(...candidates);
+}
+
+function mom(x, y) {
+    let maxMembership = Math.max(...y);
+    let candidates = x.filter((_, i) => y[i] === maxMembership);
+    return candidates.reduce((a, b) => a + b, 0) / candidates.length;
+}
+
+function lom(x, y) {
+    let maxMembership = Math.max(...y);
+    let candidates = x.filter((_, i) => y[i] === maxMembership);
+    return Math.max(...candidates);
+}
+
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     let x = [];
     let y = [];
@@ -531,12 +570,27 @@ function updatePlot() {
     Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
     Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score);
 
-    const x_vals = trace_agg.x;
-    const y_vals = trace_agg.y;
-    const crispScore = centroid(x_vals, y_vals) || 0;
-
     document.getElementById("score_display").textContent =
         'Crisp Score: ' + crispScore.toFixed(2);
+
+    const x_vals = trace_agg.x;
+    const y_vals = trace_agg.y;
+    const defuzz = getSelectedDefuzzType();
+    let defuzzValue;
+    if (defuzz === "centroid") {
+        defuzzValue = centroid(x_vals, y_vals);
+    } else if (defuzz === "bisector") {
+        defuzzValue = bisector(x_vals, y_vals);
+    } else if (defuzz === "som") {
+        defuzzValue = som(x_vals, y_vals);
+    } else if (defuzz === "mom") {
+        defuzzValue = mom(x_vals, y_vals);
+    } else if (defuzz === "lom") {
+        defuzzValue = lom(x_vals, y_vals);
+    } else {
+        defuzzValue = 0;
+    }
+
 }
 
 function getSelectedSystems() {
@@ -546,6 +600,12 @@ function getSelectedSystems() {
 
 function getSelectedSystemType() {
     const radios = document.querySelectorAll('.left-panel input[type="radio"]');
+    const selected = Array.from(radios).find(r => r.checked);
+    return selected ? selected.value : null;
+}
+
+function getSelectedDefuzzType() {
+    const radios = document.querySelectorAll('#defuzz_display input[type="radio"]');
     const selected = Array.from(radios).find(r => r.checked);
     return selected ? selected.value : null;
 }
