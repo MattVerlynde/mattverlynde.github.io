@@ -22,6 +22,7 @@ body {
 
 .control {
     margin-bottom: 25px;
+    width: 100%;
 }
 
 label {
