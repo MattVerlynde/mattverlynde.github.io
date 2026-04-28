@@ -36,14 +36,12 @@ label {
     padding: 20px;
 }
 
-.output-plots {
+.right-panel.output-plots {
     width: 50%;
-    height: 100%;
 }
 
-.output-displays {
+.right-panel.output-displays {
     width: 50%;
-    height: 100%;
 }
 
 #plot {
