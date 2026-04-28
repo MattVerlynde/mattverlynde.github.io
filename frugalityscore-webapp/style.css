@@ -56,6 +56,11 @@ label {
     height: 20%;
 }
 
+#plot_membership_score_agg {
+    width: 50%;
+    height: 20%;
+}
+
 #score_display {
     width: 30%;
     height: 20%;
