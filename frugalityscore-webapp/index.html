@@ -505,7 +505,7 @@ function updatePlot() {
 
     const layout_membership_score = {
         xaxis: { title: "Score" },
-        yaxis: { title: "Membership value" },
+        yaxis: { title: "Membership value", range: [0, 1] },
     };
 
     // Plotly.newPlot('plot', traces, layout_plot);
