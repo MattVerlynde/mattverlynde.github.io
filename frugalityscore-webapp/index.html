@@ -47,11 +47,23 @@
             <span id="timeValue">30</span>
         </div>
 
+        <!-- Energy -->
+        <div class="control">
+            <label for="energy">Energy limits (kWh)</label>
+            <input type="range" id="energy_low" min="0" max="100" value="10">
+            <span id="energyValueLow">10</span>
+            <input type="range" id="energy_medium" min="0" max="100" value="50">
+            <span id="energyValueMedium">50</span>
+            <input type="range" id="energy_high" min="0" max="100" value="90">
+            <span id="energyValueHigh">90</span>
+        </div>
+
     </div>
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
         <div id="plot"></div>
+        <label>Membership Functions</label>
         <div id="plot_membership"></div>
     </div>
 
@@ -178,6 +190,7 @@ function generateTraceMembership(minVal, maxVal, metric) {
     }));
 }
 
+
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     let x = [];
     let y = [];
@@ -241,9 +254,8 @@ function updatePlot() {
         yaxis: { title: "Value" }
     };
     const layout_membership = {
-        title: `Membership functions (${metric})`,
-        xaxis: { title: "Time (s)" },
-        yaxis: { title: "Value" }
+        xaxis: { title: metric },
+        yaxis: { title: "Membership value" }
     };
 
     Plotly.newPlot('plot', traces, layout_plot);
@@ -259,6 +271,20 @@ function getSelectedSystems() {
 // Update slider label
 document.getElementById("time").addEventListener("input", function() {
     document.getElementById("timeValue").textContent = this.value;
+    updatePlot();
+});
+
+// Update energy slider labels
+document.getElementById("energy_low").addEventListener("input", function() {
+    document.getElementById("energyValueLow").textContent = this.value;
+    updatePlot();
+});
+document.getElementById("energy_medium").addEventListener("input", function() {
+    document.getElementById("energyValueMedium").textContent = this.value;
+    updatePlot();
+});
+document.getElementById("energy_high").addEventListener("input", function() {
+    document.getElementById("energyValueHigh").textContent = this.value;
     updatePlot();
 });
 

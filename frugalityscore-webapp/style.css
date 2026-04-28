@@ -37,5 +37,10 @@ label {
 
 #plot {
     width: 100%;
-    height: 100%;
+    height: 25%;
+}
+
+#plot_membership {
+    width: 100%;
+    height: 50%;
 }
