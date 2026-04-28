@@ -52,6 +52,7 @@
     <!-- RIGHT PANEL -->
     <div class="right-panel">
         <div id="plot"></div>
+        <div id="plot_membership"></div>
     </div>
 
 </div>
@@ -123,6 +124,8 @@ function trapmf(x, [a, b, c, d]) {
     return (d === c) ? 1 : (d - x) / (d - c);
 }
 
+
+
 function computeMembership(metric, x) {
     const funcs = performanceData.performance_functions[metric];
     const params = performanceData.performance_params[metric];
@@ -138,6 +141,26 @@ function computeMembership(metric, x) {
     }
 
     return results;
+}
+
+function generateTraceMembership(minVal, maxVal, metric) {
+    let x = [];
+    let y = [];
+
+    for (let i = minVal; i <= maxVal; i++) {
+        x.push(i);
+
+        let memberships = computeMembership(metric, i);
+
+        y.push(memberships);
+    }
+
+    return {
+        x: x,
+        y: y,
+        mode: 'lines',
+        name: `System ${system}`
+    };
 }
 
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
@@ -195,14 +218,22 @@ function updatePlot() {
     const time = parseInt(document.getElementById("time").value);
 
     let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
+    let traces_membership = generateTraceMembership(minVal, maxVal, metric);
 
-    const layout = {
+    const layout_plot = {
+        title: `Performance over Time (${cpu})`,
+        xaxis: { title: "Time (s)" },
+        yaxis: { title: "Value" }
+    };
+    const layout_membership = {
         title: `Performance over Time (${cpu})`,
         xaxis: { title: "Time (s)" },
         yaxis: { title: "Value" }
     };
 
-    Plotly.newPlot('plot', traces, layout);
+    Plotly.newPlot('plot', traces, layout_plot);
+    Plotly.newPlot('plot_membership', traces_membership, layout_membership);
+
 }
 
 function getSelectedSystems() {
