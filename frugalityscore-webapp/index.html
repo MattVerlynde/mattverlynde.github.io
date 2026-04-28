@@ -200,7 +200,7 @@ function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, 
         let results = [];
 
         results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
-        results.push(trimf(energy, [energy_low, energy_medium, energy_high]));
+        results.push(trapmf(energy, [energy_low, energy_medium, energy_medium, energy_high]));
         results.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
         ys[0].push(results[0]);
         ys[1].push(results[1]);
