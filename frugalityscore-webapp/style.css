@@ -36,13 +36,13 @@ label {
     padding: 20px;
 }
 
-.right-panel.output-plots {
+/* .right-panel.output-plots {
     width: 50%;
 }
 
 .right-panel.output-displays {
     width: 50%;
-}
+} */
 
 #plot {
     width: 100%;
