@@ -192,7 +192,7 @@ function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, 
     const energy_medium = power * time_medium;
     const energy_high = power * time_high;
 
-    const step = power * (100 - 0) / 100;
+    const step = power * 0.5;
 
     for (let energy = 0; energy <= power * 100; energy += step) {
         x.push(energy);
@@ -200,7 +200,7 @@ function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, 
         let results = [];
 
         results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
-        results.push(trapmf(energy, [energy_low, energy_medium, energy_medium, energy_high]));
+        results.push(trimf(energy, [energy_low, energy_medium, energy_high]));
         results.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
         ys[0].push(results[0]);
         ys[1].push(results[1]);
@@ -357,11 +357,11 @@ function generateTraceMembershipScoreAggregated(scoreMembership) {
 
         let results = [];
 
-        results.push(Math.max(trimf(score, [0, 0, 25]), scoreMembership[0]));
-        results.push(Math.max(trimf(score, [0, 25, 50]), scoreMembership[1]));
-        results.push(Math.max(trimf(score, [25, 50, 75]), scoreMembership[2]));
-        results.push(Math.max(trimf(score, [50, 75, 100]), scoreMembership[3]));
-        results.push(Math.max(trimf(score, [75, 100, 100]), scoreMembership[4]));
+        results.push(Math.min(trimf(score, [0, 0, 25]), scoreMembership[0]));
+        results.push(Math.min(trimf(score, [0, 25, 50]), scoreMembership[1]));
+        results.push(Math.min(trimf(score, [25, 50, 75]), scoreMembership[2]));
+        results.push(Math.min(trimf(score, [50, 75, 100]), scoreMembership[3]));
+        results.push(Math.min(trimf(score, [75, 100, 100]), scoreMembership[4]));
         y.push(Math.max(results)); // aggregate using max (OR)
 
     };
@@ -441,7 +441,7 @@ function updatePlot() {
 
     // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
-    let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric);
+    let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, time_high, metric);
 
     let trace_membership_score = generateTraceMembershipScoreAggregated(scoreMembership);
 
