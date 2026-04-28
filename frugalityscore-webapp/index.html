@@ -315,17 +315,64 @@ function computeScore(perf, energy, metric, cpuFactor, cores, time_low, time_med
 
 
 
-function generateTraceMembershipScore(scoreMembership, cpuFactor, cores, time_low, time_medium, time_high) {
-    const x = [0, 0.25, 0.5, 0.75, 1];
-    const y = scoreMembership;
+function generateTraceMembershipScore() {
+    let x = [];
+    let ys = [[], [], [], [], []]; // very low, low, medium, high, very high
 
-    return [{
+    for (let score = 0; score <= 100; score += 1) {
+        x.push(score);
+
+        let results = [];
+
+        results.push(trimf(score, [0, 0, 25]));
+        results.push(trimf(score, [0, 25, 50]));
+        results.push(trimf(score, [25, 50, 75]));
+        results.push(trimf(score, [50, 75, 100]));
+        results.push(trimf(score, [75, 100, 100]));
+        ys[0].push(results[0]);
+        ys[1].push(results[1]);
+        ys[2].push(results[2]);
+        ys[3].push(results[3]);
+        ys[4].push(results[4]);
+
+    };
+
+    // choose labels based on number of sets
+    const labels = ["1", "2", "3", "4", "5"];
+
+    return ys.map((yVals, idx) => ({
+        x: x,
+        y: yVals,
+        mode: 'lines',
+        name: labels[idx]
+    }));
+};
+
+function generateTraceMembershipScoreAggregated(scoreMembership) {
+    let x = [];
+    let y = []; // very low, low, medium, high, very high
+
+    for (let score = 0; score <= 100; score += 1) {
+        x.push(score);
+
+        let results = [];
+
+        results.push(Math.max(trimf(score, [0, 0, 25]), scoreMembership[0]));
+        results.push(Math.max(trimf(score, [0, 25, 50]), scoreMembership[1]));
+        results.push(Math.max(trimf(score, [25, 50, 75]), scoreMembership[2]));
+        results.push(Math.max(trimf(score, [50, 75, 100]), scoreMembership[3]));
+        results.push(Math.max(trimf(score, [75, 100, 100]), scoreMembership[4]));
+        y.push(Math.max(results)); // aggregate using max (OR)
+
+    };
+
+    return {
         x: x,
         y: y,
-        mode: 'lines+markers',
-        name: 'Score Membership'
-    }];
-};
+        mode: 'lines',
+        name: "Score aggregated"
+    };
+}
 
 function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     let x = [];
@@ -396,7 +443,7 @@ function updatePlot() {
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_high, metric);
 
-    let trace_membership_score = generateTraceMembershipScore(cpuFactor, cores, time_low, time_high, metric);
+    let trace_membership_score = generateTraceMembershipScoreAggregated(scoreMembership);
 
     // const layout_plot = {
     //     title: `Performance over Time (${cpu})`,
