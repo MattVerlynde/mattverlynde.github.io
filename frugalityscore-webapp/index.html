@@ -79,30 +79,34 @@
 
     <!-- RIGHT PANEL -->
     <div class="right-panel">
-        <!-- <div id="plot"></div> -->
-        <label>Membership Functions</label>
-        <div id="plot_membership"></div>
-        <div id="plot_membership_energy"></div>
-
-        <!-- Input values -->
-        <div class="control">
-            <label>Performance
-            <input type="number" id="perf" value="0" step="0.01"></label>
-            <label>Energy Consumption (J)
-            <input type="number" id="energy" min="0" value="0" step="1"></label>
+        <div class="output-plots">
+            <!-- <div id="plot"></div> -->
+            <label>Membership Functions</label>
+            <div id="plot_membership"></div>
+            <div id="plot_membership_energy"></div>
         </div>
-        <div id="plot_membership_score"></div>
-        <div id="plot_membership_score_agg"></div>
-        <div id="score_display"></div>
-        <div id="defuzz_display">
-            <form>
-            <label>Defuzzification Type</label>
-            <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
-            <label><input type="radio" name="defuzz" value="bisector"> Bisector</label>
-            <label><input type="radio" name="defuzz" value="som"> SOM</label>
-            <label><input type="radio" name="defuzz" value="mom"> MOM</label>
-            <label><input type="radio" name="defuzz" value="lom"> LOM</label>
-            </form>
+
+        <div class="output-displays">
+            <!-- Input values -->
+            <div class="control">
+                <label>Performance
+                <input type="number" id="perf" value="0" step="0.01"></label>
+                <label>Energy Consumption (J)
+                <input type="number" id="energy" min="0" value="0" step="1"></label>
+            </div>
+            <div id="plot_membership_score"></div>
+            <div id="plot_membership_score_agg"></div>
+            <div id="score_display"></div>
+            <div id="defuzz_display">
+                <form>
+                <label>Defuzzification Type</label>
+                <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
+                <label><input type="radio" name="defuzz" value="bisector"> Bisector</label>
+                <label><input type="radio" name="defuzz" value="som"> SOM</label>
+                <label><input type="radio" name="defuzz" value="mom"> MOM</label>
+                <label><input type="radio" name="defuzz" value="lom"> LOM</label>
+                </form>
+            </div>
         </div>
     </div>
 </div>
