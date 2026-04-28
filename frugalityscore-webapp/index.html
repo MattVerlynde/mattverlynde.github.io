@@ -462,6 +462,13 @@ function generateTrace(system, time, cpuFactor, cores, minVal, maxVal, metric) {
     };
 }
 
+function getScoreColor(score) {
+    score = Math.max(0, Math.min(100, score));
+
+    const hue = score * 1.2; // 0 → red, 120 → green
+    return `hsl(${hue}, 70%, 50%)`;
+}
+
 function updatePlot() {
     // const systems = getSelectedSystems();
     const systemType = getSelectedSystemType();
@@ -583,8 +590,16 @@ function updatePlot() {
         defuzzValue = 0;
     }
 
-    document.getElementById("score_display").textContent =
-        'Crisp Score: ' + defuzzValue.toFixed(2);
+    const scoreEl = document.getElementById("score_display");
+
+    scoreEl.textContent = 'Crisp Score: ' + defuzzValue.toFixed(2);
+
+    // 🎨 apply color
+    const color = getScoreColor(defuzzValue);
+    scoreEl.style.backgroundColor = color;
+
+    // optional: improve readability
+    scoreEl.style.color = (defuzzValue > 50) ? "black" : "white";
 
 }
 
