@@ -306,7 +306,7 @@ function computeScore(perf, energy, metric, cpuFactor, cores, time_low, time_med
         for (let j = 0; j < energyMembership.length; j++) {
             const ruleStrength = Math.min(perfMembership[i], energyMembership[j]);
             for (let k = 0; k < scoreMembership.length; k++) {
-                scoreMembership[k] = Math.max(scoreMembership[k], Math.min(ruleStrength, rules[i * energyMembership.length + j][k]));
+                scoreMembership[k] = Math.max(scoreMembership[k], Math.min(ruleStrength, rules[j * energyMembership.length + i][k]));
             }
         }
     }
