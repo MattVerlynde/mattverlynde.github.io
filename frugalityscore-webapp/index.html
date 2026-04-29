@@ -199,11 +199,10 @@ function generateTraceMembershipEnergy(energy_value, cpuFactor, cores, time_low,
     const energy_medium = power * time_medium;
     const energy_high = power * time_high;
 
-    // const step = power * 0.5;
-    const step = Math.max(power * 0.5, 0.1);
+    const step = power * 0.5;
 
     let maxValue;
-    if (energy_value > power * 100) {maxValue = power * 100} else {maxValue = energy_value};
+    if (energy_value < power * 100) {maxValue = power * 100} else {maxValue = energy_value};
 
     for (let energy = 0; energy <= maxValue; energy += step) {
         x.push(energy);
