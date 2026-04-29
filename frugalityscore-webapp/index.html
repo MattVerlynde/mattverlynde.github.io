@@ -190,7 +190,7 @@ function computeMembership(metric, x) {
     return results;
 }
 
-function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, time_high, metric) {
+function generateTraceMembershipEnergy(energy_value, cpuFactor, cores, time_low, time_medium, time_high, metric) {
     let x = [];
     let ys = [[], [], []]; // low, medium, high
 
@@ -201,14 +201,17 @@ function generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, 
 
     const step = power * 0.5;
 
-    for (let energy = 0; energy <= power * 100; energy += step) {
+    let maxValue;
+    if (energy_value > power * 100) {maxValue = power * 100} else {maxValue = energy_value};
+
+    for (let energy = 0; energy <= maxValue; energy += step) {
         x.push(energy);
 
         let results = [];
 
         results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
         results.push(trimf(energy, [energy_low, energy_medium, energy_high]));
-        results.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
+        results.push(trapmf(energy, [energy_medium, energy_high, maxValue, maxValue]));
         ys[0].push(results[0]);
         ys[1].push(results[1]);
         ys[2].push(results[2]);
@@ -500,7 +503,7 @@ function updatePlot() {
 
     // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
-    let trace_membership_energy = generateTraceMembershipEnergy(cpuFactor, cores, time_low, time_medium, time_high, metric);
+    let trace_membership_energy = generateTraceMembershipEnergy(energy, cpuFactor, cores, time_low, time_medium, time_high, metric);
 
     let trace_membership_score = generateTraceMembershipScore();
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
