@@ -29,7 +29,7 @@
         <!-- CPU -->
        <div class="control">
             <label for="cpu-select">CPU Model</label>
-            <select id="cpu-select"></select>
+            <select id="cpu-select"></select><input type="number" id="cpu-power" min="0" value="0">W
         </div>
 
         <!-- Number of cores -->
@@ -312,7 +312,7 @@ function computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, ti
     memberships.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
 
     return memberships;
-}   
+}
 
 function computePerfMembership(metric, perf) {
     const [minVal, maxVal] = performanceData.performance_minmax[metric];
@@ -527,6 +527,13 @@ function updatePlot() {
     const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
 
+    // set cpu-power input value based on cpuFactor and cores
+    const cpuPowerInput = document.getElementById("cpu-power");
+    const cpuPower = cpuFactor * cores;
+    cpuPowerInput.value = cpuPower;
+    // update cpu-power html to show cpu power in W
+    cpuPowerInput.nextSibling.textContent = `W (TDP: ${cpuFactor} W/core × ${cores} cores)`;
+
     const selectGPU = document.getElementById("gpu-select");
     const selectedOptionGPU = selectGPU.options[selectGPU.selectedIndex];
     if (!selectedOptionGPU) return;
@@ -534,7 +541,7 @@ function updatePlot() {
     const gpu = selectedOptionGPU.textContent;
     const gpuFactor = parseFloat(selectedOptionGPU.dataset.TDP_per_core) || 1;
     const ngpu = parseInt(document.getElementById("number-gpu").value) || 0;
-    
+
     const time_low = parseInt(document.getElementById("energy_low").value);
     const time_medium = parseInt(document.getElementById("energy_medium").value);
     const time_high = parseInt(document.getElementById("energy_high").value);
@@ -712,6 +719,7 @@ document.querySelectorAll("input[name=defuzz]").forEach(rb => {
 });
 
 document.getElementById("cpu-select").addEventListener("change", updatePlot);
+document.getElementById("cpu-power").addEventListener("input", updatePlot);
 document.getElementById("cores").addEventListener("input", updatePlot);
 document.getElementById("gpu-select").addEventListener("change", updatePlot);
 document.getElementById("number-gpu").addEventListener("input", updatePlot);
