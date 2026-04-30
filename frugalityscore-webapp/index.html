@@ -561,7 +561,7 @@ function updatePlot() {
     // const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
     // const cores = parseInt(document.getElementById("cores").value) || 1;
 
-    const cpuFactor = parseFloat(document.getElementById("cpu-power")) || 1;
+    const cpuFactor = parseInt(document.getElementById("cpu-power")) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
 
     // // set cpu-power input value based on cpuFactor and cores
@@ -579,7 +579,7 @@ function updatePlot() {
     // const gpuFactor = parseFloat(selectedOptionGPU.dataset.TDP_per_core) || 1;
     // const ngpu = parseInt(document.getElementById("number-gpu").value) || 0;
 
-    const gpuFactor = parseFloat(document.getElementById("gpu-power")) || 1;
+    const gpuFactor = parseInt(document.getElementById("gpu-power")) || 1;
     const ngpu = parseInt(document.getElementById("number-gpu").value) || 0;
 
     const time_low = parseInt(document.getElementById("energy_low").value);
@@ -763,7 +763,7 @@ document.getElementById("cpu-power").addEventListener("input", updatePlot);
 document.getElementById("cores").addEventListener("input", updatePlot);
 
 document.getElementById("gpu-select").addEventListener("change", updateGPUPower);
-document.getElementById("gpu-power").addEventListener("change", updatePlot);
+document.getElementById("gpu-power").addEventListener("input", updatePlot);
 document.getElementById("number-gpu").addEventListener("input", updatePlot);
 
 document.getElementById("metric").addEventListener("change", updatePlot);
