@@ -525,11 +525,8 @@ function updateCPUPower() {
     if (!selectedOptionCPU) return;
 
     const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
-    const cores = parseInt(document.getElementById("cores").value) || 1;
-
     const cpuPowerInput = document.getElementById("cpu-power");
-    const cpuPower = cpuFactor * cores;
-    cpuPowerInput.value = cpuPower;
+    cpuPowerInput.value = cpuFactor;
     cpuPowerInput.nextSibling.textContent = "W";
 
     updatePlot()
@@ -541,11 +538,8 @@ function updateGPUPower() {
     if (!selectedOptionGPU) return;
 
     const gpuFactor = parseFloat(selectedOptionGPU.dataset.TDP_per_core) || 1;
-    const ngpu = parseInt(document.getElementById("number-gpu").value) || 1;
-
     const gpuPowerInput = document.getElementById("gpu-power");
-    const gpuPower = gpuFactor * ngpu;
-    gpuPowerInput.value = gpuPower;
+    gpuPowerInput.value = gpuFactor;
     gpuPowerInput.nextSibling.textContent = "W";
 
     updatePlot()
