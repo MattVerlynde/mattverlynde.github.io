@@ -511,6 +511,22 @@ function getScoreColor(score) {
     return `hsl(${hue}, 70%, 50%)`;
 }
 
+function updateCPUPower() {
+    const selectCPU = document.getElementById("cpu-select");
+    const selectedOptionCPU = selectCPU.options[selectCPU.selectedIndex];
+    if (!selectedOptionCPU) return;
+
+    const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
+    const cores = parseInt(document.getElementById("cores").value) || 1;
+
+    const cpuPowerInput = document.getElementById("cpu-power");
+    const cpuPower = cpuFactor * cores;
+    cpuPowerInput.value = cpuPower;
+    cpuPowerInput.nextSibling.textContent = "W";
+
+    updatePlot()
+}
+
 function updatePlot() {
     // const systems = getSelectedSystems();
     const systemType = getSelectedSystemType();
@@ -519,20 +535,23 @@ function updatePlot() {
     if (!performanceData.performance_minmax) return;
     const [minVal, maxVal] = performanceData.performance_minmax[metric];
 
-    const selectCPU = document.getElementById("cpu-select");
-    const selectedOptionCPU = selectCPU.options[selectCPU.selectedIndex];
-    if (!selectedOptionCPU) return;
+    // const selectCPU = document.getElementById("cpu-select");
+    // const selectedOptionCPU = selectCPU.options[selectCPU.selectedIndex];
+    // if (!selectedOptionCPU) return;
 
-    const cpu = selectedOptionCPU.textContent;
-    const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
+    // const cpu = selectedOptionCPU.textContent;
+    // const cpuFactor = parseFloat(selectedOptionCPU.dataset.TDP_per_core) || 1;
+    // const cores = parseInt(document.getElementById("cores").value) || 1;
+
+    const cpuFactor = parseFloat(document.getElementById("cpu-power")) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
 
-    // set cpu-power input value based on cpuFactor and cores
-    const cpuPowerInput = document.getElementById("cpu-power");
-    const cpuPower = cpuFactor * cores;
-    cpuPowerInput.value = cpuPower;
-    // update cpu-power html to show cpu power in W
-    cpuPowerInput.nextSibling.textContent = `W (TDP: ${cpuFactor} W/core × ${cores} cores)`;
+    // // set cpu-power input value based on cpuFactor and cores
+    // const cpuPowerInput = document.getElementById("cpu-power");
+    // const cpuPower = cpuFactor * cores;
+    // cpuPowerInput.value = cpuPower;
+    // // update cpu-power html to show cpu power in W
+    // cpuPowerInput.nextSibling.textContent = "W";
 
     const selectGPU = document.getElementById("gpu-select");
     const selectedOptionGPU = selectGPU.options[selectGPU.selectedIndex];
@@ -718,11 +737,13 @@ document.querySelectorAll("input[name=defuzz]").forEach(rb => {
     rb.addEventListener("change", updatePlot);
 });
 
-document.getElementById("cpu-select").addEventListener("change", updatePlot);
+document.getElementById("cpu-select").addEventListener("change", updateCPUPower);
 document.getElementById("cpu-power").addEventListener("input", updatePlot);
 document.getElementById("cores").addEventListener("input", updatePlot);
+
 document.getElementById("gpu-select").addEventListener("change", updatePlot);
 document.getElementById("number-gpu").addEventListener("input", updatePlot);
+
 document.getElementById("metric").addEventListener("change", updatePlot);
 document.getElementById("perf").addEventListener("input", updatePlot);
 document.getElementById("energy").addEventListener("input", updatePlot);
