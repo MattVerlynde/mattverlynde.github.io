@@ -724,6 +724,7 @@ document.getElementById("input-file").addEventListener("change", updatePlot);
 // Initial plot
 Promise.all([
     loadCPUs(),
+    loadGPUs(),
     loadPerformanceData()
 ]).then(() => updatePlot());
 </script>
