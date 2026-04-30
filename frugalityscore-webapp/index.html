@@ -174,7 +174,7 @@ async function loadGPUs() {
     const selectGPU = document.getElementById("gpu-select");
     const option = document.createElement("option");
 
-    selectCPU.appendChild(option);
+    selectGPU.appendChild(option);
     option.value = 'DEFAULT';
     option.textContent = "DEFAULT";
     option.dataset.TDP_per_core = 6; // default TDP per core
