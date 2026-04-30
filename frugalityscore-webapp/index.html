@@ -300,8 +300,8 @@ function generateTraceMembership(minVal, maxVal, metric) {
     }));
 }
 
-function computeEnergyMembership(cpuFactor, cores, time_low, time_medium, time_high, energy) {
-    const power = cpuFactor * cores;
+function computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, energy) {
+    const power = cpuFactor * cores + gpuFactor * ngpu;
     const energy_low = power * time_low;
     const energy_medium = power * time_medium;
     const energy_high = power * time_high;
@@ -319,9 +319,9 @@ function computePerfMembership(metric, perf) {
     return computeMembership(metric, perf);
 }
 
-function computeScore(perf, energy, metric, cpuFactor, cores, time_low, time_medium, time_high) {
+function computeScore(perf, energy, metric, cpuFactor, cores, gpuFactor, ngpu,  time_low, time_medium, time_high) {
     const perfMembership = computePerfMembership(metric, perf);
-    const energyMembership = computeEnergyMembership(cpuFactor, cores, time_low, time_medium, time_high, energy);
+    const energyMembership = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, energy);
 
     // Example: score has 5 triangular memberships functions: very low, low, medium, high, very high
     // Association rules are defined as follows:
@@ -554,7 +554,7 @@ function updatePlot() {
         reader.readAsText(file);
     }
 
-    const scoreMembership = computeScore(safePerf, safeEnergy, metric, cpuFactor, cores, time_low, time_medium, time_high);
+    const scoreMembership = computeScore(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
 
     // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
