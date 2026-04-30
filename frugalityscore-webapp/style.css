@@ -20,6 +20,16 @@ body {
   margin-top: 0;
 }
 
+.control-inline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.control-inline select {
+    flex: 1;
+}
+
 .control {
   margin-bottom: 25px;
   width: 100%;
