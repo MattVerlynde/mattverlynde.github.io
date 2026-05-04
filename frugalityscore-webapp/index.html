@@ -734,29 +734,26 @@ function getSelectedDefuzzType() {
 // });
 
 function readUploadFile(evt) {
-    var f = evt.target.files[0]; 
-    if (f) {
-      var r = new FileReader();
-      r.onload = function(e) { 
-          var contents = e.target.result;
-          const lines = contents.split(/\r?\n/);
-          const header = lines[0].split(',').map(h => h.trim());
-          const data = lines.slice(1).map(line => {
-              const values = line.split(',').map(v => v.trim());
-                let obj = {};
-                header.forEach((h, i) => {
-                    obj[h] = values[i];
-                });
-                return obj;
-          });
-          console.log("Parsed CSV data:", data);
-          const scoreEl = document.getElementById("score_display");
-          scoreEl.textContent = `Loaded ${data.length} rows from CSV: ` + JSON.stringify(data[0]);
+    const file = evt.target.files[0];
+    if (!file) return;
 
-      }
-    } else { 
-      alert("Failed to load file");
-    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const text = e.target.result;
+        // Assuming CSV with headers: perf,energy
+        const lines = text.split(/\r?\n/);
+        if (lines.length < 2) return;
+        const headers = lines[0].split(',');
+        const perfIdx = headers.indexOf("perf");
+        const energyIdx = headers.indexOf("energy");
+        if (perfIdx === -1 || energyIdx === -1) return;
+        const lastLine = lines[lines.length - 1].split(',');
+        const perf = parseFloat(lastLine[perfIdx]) || 0;
+        const energy = parseFloat(lastLine[energyIdx]) || 0;
+        document.getElementById("perf").value = perf;
+        document.getElementById("energy").value = energy;
+        updatePlot();
+    }.readAsText(file);
 }
 
 document.getElementById('input-file').addEventListener('change', readUploadFile);
