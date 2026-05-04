@@ -750,6 +750,9 @@ function readUploadFile(evt) {
                 return obj;
           });
           console.log("Parsed CSV data:", data);
+          const scoreEl = document.getElementById("score_display");
+          scoreEl.textContent = `Loaded ${data.length} rows from CSV: ` + JSON.stringify(data[0]);
+
       }
     } else { 
       alert("Failed to load file");
