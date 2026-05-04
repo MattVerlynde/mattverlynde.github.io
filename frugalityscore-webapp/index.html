@@ -733,6 +733,31 @@ function getSelectedDefuzzType() {
 //     updatePlot();
 // });
 
+function readUploadFile(evt) {
+    var f = evt.target.files[0]; 
+    if (f) {
+      var r = new FileReader();
+      r.onload = function(e) { 
+          var contents = e.target.result;
+          const lines = contents.split(/\r?\n/);
+          const header = lines[0].split(',').map(h => h.trim());
+          const data = lines.slice(1).map(line => {
+              const values = line.split(',').map(v => v.trim());
+                let obj = {};
+                header.forEach((h, i) => {
+                    obj[h] = values[i];
+                });
+                return obj;
+          });
+          console.log("Parsed CSV data:", data);
+      }
+    } else { 
+      alert("Failed to load file");
+    }
+}
+
+document.getElementById('input-file').addEventListener('change', readUploadFile);
+
 // Update energy slider labels
 document.getElementById("energy_low").addEventListener("input", function() {
     document.getElementById("energyValueLow").textContent = this.value;
