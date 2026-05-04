@@ -591,15 +591,15 @@ function updatePlot() {
     const energy = parseFloat(document.getElementById("energy").value) || 0;
     const safeEnergy = Math.max(0, energy);
 
-    const inputFile = document.getElementById("input-file");
-    if (inputFile.files.length > 0) {
-        const file = inputFile.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const text = e.target.result;
-        }
-        reader.readAsText(file);
-    }
+    // const inputFile = document.getElementById("input-file");
+    // if (inputFile.files.length > 0) {
+    //     const file = inputFile.files[0];
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //         const text = e.target.result;
+    //     }
+    //     reader.readAsText(file);
+    // }
 
     const scoreMembership = computeScore(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
 
@@ -739,11 +739,11 @@ function readUploadFile(evt) {
 
     const reader = new FileReader();
     reader.onload = function(e) {
-        const text = e.target.result;
+        const text = e.target.result.trim();
         // Assuming CSV with headers: perf,energy
         const lines = text.split(/\r?\n/);
         if (lines.length < 2) return;
-        const headers = lines[0].split(',');
+        const headers = lines[0].split(',').map(h => h.trim());
         const perfIdx = headers.indexOf("perf");
         const energyIdx = headers.indexOf("energy");
         if (perfIdx === -1 || energyIdx === -1) return;
@@ -753,7 +753,8 @@ function readUploadFile(evt) {
         document.getElementById("perf").value = perf;
         document.getElementById("energy").value = energy;
         updatePlot();
-    }.readAsText(file);
+    };
+    reader.readAsText(file);
 }
 
 document.getElementById('input-file').addEventListener('change', readUploadFile);
@@ -795,7 +796,7 @@ document.getElementById("metric").addEventListener("change", updatePlot);
 document.getElementById("perf").addEventListener("input", updatePlot);
 document.getElementById("energy").addEventListener("input", updatePlot);
 
-document.getElementById("input-file").addEventListener("change", updatePlot);
+// document.getElementById("input-file").addEventListener("change", updatePlot);
 
 // Initial plot
 Promise.all([
