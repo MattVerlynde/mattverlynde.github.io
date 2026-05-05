@@ -719,7 +719,11 @@ function updatePlot() {
         shapes: [
             {
                 type: 'line',
-                color: 'red',
+                line: {
+                    color: getScoreColor(defuzzValue),
+                    dash: 'dash',
+                    width: 2
+                },
                 x0: defuzzValue,
                 x1: defuzzValue,
                 y0: 0,
@@ -735,6 +739,9 @@ function updatePlot() {
                 x: defuzzValue,
                 y: 1,
                 text: defuzzValue.toFixed(2),
+                font: {
+                    color: getScoreColor(defuzzValue)
+                },
                 showarrow: false,
                 yanchor: "bottom"
             }
