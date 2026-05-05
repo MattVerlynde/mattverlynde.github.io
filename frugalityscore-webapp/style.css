@@ -60,7 +60,7 @@ label {
 /* Input in three columns */
 .input-summary {
   display: flex;
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 .input-summary > div {
