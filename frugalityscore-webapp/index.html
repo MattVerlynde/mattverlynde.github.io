@@ -194,6 +194,24 @@ async function loadGPUs() {
     });
 }
 
+function smf(x, [a, b]) {
+    if (a === b && x === a) return 1;
+
+    if (x <= a) return 0;
+    if (x >= b) return 1;
+
+    return (b === a) ? 1 : (x - a) / (b - a);
+}
+
+function zmf(x, [a, b]) {
+    if (a === b && x === a) return 1;
+
+    if (x <= a) return 1;
+    if (x >= b) return 0;
+
+    return (b === a) ? 1 : 1 - (x - a) / (b - a);
+}
+
 function trimf(x, [a, b, c]) {
     if (a === b && x === a) return 1;
     if (b === c && x === c) return 1;
@@ -254,9 +272,11 @@ function generateTraceMembershipEnergy(energy_value, cpuFactor, cores, gpuFactor
 
         let results = [];
 
-        results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
+        // results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
+        results.push(smf(energy, [energy_low, energy_medium]));
         results.push(trimf(energy, [energy_low, energy_medium, energy_high]));
-        results.push(trapmf(energy, [energy_medium, energy_high, maxValue, maxValue]));
+        // results.push(trapmf(energy, [energy_medium, energy_high, maxValue, maxValue]));
+        results.push(zmf(energy, [energy_medium, energy_high]));
         ys[0].push(results[0]);
         ys[1].push(results[1]);
         ys[2].push(results[2]);
@@ -315,9 +335,11 @@ function computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, ti
     const energy_high = power * time_high;
 
     let memberships = [];
-    memberships.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
+    // memberships.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
+    memberships.push(smf(energy, [energy_low, energy_medium]));
     memberships.push(trimf(energy, [energy_low, energy_medium, energy_high]));
-    memberships.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
+    // memberships.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
+    memberships.push(zmf(energy, [energy_medium, energy_high]));
 
     return memberships;
 }
