@@ -62,17 +62,17 @@
         <div class="control">
             <label>
             <input type="range" id="energy_low" min="0" max="100" value="10">
-            <span id="energyValueLow">10</span> Low</label><input type="number" id="energyValueLow-input" min="0" value="10">W
+            </label><input type="number" id="energyValueLow" min="0" value="10">s (Low)
         </div>
         <div class="control">
             <label>
             <input type="range" id="energy_medium" min="0" max="100" value="50">
-            <span id="energyValueMedium">50</span> Medium</label><input type="number" id="energyValueMedium-input" min="0" value="50">W
+            </label><input type="number" id="energyValueMedium" min="0" value="50">s (Medium)
         </div>
         <div class="control">
             <label>
             <input type="range" id="energy_high" min="0" max="100" value="90">
-            <span id="energyValueHigh">90</span> High</label><input type="number" id="energyValueHigh-input" min="0" value="90">W
+            </label><input type="number" id="energyValueHigh" min="0" value="90">s (High)
         </div>
 
     </div>
@@ -783,39 +783,33 @@ document.getElementById('input-file').addEventListener('change', readUploadFile)
 
 // Update energy slider labels
 document.getElementById("energy_low").addEventListener("input", function() {
-    document.getElementById("energyValueLow").textContent = this.value;
-    document.getElementById("energyValueLow-input").value = this.value;
+    document.getElementById("energyValueLow").value = this.value;
     updatePlot();
 });
 document.getElementById("energy_medium").addEventListener("input", function() {
-    document.getElementById("energyValueMedium").textContent = this.value;
-    document.getElementById("energyValueMedium-input").value = this.value;
+    document.getElementById("energyValueMedium").value = this.value;
     updatePlot();
 });
 document.getElementById("energy_high").addEventListener("input", function() {
-    document.getElementById("energyValueHigh").textContent = this.value;
-    document.getElementById("energyValueHigh-input").value = this.value;
+    document.getElementById("energyValueHigh").value = this.value;
     updatePlot();
 });
 
-document.getElementById("energyValueLow-input").addEventListener("input", function() {
-    document.getElementById("energyValueLow").textContent = this.value;
+document.getElementById("energyValueLow").addEventListener("input", function() {
     if (this.value > parseInt(document.getElementById("energy_low").max)) {
         document.getElementById("energy_low").max = this.value*1.5;
     }
     document.getElementById("energy_low").value = this.value;
     updatePlot();
 });
-document.getElementById("energyValueMedium-input").addEventListener("input", function() {
-    document.getElementById("energyValueMedium").textContent = this.value;
+document.getElementById("energyValueMedium").addEventListener("input", function() {
     if (this.value > parseInt(document.getElementById("energy_medium").max)) {
         document.getElementById("energy_medium").max = this.value*1.5;
     }
     document.getElementById("energy_medium").value = this.value;
     updatePlot();
 });
-document.getElementById("energyValueHigh-input").addEventListener("input", function() {
-    document.getElementById("energyValueHigh").textContent = this.value;
+document.getElementById("energyValueHigh").addEventListener("input", function() {
     if (this.value > parseInt(document.getElementById("energy_high").max)) {
         document.getElementById("energy_high").max = this.value*1.5;
     }
