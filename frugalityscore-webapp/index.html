@@ -273,10 +273,10 @@ function generateTraceMembershipEnergy(energy_value, cpuFactor, cores, gpuFactor
         let results = [];
 
         // results.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
-        results.push(smf(energy, [energy_low, energy_medium]));
+        results.push(zmf(energy, [energy_low, energy_medium]));
         results.push(trimf(energy, [energy_low, energy_medium, energy_high]));
         // results.push(trapmf(energy, [energy_medium, energy_high, maxValue, maxValue]));
-        results.push(zmf(energy, [energy_medium, energy_high]));
+        results.push(smf(energy, [energy_medium, energy_high]));
         ys[0].push(results[0]);
         ys[1].push(results[1]);
         ys[2].push(results[2]);
@@ -336,10 +336,10 @@ function computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, ti
 
     let memberships = [];
     // memberships.push(trapmf(energy, [0, 0, energy_low, energy_medium]));
-    memberships.push(smf(energy, [energy_low, energy_medium]));
+    memberships.push(zmf(energy, [energy_low, energy_medium]));
     memberships.push(trimf(energy, [energy_low, energy_medium, energy_high]));
     // memberships.push(trapmf(energy, [energy_medium, energy_high, power * 100, power * 100]));
-    memberships.push(zmf(energy, [energy_medium, energy_high]));
+    memberships.push(smf(energy, [energy_medium, energy_high]));
 
     return memberships;
 }
