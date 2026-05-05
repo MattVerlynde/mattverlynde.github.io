@@ -632,6 +632,24 @@ function updatePlot() {
     let trace_membership_score = generateTraceMembershipScore();
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
 
+    const x_vals = trace_membership_agg.x;
+    const y_vals = trace_membership_agg.y;
+    const defuzz = getSelectedDefuzzType();
+    let defuzzValue;
+    if (defuzz === "centroid") {
+        defuzzValue = centroid(x_vals, y_vals);
+    } else if (defuzz === "bisector") {
+        defuzzValue = bisector(x_vals, y_vals);
+    } else if (defuzz === "som") {
+        defuzzValue = som(x_vals, y_vals);
+    } else if (defuzz === "mom") {
+        defuzzValue = mom(x_vals, y_vals);
+    } else if (defuzz === "lom") {
+        defuzzValue = lom(x_vals, y_vals);
+    } else {
+        defuzzValue = 0;
+    }
+
     // const layout_plot = {
     //     title: `Performance over Time (${cpu})`,
     //     xaxis: { title: "Time (s)" },
@@ -695,29 +713,39 @@ function updatePlot() {
         yaxis: { title: "Membership value", range: [0, 1] },
     };
 
+    const layout_membership_score_annoted = {
+        xaxis: { title: "Score" },
+        yaxis: { title: "Membership value", range: [0, 1] },
+        shapes: [
+            {
+                type: 'line',
+                color: 'red',
+                x0: defuzzValue,
+                x1: defuzzValue,
+                y0: 0,
+                y1: 1,
+                line: {
+                    dash: 'dash',
+                    width: 2
+                }
+            }
+        ],
+        annotations: [
+            {
+                x: defuzzValue,
+                y: 1,
+                text: defuzzValue.toFixed(2),
+                showarrow: false,
+                yanchor: "bottom"
+            }
+        ]
+    };
+
     // Plotly.newPlot('plot', traces, layout_plot);
     Plotly.newPlot('plot_membership', traces_membership, layout_membership);
     Plotly.newPlot('plot_membership_energy', trace_membership_energy, layout_membership_energy);
     Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
-    Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score);
-
-    const x_vals = trace_membership_agg.x;
-    const y_vals = trace_membership_agg.y;
-    const defuzz = getSelectedDefuzzType();
-    let defuzzValue;
-    if (defuzz === "centroid") {
-        defuzzValue = centroid(x_vals, y_vals);
-    } else if (defuzz === "bisector") {
-        defuzzValue = bisector(x_vals, y_vals);
-    } else if (defuzz === "som") {
-        defuzzValue = som(x_vals, y_vals);
-    } else if (defuzz === "mom") {
-        defuzzValue = mom(x_vals, y_vals);
-    } else if (defuzz === "lom") {
-        defuzzValue = lom(x_vals, y_vals);
-    } else {
-        defuzzValue = 0;
-    }
+    Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score_annoted);
 
     const scoreEl = document.getElementById("score_display");
 
