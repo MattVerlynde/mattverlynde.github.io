@@ -812,14 +812,26 @@ document.getElementById('input-file').addEventListener('change', readUploadFile)
 // Update energy slider labels
 document.getElementById("energy_low").addEventListener("input", function() {
     document.getElementById("energyValueLow").value = this.value;
+    if (this.value > parseInt(document.getElementById("energy_medium").value)) {
+        document.getElementById("energy_medium").value = this.value;
+    }
     updatePlot();
 });
 document.getElementById("energy_medium").addEventListener("input", function() {
     document.getElementById("energyValueMedium").value = this.value;
+    if (this.value > parseInt(document.getElementById("energy_high").value)) {
+        document.getElementById("energy_high").value = this.value;
+    }
+    if (this.value < parseInt(document.getElementById("energy_low").value)) {
+        document.getElementById("energy_low").value = this.value;
+    }
     updatePlot();
 });
 document.getElementById("energy_high").addEventListener("input", function() {
     document.getElementById("energyValueHigh").value = this.value;
+    if (this.value < parseInt(document.getElementById("energy_medium").value)) {
+        document.getElementById("energy_medium").value = this.value;
+    }
     updatePlot();
 });
 
