@@ -817,9 +817,7 @@ function readUploadFile(evt) {
 function updateSliderLow(time) {
     document.getElementById("energy_low").value = time;
     document.getElementById("energyValueLow").value = time;
-    if (time >= parseInt(document.getElementById("energy_low").max)) {
-        document.getElementById("energy_low").max = time * 1.5;
-    }
+    document.getElementById("energy_low").max = document.getElementById("energy_high").max;
     if (time > parseInt(document.getElementById("energy_medium").value)) {
         updateSliderMedium(time);
     }
@@ -829,9 +827,7 @@ function updateSliderLow(time) {
 function updateSliderMedium(time) {
     document.getElementById("energy_medium").value = time;
     document.getElementById("energyValueMedium").value = time;
-    if (time >= parseInt(document.getElementById("energy_medium").max)) {
-        document.getElementById("energy_medium").max = time * 1.5;
-    }
+    document.getElementById("energy_medium").max = document.getElementById("energy_high").max;
     if (time > parseInt(document.getElementById("energy_high").value)) {
         updateSliderHigh(time);
     }
@@ -845,7 +841,7 @@ function updateSliderHigh(time) {
     document.getElementById("energy_high").value = time;
     document.getElementById("energyValueHigh").value = time;
     if (time >= parseInt(document.getElementById("energy_high").max)) {
-        document.getElementById("energy_high").max = time* 1.5;
+        document.getElementById("energy_high").max = time + 1;
     }
     if (time < parseInt(document.getElementById("energy_medium").value)) {
         updateSliderMedium(time);
