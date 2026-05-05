@@ -265,7 +265,7 @@ function generateTraceMembershipEnergy(energy_value, cpuFactor, cores, gpuFactor
     const step = power * 0.5;
 
     let maxValue;
-    if (energy_value < power * 100 && power * 100 < energy_high) {maxValue = power * 100} else if (energy_value < power * 100) {maxValue = energy_high} else {maxValue = energy_value};
+    if (energy_value < power * 100 && power * 100 < energy_high) {maxValue = energy_high} else if (energy_value < power * 100) {maxValue = power * 100} else {maxValue = energy_value};
 
     for (let energy = 0; energy <= maxValue; energy += step) {
         x.push(energy);
