@@ -104,6 +104,7 @@
             </div>
             <div class="output-summary">
                 <div id="score_display" class="score-display"></div>
+                <div id="bar_scores_display" class="plot" style="display:none;"></div>
                 <div id="defuzz_display" class="radio-group">
                     <label>Defuzzification Type</label>
                     <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
@@ -820,7 +821,7 @@ function readUploadFile(evt) {
             yaxis: { title: "Group" },
             title: "Scores by Group"
         };
-        Plotly.newPlot('score_display', [trace_bar_scores], layout_bar_scores);
+        Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
 }
@@ -832,21 +833,21 @@ function generateDisplayScore(perfs, energies, groups) {
         const energy = energies[index];
         const group = groups[index] || "N/A";
         const defuzz = getSelectedDefuzzType();
-        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power")) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power")) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
+        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power")) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
         const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
         const x_vals = trace_aggregated.x;
         const y_vals = trace_aggregated.y;
         let defuzzValue;
         if (defuzz === "centroid") {
-            defuzzValue = computeCentroid(x_vals, y_vals);
+            defuzzValue = centroid(x_vals, y_vals);
         } else if (defuzz === "bisector") {
-            defuzzValue = computeBisector(x_vals, y_vals);
+            defuzzValue = bisector(x_vals, y_vals);
         } else if (defuzz === "som") {
-            defuzzValue = computeSOM(x_vals, y_vals);
+            defuzzValue = som(x_vals, y_vals);
         } else if (defuzz === "mom") {
-            defuzzValue = computeMOM(x_vals, y_vals);
+            defuzzValue = mom(x_vals, y_vals);
         } else if (defuzz === "lom") {
-            defuzzValue = computeLOM(x_vals, y_vals);
+            defuzzValue = lom(x_vals, y_vals);
         } else {
             defuzzValue = 0;
         }
@@ -855,7 +856,8 @@ function generateDisplayScore(perfs, energies, groups) {
     return {
         x: scores,
         y: groups,
-        mode: 'bar',
+        type: 'bar',
+        orientation: 'h',
         name: `System ${system}`
     };
 }
