@@ -803,6 +803,7 @@ function readUploadFile(evt) {
         const headers = lines[0].split(',').map(h => h.trim());
         const perfIdx = headers.indexOf("perf");
         const energyIdx = headers.indexOf("energy");
+        const groupIdx = headers.indexOf("group");
         if (perfIdx === -1 || energyIdx === -1) return;
         const lastLine = lines[lines.length - 1].split(',');
         const perf = parseFloat(lastLine[perfIdx]) || 0;
@@ -810,8 +811,53 @@ function readUploadFile(evt) {
         document.getElementById("perf").value = perf;
         document.getElementById("energy").value = energy;
         updatePlot();
+        const perfs = lines.slice(1).map(line => parseFloat(line.split(',')[perfIdx]));
+        const energies = lines.slice(1).map(line => parseFloat(line.split(',')[energyIdx]));
+        const groups = lines.slice(1).map(line => line.split(',')[groupIdx]);
+        const trace_bar_scores = generateDisplayScore(perfs, energies, groups);
+        const layout_bar_scores = {
+            xaxis: { title: "Score" },
+            yaxis: { title: "Group" },
+            title: "Scores by Group"
+        };
+        Plotly.newPlot('score_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
+}
+
+function generateDisplayScore(perfs, energies, groups) {
+    let scores = [];
+    for (let index = 0; index < perfs.length; index++) {
+        const perf = perfs[index];
+        const energy = energies[index];
+        const group = groups[index] || "N/A";
+        const defuzz = getSelectedDefuzzType();
+        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power")) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power")) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
+        const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
+        const x_vals = trace_aggregated.x;
+        const y_vals = trace_aggregated.y;
+        let defuzzValue;
+        if (defuzz === "centroid") {
+            defuzzValue = computeCentroid(x_vals, y_vals);
+        } else if (defuzz === "bisector") {
+            defuzzValue = computeBisector(x_vals, y_vals);
+        } else if (defuzz === "som") {
+            defuzzValue = computeSOM(x_vals, y_vals);
+        } else if (defuzz === "mom") {
+            defuzzValue = computeMOM(x_vals, y_vals);
+        } else if (defuzz === "lom") {
+            defuzzValue = computeLOM(x_vals, y_vals);
+        } else {
+            defuzzValue = 0;
+        }
+        scores.push(defuzzValue);
+    }
+    return {
+        x: scores,
+        y: groups,
+        mode: 'bar',
+        name: `System ${system}`
+    };
 }
 
 function updateSliderLow(time) {
