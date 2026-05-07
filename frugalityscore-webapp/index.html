@@ -833,7 +833,7 @@ function generateDisplayScore(perfs, energies, groups) {
         const energy = energies[index];
         const group = groups[index] || "N/A";
         const defuzz = getSelectedDefuzzType();
-        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power")) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
+        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power").value) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
         const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
         const x_vals = trace_aggregated.x;
         const y_vals = trace_aggregated.y;
