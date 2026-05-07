@@ -350,7 +350,7 @@ function computePerfMembership(metric, perf) {
     return computeMembership(metric, perf);
 }
 
-function computeScore(perf, energy, metric, cpuFactor, cores, gpuFactor, ngpu,  time_low, time_medium, time_high) {
+function computeScoreMembership(perf, energy, metric, cpuFactor, cores, gpuFactor, ngpu,  time_low, time_medium, time_high) {
     const perfMembership = computePerfMembership(metric, perf);
     const energyMembership = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, energy);
 
@@ -457,6 +457,30 @@ function generateTraceMembershipScoreAggregated(scoreMembership) {
         name: "Score aggregated"
     };
 }
+
+function computeScore(perf, energy) {
+    const defuzz = getSelectedDefuzzType();
+    const scoreMembership = computeScoreMembership(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power").value) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
+    const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
+    const x_vals = trace_aggregated.x;
+    const y_vals = trace_aggregated.y;
+    let defuzzValue;
+    if (defuzz === "centroid") {
+        defuzzValue = centroid(x_vals, y_vals);
+    } else if (defuzz === "bisector") {
+        defuzzValue = bisector(x_vals, y_vals);
+    } else if (defuzz === "som") {
+        defuzzValue = som(x_vals, y_vals);
+    } else if (defuzz === "mom") {
+        defuzzValue = mom(x_vals, y_vals);
+    } else if (defuzz === "lom") {
+        defuzzValue = lom(x_vals, y_vals);
+    } else {
+        defuzzValue = 0;
+    }
+    return defuzzValue;
+}
+
 
 function centroid(x, y) {
     let num = 0, den = 0;
@@ -624,7 +648,7 @@ function updatePlot() {
     //     reader.readAsText(file);
     // }
 
-    const scoreMembership = computeScore(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
+    const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
 
     // let traces = systems.map(sys => generateTrace(sys, time, cpuFactor, cores, minVal, maxVal, metric));
     let traces_membership = generateTraceMembership(minVal, maxVal, metric);
@@ -831,26 +855,7 @@ function generateDisplayScore(perfs, energies, groups) {
     for (let index = 0; index < perfs.length; index++) {
         const perf = perfs[index];
         const energy = energies[index];
-        const group = groups[index] || "N/A";
-        const defuzz = getSelectedDefuzzType();
-        const scoreMembership = computeScore(perf, energy, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power").value) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value));
-        const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
-        const x_vals = trace_aggregated.x;
-        const y_vals = trace_aggregated.y;
-        let defuzzValue;
-        if (defuzz === "centroid") {
-            defuzzValue = centroid(x_vals, y_vals);
-        } else if (defuzz === "bisector") {
-            defuzzValue = bisector(x_vals, y_vals);
-        } else if (defuzz === "som") {
-            defuzzValue = som(x_vals, y_vals);
-        } else if (defuzz === "mom") {
-            defuzzValue = mom(x_vals, y_vals);
-        } else if (defuzz === "lom") {
-            defuzzValue = lom(x_vals, y_vals);
-        } else {
-            defuzzValue = 0;
-        }
+        const defuzzValue = computeScore(perf, energy);
         scores.push(defuzzValue);
     }
     return {
