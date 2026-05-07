@@ -848,6 +848,7 @@ function readUploadFile(evt) {
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
+    document.getElementById("bar_scores_display").style.display = "block";
 }
 
 function generateDisplayScore(perfs, energies, groups) {
