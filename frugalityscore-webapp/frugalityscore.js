@@ -748,8 +748,8 @@ function readUploadFile(evt) {
         const groups = lines.slice(1).map(line => line.split(',')[groupIdx]);
         const trace_bar_scores = generateDisplayScore(perfs, energies, groups);
         const layout_bar_scores = {
-            xaxis: { title: "Score" },
-            yaxis: { title: "Group" },
+            xaxis: { title: "Group" },
+            yaxis: { title: "Score", range: [0, 100] },
             title: "Scores by Group"
         };
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
@@ -769,7 +769,9 @@ function generateDisplayScore(perfs, energies, groups) {
         x: scores,
         y: groups,
         type: 'bar',
-        orientation: 'h'
+        marker: {
+            color: scores.map(s => getScoreColor(s))
+        },
     };
 }
 
