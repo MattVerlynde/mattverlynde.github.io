@@ -724,7 +724,7 @@ function getSelectedDefuzzType() {
 function readUploadFile(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    document.getElementById("bar_scores_display").style.display = "block";
+    // document.getElementById("bar_scores_display").style.display = "block";
 
     const reader = new FileReader();
     reader.onload = function(e) {
@@ -752,7 +752,8 @@ function readUploadFile(evt) {
             yaxis: { title: "Score", range: [0, 100] },
             title: "Scores by Group"
         };
-        Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
+        // Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
+        Plotly.newPlot('score_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
 }
