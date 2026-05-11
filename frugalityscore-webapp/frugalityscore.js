@@ -261,8 +261,8 @@ function computeScoreMembership(perf, energy, metric, cpuFactor, cores, gpuFacto
     for (let i = 0; i < perfMembership.length; i++) {
         for (let j = 0; j < energyMembership.length; j++) {
             const ruleStrength = Math.min(perfMembership[i], energyMembership[j]);
-            for (let k = 0; k < scoreMembership.length; k++) {
-                scoreMembership[k] = Math.max(scoreMembership[k], Math.min(ruleStrength, rules[j * energyMembership.length + i][k]));
+            for (let s = 0; s < scoreMembership.length; s++) {
+                scoreMembership[s] = Math.max(scoreMembership[s], Math.min(ruleStrength, rules[j * energyMembership.length + i][s]));
             }
         }
     }
@@ -270,6 +270,89 @@ function computeScoreMembership(perf, energy, metric, cpuFactor, cores, gpuFacto
     return scoreMembership;
 };
 
+function computeScoreMLMembership(perf, energy_train, energy_test, metric, cpuFactor, cores, gpuFactor, ngpu,  time_low_train, time_medium_train, time_high_train, time_low_test, time_medium_test, time_high_test) {
+    const perfMembership = computePerfMembership(metric, perf);
+    const energyTrainMembership = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low_train, time_medium_train, time_high_train, energy_train);
+    const energyTestMembership = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, time_low_test, time_medium_test, time_high_test, energy_test);
+
+    // Example: score has 5 triangular memberships functions: very low, low, medium, high, very high
+    // Association rules are defined as follows:
+    // - If perf is low, energy train is low and energy test is low, then score is medium
+    // - If perf is medium, energy is low and energy test is low, then score is high
+    // - If perf is high, energy is low and energy test is low, then score is very high
+    // - If perf is low, energy is medium and energy test is low, then score is low
+    // - If perf is medium, energy is medium and energy test is low, then score is medium
+    // - If perf is high, energy is medium and energy test is low, then score is high
+    // - If perf is low, energy is high and energy test is low, then score is very low
+    // - If perf is medium, energy is high and energy test is low, then score is low
+    // - If perf is high, energy is high and energy test is low, then score is medium
+
+    // - If perf is low, energy train is low and energy test is medium, then score is low
+    // - If perf is medium, energy is low and energy test is medium, then score is medium
+    // - If perf is high, energy is low and energy test is medium, then score is high
+    // - If perf is low, energy is medium and energy test is medium, then score is very low
+    // - If perf is medium, energy is medium and energy test is medium, then score is low
+    // - If perf is high, energy is medium and energy test is medium, then score is medium
+    // - If perf is low, energy is high and energy test is medium, then score is very low
+    // - If perf is medium, energy is high and energy test is medium, then score is very low
+    // - If perf is high, energy is high and energy test is medium, then score is low
+
+    // - If perf is low, energy train is low and energy test is high, then score is very low
+    // - If perf is medium, energy is low and energy test is high, then score is low
+    // - If perf is high, energy is low and energy test is high, then score is medium
+    // - If perf is low, energy is medium and energy test is high, then score is very low
+    // - If perf is medium, energy is medium and energy test is high, then score is very low
+    // - If perf is high, energy is medium and energy test is high, then score is low
+    // - If perf is low, energy is high and energy test is high, then score is very low
+    // - If perf is medium, energy is high and energy test is high, then score is very low
+    // - If perf is high, energy is high and energy test is high, then score is very low
+
+    const rules = [
+        [0, 0, 1, 0, 0], // low perf, low energy train, low energy test -> medium score
+        [0, 0, 0, 1, 0], // medium perf, low energy train, low energy test -> high score
+        [0, 0, 0, 0, 1], // high perf, low energy train, low energy test -> very high score
+        [0, 1, 0, 0, 0], // low perf, medium energy train, low energy test -> low score
+        [0, 0, 1, 0, 0], // medium perf, medium energy train, low energy test -> medium score
+        [0, 0, 0, 1, 0], // high perf, medium energy train, low energy test -> high score
+        [1, 0, 0, 0, 0], // low perf, high energy, low energy test -> very low score
+        [0, 1, 0, 0, 0], // medium perf, high energy, low energy test -> low score
+        [0, 0, 1, 0, 0] // high perf, high energy, low energy test -> medium score
+
+        [0, 1, 0, 0, 0], // low perf, low energy train, medium energy test -> medium score
+        [0, 0, 1, 0, 0], // medium perf, low energy train, medium energy test -> high score
+        [0, 0, 0, 1, 0], // high perf, low energy train, medium energy test -> very high score
+        [1, 0, 0, 0, 0], // low perf, medium energy train, medium energy test -> low score
+        [0, 1, 0, 0, 0], // medium perf, medium energy train, medium energy test -> medium score
+        [0, 0, 1, 0, 0], // high perf, medium energy train, medium energy test -> high score
+        [1, 0, 0, 0, 0], // low perf, high energy, medium energy test -> very low score
+        [1, 0, 0, 0, 0], // medium perf, high energy, medium energy test -> low score
+        [0, 1, 0, 0, 0] // high perf, high energy, medium energy test -> medium score
+
+        [1, 0, 0, 0, 0], // low perf, low energy train, high energy test -> medium score
+        [0, 1, 0, 0, 0], // medium perf, low energy train, high energy test -> high score
+        [0, 0, 1, 0, 0], // high perf, low energy train, high energy test -> very high score
+        [1, 0, 0, 0, 0], // low perf, medium energy train, high energy test -> low score
+        [1, 0, 0, 0, 0], // medium perf, medium energy train, high energy test -> medium score
+        [0, 1, 0, 0, 0], // high perf, medium energy train, high energy test -> high score
+        [1, 0, 0, 0, 0], // low perf, high energy, high energy test -> very low score
+        [1, 0, 0, 0, 0], // medium perf, high energy, high energy test -> low score
+        [1, 0, 0, 0, 0] // high perf, high energy, high energy test -> medium score
+    ];
+
+    let scoreMembership = [0, 0, 0, 0, 0]; // very low, low, medium, high, very high
+    for (let i = 0; i < perfMembership.length; i++) {
+        for (let j = 0; j < energyTrainMembership.length; j++) {
+            for (let k = 0; k < energyTestMembership.length; k++) {
+                const ruleStrength = Math.min(perfMembership[i], energyTrainMembership[j], energyTestMembership[k]);
+                for (let s = 0; s < scoreMembership.length; s++) {
+                    scoreMembership[s] = Math.max(scoreMembership[s], Math.min(ruleStrength, rules[(k * perfMembership.length + j) * energyTrainMembership.length + i][s]));
+                }
+            }
+        }
+    }
+
+    return scoreMembership;
+};
 
 
 function generateTraceMembershipScore() {
@@ -433,6 +516,11 @@ function updateGPUPower() {
     updatePlot()
 }
 
+function updatePlotML() {
+    // Implementation for updating ML plot
+}
+
+
 function updatePlot() {
     const systemType = getSelectedSystemType();
 
@@ -459,8 +547,15 @@ function updatePlot() {
 
     let traces_membership = generateTraceMembershipPerformance(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
-
     let trace_membership_score = generateTraceMembershipScore();
+
+    if (systemType === "ML") {
+        const scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low, time_medium, time_high);
+        let trace_membership_energy_test = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
+    } else {
+        const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
+    }
+
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
 
     const x_vals = trace_membership_agg.x;
@@ -585,6 +680,13 @@ function updatePlot() {
     Plotly.newPlot('plot_membership_score', [...trace_membership_score, trace_membership_agg], layout_membership_score);
     Plotly.newPlot('plot_membership_score_agg', [trace_membership_agg], layout_membership_score_annoted);
 
+    if (systemType === "ML") {
+        // Additional plot for ML system
+        Plotly.newPlot('plot_membership_energy_test', trace_membership_energy_test, layout_membership_energy);
+        document.getElementById("plot_membership_energy_test").style.display = "block";
+    } else {
+        document.getElementById("plot_membership_energy_test").style.display = "none";
+    }
     const scoreEl = document.getElementById("score_display");
 
     scoreEl.textContent = 'Score: ' + defuzzValue.toFixed(2);
