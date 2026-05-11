@@ -316,7 +316,7 @@ function computeScoreMLMembership(perf, energy_train, energy_test, metric, cpuFa
         [0, 0, 0, 1, 0], // high perf, medium energy train, low energy test -> high score
         [1, 0, 0, 0, 0], // low perf, high energy, low energy test -> very low score
         [0, 1, 0, 0, 0], // medium perf, high energy, low energy test -> low score
-        [0, 0, 1, 0, 0] // high perf, high energy, low energy test -> medium score
+        [0, 0, 1, 0, 0], // high perf, high energy, low energy test -> medium score
 
         [0, 1, 0, 0, 0], // low perf, low energy train, medium energy test -> medium score
         [0, 0, 1, 0, 0], // medium perf, low energy train, medium energy test -> high score
@@ -326,7 +326,7 @@ function computeScoreMLMembership(perf, energy_train, energy_test, metric, cpuFa
         [0, 0, 1, 0, 0], // high perf, medium energy train, medium energy test -> high score
         [1, 0, 0, 0, 0], // low perf, high energy, medium energy test -> very low score
         [1, 0, 0, 0, 0], // medium perf, high energy, medium energy test -> low score
-        [0, 1, 0, 0, 0] // high perf, high energy, medium energy test -> medium score
+        [0, 1, 0, 0, 0], // high perf, high energy, medium energy test -> medium score
 
         [1, 0, 0, 0, 0], // low perf, low energy train, high energy test -> medium score
         [0, 1, 0, 0, 0], // medium perf, low energy train, high energy test -> high score
@@ -548,12 +548,14 @@ function updatePlot() {
     let traces_membership = generateTraceMembershipPerformance(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
     let trace_membership_score = generateTraceMembershipScore();
-
+    
+    let scoreMembership;
+    let trace_membership_energy_test;
     if (systemType === "ML") {
-        const scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low, time_medium, time_high);
-        let trace_membership_energy_test = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
+        scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low, time_medium, time_high);
+        trace_membership_energy_test = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
     } else {
-        const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
+        scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
     }
 
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
@@ -653,11 +655,7 @@ function updatePlot() {
                 x0: defuzzValue,
                 x1: defuzzValue,
                 y0: 0,
-                y1: 1,
-                line: {
-                    dash: 'dash',
-                    width: 2
-                }
+                y1: 1
             }
         ],
         annotations: [
