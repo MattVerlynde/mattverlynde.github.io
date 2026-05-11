@@ -769,8 +769,7 @@ function generateDisplayScore(perfs, energies, groups) {
         x: scores,
         y: groups,
         type: 'bar',
-        orientation: 'h',
-        name: `System ${system}`
+        orientation: 'h'
     };
 }
 
