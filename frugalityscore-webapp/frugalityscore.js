@@ -766,12 +766,13 @@ function generateDisplayScore(perfs, energies, groups) {
         scores.push(defuzzValue);
     }
     return {
-        x: groups,
-        y: scores,
+        x: scores,
+        y: groups,
         type: 'bar',
         marker: {
             color: scores.map(s => getScoreColor(s))
         },
+        orientation: 'h'
     };
 }
 
