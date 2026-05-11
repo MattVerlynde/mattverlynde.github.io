@@ -35,7 +35,7 @@ async function loadCPUs() {
         if (!line.trim()) return;
         const cols = line.split(',');
         const model = cols[0];
-        const TDP_per_core = parseFloat(cols[2]) || 1; // 3rd column
+        const TDP_per_core = parseFloat(cols[3]) || 1; // 4th column
 
         const option = document.createElement("option");
         option.value = model;
@@ -63,7 +63,7 @@ async function loadGPUs() {
         if (!line.trim()) return;
         const cols = line.split(',');
         const model = cols[0];
-        const TDP_per_core = parseFloat(cols[2]) || 1; // 3rd column
+        const TDP_per_core = parseFloat(cols[3]) || 1; // 4th column
 
         const option = document.createElement("option");
         option.value = model;
