@@ -528,10 +528,10 @@ function updatePlot() {
     if (!performanceData.performance_minmax) return;
     const [minVal, maxVal] = performanceData.performance_minmax[metric];
 
-    const cpuFactor = parseInt(document.getElementById("cpu-power")) || 1;
+    const cpuFactor = parseInt(document.getElementById("cpu-power").value) || 1;
     const cores = parseInt(document.getElementById("cores").value) || 1;
 
-    const gpuFactor = parseInt(document.getElementById("gpu-power")) || 1;
+    const gpuFactor = parseInt(document.getElementById("gpu-power").value) || 1;
     const ngpu = parseInt(document.getElementById("number-gpu").value) || 0;
 
     const time_low = parseInt(document.getElementById("energy_low").value);
@@ -543,7 +543,7 @@ function updatePlot() {
     const energy = parseFloat(document.getElementById("energy").value) || 0;
     const safeEnergy = Math.max(0, energy);
 
-    const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
+    // const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
 
     let traces_membership = generateTraceMembershipPerformance(minVal, maxVal, metric);
     let trace_membership_energy = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
