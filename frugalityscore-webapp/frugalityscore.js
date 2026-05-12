@@ -918,6 +918,7 @@ document.getElementById("number-gpu").addEventListener("input", updatePlot);
 document.getElementById("metric").addEventListener("change", updatePlot);
 document.getElementById("perf").addEventListener("input", updatePlot);
 document.getElementById("energy").addEventListener("input", updatePlot);
+document.getElementById("energy_test").addEventListener("input", updatePlot);
 
 // document.getElementById("input-file").addEventListener("change", updatePlot);
 
