@@ -51,23 +51,26 @@
         </div>
 
         <!-- Energy -->
+        <div id="energy_control">
         <label>Time limits (s)</label>
-        <div class="control" id="energy_low_control">
+        <div class="control">
             <label>
             <input type="range" id="energy_low" min="0" max="100" value="10">
             </label><input type="number" id="energyValueLow" min="0" value="10">s (Low)
         </div>
-        <div class="control" id="energy_medium_control">
+        <div class="control">
             <label>
             <input type="range" id="energy_medium" min="0" max="100" value="50">
             </label><input type="number" id="energyValueMedium" min="0" value="50">s (Medium)
         </div>
-        <div class="control" id="energy_high_control">
+        <div class="control">
             <label>
             <input type="range" id="energy_high" min="0" max="100" value="90">
             </label><input type="number" id="energyValueHigh" min="0" value="90">s (High)
         </div>
+        </div>
         <!-- Energy test-->
+         <div id="energy_control_test" style="display:none;">
         <label>Time limits (s)</label>
         <div class="control" style="display:none;" id="energy_low_control_test">
             <label>
@@ -79,10 +82,11 @@
             <input type="range" id="energy_medium_test" min="0" max="100" value="50">
             </label><input type="number" id="energyValueMedium_test" min="0" value="50">s (Medium)
         </div>
-        <div class="control" style="display:none;" id="energy_high_control_test">
+        <div class="control" id="energy_high_control_test">
             <label>
             <input type="range" id="energy_high_test" min="0" max="100" value="90">
             </label><input type="number" id="energyValueHigh_test" min="0" value="90">s (High)
+        </div>
         </div>
 
     </div>
@@ -102,8 +106,11 @@
                 <div><label>Performance
                 <input type="number" id="perf" value="0" step="0.01"></label>
                 </div>
-                <div><label>Energy Consumption (J)
+                <div id="energy_input"><label>Energy Consumption (J)
                 <input type="number" id="energy" min="0" value="0" step="1"></label>
+                </div>
+                <div id="energy_input_test" style="display:none;"><label>Energy Consumption Test (J)
+                <input type="number" id="energy_test" min="0" value="0" step="1"></label>
                 </div>
                 <div><label>Upload CSV
                 <input type="file" id="input-file" accept=".csv" />

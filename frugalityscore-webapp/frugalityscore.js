@@ -552,10 +552,9 @@ function updatePlot() {
     let scoreMembership;
     let trace_membership_energy_test;
     if (systemType === "ML") {
-        document.getElementById("energy_low_control_test").style.display = "block";
-        document.getElementById("energy_medium_control_test").style.display = "block";
-        document.getElementById("energy_high_control_test").style.display = "block";
-        const energy_test = parseFloat(document.getElementById("energy").value) || 0;
+        document.getElementById("energy_control_test").style.display = "block";
+        document.getElementById("energy_input_test").style.display = "block";
+        const energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
         const safeEnergy_test = Math.max(0, energy_test);
         let time_low_test = parseInt(document.getElementById("energy_low_test").value);
         let time_medium_test = parseInt(document.getElementById("energy_medium_test").value);
@@ -688,13 +687,38 @@ function updatePlot() {
 
     if (systemType === "ML") {
         // Additional plot for ML system
-        Plotly.newPlot('plot_membership_energy_test', trace_membership_energy_test, layout_membership_energy);
+        const layout_membership_energy_test = {
+            xaxis: { title: "Energy (J)" },
+            yaxis: { title: "Membership value", range: [0, 1] },
+            shapes: [
+                {
+                    type: 'line',
+                    x0: safeEnergy_test,
+                    x1: safeEnergy_test,
+                    y0: 0,
+                    y1: 1,
+                    line: {
+                        dash: 'dash',
+                        width: 2
+                    }
+                }
+            ],
+            annotations: [
+                {
+                    x: safeEnergy_test,
+                    y: 1,
+                    text: safeEnergy_test.toFixed(2),
+                    showarrow: false,
+                    yanchor: "bottom"
+                }
+            ]
+        };
+        Plotly.newPlot('plot_membership_energy_test', trace_membership_energy_test, layout_membership_energy_test);
         document.getElementById("plot_membership_energy_test").style.display = "block";
     } else {
         document.getElementById("plot_membership_energy_test").style.display = "none";
-        document.getElementById("energy_low_control_test").style.display = "none";
-        document.getElementById("energy_medium_control_test").style.display = "none";
-        document.getElementById("energy_high_control_test").style.display = "none";
+        document.getElementById("energy_control_test").style.display = "none";
+        document.getElementById("energy_input_test").style.display = "none";
     }
     const scoreEl = document.getElementById("score_display");
 
