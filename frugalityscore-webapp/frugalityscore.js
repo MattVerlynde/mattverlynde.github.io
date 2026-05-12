@@ -542,6 +542,11 @@ function updatePlot() {
     const safePerf = Math.max(minVal, Math.min(maxVal, perf));
     const energy = parseFloat(document.getElementById("energy").value) || 0;
     const safeEnergy = Math.max(0, energy);
+    let energy_test;
+    let safeEnergy_test;
+    let time_low_test;
+    let time_medium_test;
+    let time_high_test;
 
     // const scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
 
@@ -554,11 +559,11 @@ function updatePlot() {
     if (systemType === "ML") {
         document.getElementById("energy_control_test").style.display = "block";
         document.getElementById("energy_input_test").style.display = "block";
-        const energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
-        const safeEnergy_test = Math.max(0, energy_test);
-        let time_low_test = parseInt(document.getElementById("energy_low_test").value);
-        let time_medium_test = parseInt(document.getElementById("energy_medium_test").value);
-        let time_high_test = parseInt(document.getElementById("energy_high_test").value);
+        energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
+        safeEnergy_test = Math.max(0, energy_test);
+        time_low_test = parseInt(document.getElementById("energy_low_test").value);
+        time_medium_test = parseInt(document.getElementById("energy_medium_test").value);
+        time_high_test = parseInt(document.getElementById("energy_high_test").value);
         scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy_test, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low_test, time_medium_test, time_high_test);
         trace_membership_energy_test = generateTraceMembershipEnergy(safeEnergy_test, cpuFactor, cores, gpuFactor, ngpu, time_low_test, time_medium_test, time_high_test, metric);
     } else {
