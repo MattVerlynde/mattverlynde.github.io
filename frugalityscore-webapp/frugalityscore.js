@@ -522,6 +522,8 @@ function updatePlotML() {
 
 
 function updatePlot() {
+    document.getElementById("bar_scores_display").style.display = "none";
+    document.getElementById("scores_display").style.display = "block";
     const systemType = getSelectedSystemType();
 
     const metric = document.getElementById("metric").value;
