@@ -810,8 +810,7 @@ function generateDisplayScore(perfs, energies, groups) {
         type: 'bar',
         marker: {
             color: scores.map(s => getScoreColor(s))
-        },
-        // orientation: 'h'
+        }
     };
 }
 
