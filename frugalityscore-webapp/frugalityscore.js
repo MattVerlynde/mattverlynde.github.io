@@ -522,8 +522,6 @@ function updatePlotML() {
 
 
 function updatePlot() {
-    document.getElementById("bar_scores_display").style.display = "none";
-    document.getElementById("scores_display").style.display = "block";
     const systemType = getSelectedSystemType();
 
     const metric = document.getElementById("metric").value;
@@ -729,6 +727,8 @@ function updatePlot() {
     }
     const scoreEl = document.getElementById("score_display");
 
+    document.getElementById("bar_scores_display").style.display = "none";
+    scoreEl.style.display = "block";
     scoreEl.textContent = 'Score: ' + defuzzValue.toFixed(2);
 
     // 🎨 apply color
