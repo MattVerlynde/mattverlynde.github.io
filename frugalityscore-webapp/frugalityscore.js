@@ -563,7 +563,7 @@ function updatePlot() {
         scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy_test, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low_test, time_medium_test, time_high_test);
         trace_membership_energy_test = generateTraceMembershipEnergy(safeEnergy_test, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
     } else {
-        scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low_test, time_medium_test, time_high_test);
+        scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
     }
 
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
