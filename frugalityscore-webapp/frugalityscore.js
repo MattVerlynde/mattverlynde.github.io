@@ -735,7 +735,6 @@ function updatePlot() {
 
     // optional: improve readability
     scoreEl.style.color = (defuzzValue > 50) ? "black" : "white";
-
 }
 
 function getSelectedSystems() {
@@ -765,7 +764,7 @@ function readUploadFile(evt) {
     const file = evt.target.files[0];
     if (!file) return;
     document.getElementById("bar_scores_display").style.display = "block";
-
+    document.getElementById("scores_display").style.display = "none";
     const reader = new FileReader();
     reader.onload = function(e) {
         const text = e.target.result.trim();
@@ -793,7 +792,6 @@ function readUploadFile(evt) {
             title: "Scores by Group"
         };
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
-        // Plotly.newPlot('score_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
 }
@@ -807,13 +805,13 @@ function generateDisplayScore(perfs, energies, groups) {
         scores.push(defuzzValue);
     }
     return {
-        x: scores,
-        y: groups,
+        x: groups,
+        y: scores,
         type: 'bar',
         marker: {
             color: scores.map(s => getScoreColor(s))
         },
-        orientation: 'h'
+        // orientation: 'h'
     };
 }
 
