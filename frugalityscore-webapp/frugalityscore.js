@@ -552,10 +552,18 @@ function updatePlot() {
     let scoreMembership;
     let trace_membership_energy_test;
     if (systemType === "ML") {
-        scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low, time_medium, time_high);
-        trace_membership_energy_test = generateTraceMembershipEnergy(energy, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
+        document.getElementById("energy_low_control_test").style.display = "block";
+        document.getElementById("energy_medium_control_test").style.display = "block";
+        document.getElementById("energy_high_control_test").style.display = "block";
+        const energy_test = parseFloat(document.getElementById("energy").value) || 0;
+        const safeEnergy_test = Math.max(0, energy_test);
+        let time_low_test = parseInt(document.getElementById("energy_low_test").value);
+        let time_medium_test = parseInt(document.getElementById("energy_medium_test").value);
+        let time_high_test = parseInt(document.getElementById("energy_high_test").value);
+        scoreMembership = computeScoreMLMembership(safePerf, safeEnergy, safeEnergy_test, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, time_low_test, time_medium_test, time_high_test);
+        trace_membership_energy_test = generateTraceMembershipEnergy(safeEnergy_test, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high, metric);
     } else {
-        scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low, time_medium, time_high);
+        scoreMembership = computeScoreMembership(safePerf, safeEnergy, metric, cpuFactor, cores, gpuFactor, ngpu, time_low_test, time_medium_test, time_high_test);
     }
 
     let trace_membership_agg = generateTraceMembershipScoreAggregated(scoreMembership);
@@ -684,6 +692,9 @@ function updatePlot() {
         document.getElementById("plot_membership_energy_test").style.display = "block";
     } else {
         document.getElementById("plot_membership_energy_test").style.display = "none";
+        document.getElementById("energy_low_control_test").style.display = "none";
+        document.getElementById("energy_medium_control_test").style.display = "none";
+        document.getElementById("energy_high_control_test").style.display = "none";
     }
     const scoreEl = document.getElementById("score_display");
 
@@ -777,37 +788,37 @@ function generateDisplayScore(perfs, energies, groups) {
     };
 }
 
-function updateSliderLow(time) {
-    document.getElementById("energy_low").value = time;
-    document.getElementById("energyValueLow").value = time;
-    document.getElementById("energy_low").max = document.getElementById("energy_high").max;
-    if (time > parseInt(document.getElementById("energy_medium").value)) {
-        updateSliderMedium(time);
+function updateSliderLow(time, split = "") {
+    document.getElementById("energy_low" + split).value = time;
+    document.getElementById("energyValueLow" + split).value = time;
+    document.getElementById("energy_low" + split).max = document.getElementById("energy_high" + split).max;
+    if (time > parseInt(document.getElementById("energy_medium" + split).value)) {
+        updateSliderMedium(time, split);
     }
     updatePlot();
 }
 
-function updateSliderMedium(time) {
-    document.getElementById("energy_medium").value = time;
-    document.getElementById("energyValueMedium").value = time;
-    document.getElementById("energy_medium").max = document.getElementById("energy_high").max;
-    if (time > parseInt(document.getElementById("energy_high").value)) {
-        updateSliderHigh(time);
+function updateSliderMedium(time, split = "") {
+    document.getElementById("energy_medium" + split).value = time;
+    document.getElementById("energyValueMedium" + split).value = time;
+    document.getElementById("energy_medium" + split).max = document.getElementById("energy_high" + split).max;
+    if (time > parseInt(document.getElementById("energy_high" + split).value)) {
+        updateSliderHigh(time, split);
     }
-    if (time < parseInt(document.getElementById("energy_low").value)) {
-        updateSliderLow(time);
+    if (time < parseInt(document.getElementById("energy_low" + split).value)) {
+        updateSliderLow(time, split);
     }
     updatePlot();
 }
 
-function updateSliderHigh(time) {
-    document.getElementById("energy_high").value = time;
-    document.getElementById("energyValueHigh").value = time;
-    if (time >= parseInt(document.getElementById("energy_high").max)) {
-        document.getElementById("energy_high").max = time*1.1;
+function updateSliderHigh(time, split = "") {
+    document.getElementById("energy_high" + split).value = time;
+    document.getElementById("energyValueHigh" + split).value = time;
+    if (time >= parseInt(document.getElementById("energy_high" + split).max)) {
+        document.getElementById("energy_high" + split).max = time*1.1;
     }
-    if (time < parseInt(document.getElementById("energy_medium").value)) {
-        updateSliderMedium(time);
+    if (time < parseInt(document.getElementById("energy_medium" + split).value)) {
+        updateSliderMedium(time, split);
     }
     updatePlot();
 }
@@ -833,6 +844,27 @@ document.getElementById("energyValueMedium").addEventListener("input", function(
 });
 document.getElementById("energyValueHigh").addEventListener("input", function() {
     updateSliderHigh(this.value);
+});
+
+// Update energy slider labels test
+document.getElementById("energy_low_test").addEventListener("input", function() {
+    updateSliderLow(this.value, "_test");
+});
+document.getElementById("energy_medium_test").addEventListener("input", function() {
+    updateSliderMedium(this.value, "_test");
+}); 
+document.getElementById("energy_high_test").addEventListener("input", function() {
+    updateSliderHigh(this.value, "_test");
+});
+
+document.getElementById("energyValueLow_test").addEventListener("input", function() {
+    updateSliderLow(this.value, "_test");
+});
+document.getElementById("energyValueMedium_test").addEventListener("input", function() {
+    updateSliderMedium(this.value, "_test");
+});
+document.getElementById("energyValueHigh_test").addEventListener("input", function() {
+    updateSliderHigh(this.value, "_test");
 });
 
 // Update on interactions
