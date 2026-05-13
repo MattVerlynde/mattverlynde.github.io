@@ -830,11 +830,11 @@ function readUploadFile(evt) {
             xaxis: { title: "Group" },
             yaxis: { title: "Score", range: [0, 100] },
             title: "Scores by Group",
-            annotations: trace_bar_scores.x.map((group, idx) => ({
-                x: group,
-                y: trace_bar_scores.y[idx],
-                text: trace_bar_scores.y[idx].toFixed(2)
-            }))
+            // annotations: trace_bar_scores.x.map((group, idx) => ({
+            //     x: group,
+            //     y: trace_bar_scores.y[idx],
+            //     text: trace_bar_scores.y[idx].toFixed(2)
+            // }))
         };
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
     };
