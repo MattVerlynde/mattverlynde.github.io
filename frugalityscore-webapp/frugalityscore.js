@@ -443,6 +443,29 @@ function computeScore(perf, energy) {
     return defuzzValue;
 }
 
+function computeScoreML(perf, energy_train, energy_test) {
+    const defuzz = getSelectedDefuzzType();
+    const scoreMembership = computeScoreMLMembership(perf, energy_train, energy_test, document.getElementById("metric").value, parseInt(document.getElementById("cpu-power").value) || 1, parseInt(document.getElementById("cores").value) || 1, parseInt(document.getElementById("gpu-power").value) || 1, parseInt(document.getElementById("number-gpu").value) || 0, parseInt(document.getElementById("energy_low").value), parseInt(document.getElementById("energy_medium").value), parseInt(document.getElementById("energy_high").value), parseInt(document.getElementById("energy_low_test").value), parseInt(document.getElementById("energy_medium_test").value), parseInt(document.getElementById("energy_high_test").value));
+    const trace_aggregated = generateTraceMembershipScoreAggregated(scoreMembership)
+    const x_vals = trace_aggregated.x;
+    const y_vals = trace_aggregated.y;
+    let defuzzValue;
+    if (defuzz === "centroid") {
+        defuzzValue = centroid(x_vals, y_vals);
+    } else if (defuzz === "bisector") {
+        defuzzValue = bisector(x_vals, y_vals);
+    } else if (defuzz === "som") {
+        defuzzValue = som(x_vals, y_vals);
+    } else if (defuzz === "mom") {
+        defuzzValue = mom(x_vals, y_vals);
+    } else if (defuzz === "lom") {
+        defuzzValue = lom(x_vals, y_vals);
+    } else {
+        defuzzValue = 0;
+    }
+    return defuzzValue;
+}
+
 
 function centroid(x, y) {
     let num = 0, den = 0;
@@ -785,7 +808,6 @@ function readUploadFile(evt) {
         const perfs = lines.slice(1).map(line => parseFloat(line.split(',')[perfIdx]));
         const energies = lines.slice(1).map(line => parseFloat(line.split(',')[energyIdx]));
         const groups = lines.slice(1).map(line => line.split(',')[groupIdx]);
-        const trace_bar_scores = generateDisplayScore(perfs, energies, groups);
         const layout_bar_scores = {
             xaxis: { title: "Group" },
             yaxis: { title: "Score", range: [0, 100] },
@@ -793,6 +815,21 @@ function readUploadFile(evt) {
         };
         document.getElementById("score_display").style.display = "none";
         document.getElementById("bar_scores_display").style.display = "block";
+
+
+        let energy_testIdx;
+        let energy_test;
+        let trace_bar_scores
+        if (document.getElementById("systemType").value === "ML") {
+            energy_testIdx = headers.indexOf("energy_test");
+            if (energy_testIdx === -1) return;
+            energy_test = parseFloat(lastLine[energy_testIdx]) || 0;
+            document.getElementById("energy_test").value = energy_test;
+            computeScoreML(perf, energy_train, energy_test)
+            trace_bar_scores = generateDisplayScoreML(perfs, energies, energy_test, groups);
+        } else {
+            trace_bar_scores = generateDisplayScore(perfs, energies, groups);
+        }
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
@@ -804,6 +841,25 @@ function generateDisplayScore(perfs, energies, groups) {
         const perf = perfs[index];
         const energy = energies[index];
         const defuzzValue = computeScore(perf, energy);
+        scores.push(defuzzValue);
+    }
+    return {
+        x: groups,
+        y: scores,
+        type: 'bar',
+        marker: {
+            color: scores.map(s => getScoreColor(s))
+        }
+    };
+}
+
+function generateDisplayScoreML(perfs, energies, energy_tests, groups) {
+    let scores = [];
+    for (let index = 0; index < perfs.length; index++) {
+        const perf = perfs[index];
+        const energy = energies[index];
+        const energy_test = energy_tests[index];
+        const defuzzValue = computeScoreML(perf, energy, energy_test);
         scores.push(defuzzValue);
     }
     return {
