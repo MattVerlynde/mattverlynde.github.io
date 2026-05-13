@@ -559,6 +559,7 @@ function updatePlot() {
     if (systemType === "ML") {
         document.getElementById("energy_control_test").style.display = "flex";
         document.getElementById("energy_input_test").style.display = "flex";
+        document.getElementById("plot_membership_energy_test").style.display = "flex";
         energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
         safeEnergy_test = Math.max(0, energy_test);
         time_low_test = parseInt(document.getElementById("energy_low_test").value);
@@ -719,7 +720,6 @@ function updatePlot() {
             ]
         };
         Plotly.newPlot('plot_membership_energy_test', trace_membership_energy_test, layout_membership_energy_test);
-        document.getElementById("plot_membership_energy_test").style.display = "flex";
     } else {
         document.getElementById("plot_membership_energy_test").style.display = "none";
         document.getElementById("energy_control_test").style.display = "none";
