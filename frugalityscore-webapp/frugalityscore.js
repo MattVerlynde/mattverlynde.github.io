@@ -849,12 +849,35 @@ function generateDisplayScore(perfs, energies, groups) {
         const defuzzValue = computeScore(perf, energy);
         scores.push(defuzzValue);
     }
+    // group per group and get mean and std
+    const groupedScores = {};
+    groups.forEach((group, index) => {
+        if (!groupedScores[group]) {
+            groupedScores[group] = [];
+        }
+        groupedScores[group].push(scores[index]);
+    });
+    const means = Object.values(groupedScores).map(s => s.reduce((a, b) => a + b, 0) / s.length);
+    const stds = Object.values(groupedScores).map(s => {
+        const mean = s.reduce((a, b) => a + b, 0) / s.length;
+        const squaredDiffs = s.map(x => Math.pow(x - mean, 2));
+        return Math.sqrt(squaredDiffs.reduce((a, b) => a + b, 0) / s.length);
+    });
+
     return {
-        x: groups,
-        y: scores,
+        x: Object.keys(groupedScores),
+        y: means,
         type: 'bar',
         marker: {
-            color: scores.map(s => getScoreColor(s))
+            color: means.map(s => getScoreColor(s))
+        },
+        error_y: {
+            type: 'data',
+            array: stds,
+            visible: true,
+            color: 'black',
+            thickness: 1.5,
+            width: 3
         }
     };
 }
