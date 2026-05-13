@@ -557,8 +557,8 @@ function updatePlot() {
     let scoreMembership;
     let trace_membership_energy_test;
     if (systemType === "ML") {
-        document.getElementById("energy_control_test").style.display = "block";
-        document.getElementById("energy_input_test").style.display = "block";
+        document.getElementById("energy_control_test").style.display = "flex";
+        document.getElementById("energy_input_test").style.display = "flex";
         energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
         safeEnergy_test = Math.max(0, energy_test);
         time_low_test = parseInt(document.getElementById("energy_low_test").value);
@@ -719,7 +719,7 @@ function updatePlot() {
             ]
         };
         Plotly.newPlot('plot_membership_energy_test', trace_membership_energy_test, layout_membership_energy_test);
-        document.getElementById("plot_membership_energy_test").style.display = "block";
+        document.getElementById("plot_membership_energy_test").style.display = "flex";
     } else {
         document.getElementById("plot_membership_energy_test").style.display = "none";
         document.getElementById("energy_control_test").style.display = "none";
@@ -728,7 +728,7 @@ function updatePlot() {
     const scoreEl = document.getElementById("score_display");
 
     document.getElementById("bar_scores_display").style.display = "none";
-    scoreEl.style.display = "block";
+    scoreEl.style.display = "flex";
     scoreEl.textContent = 'Score: ' + defuzzValue.toFixed(2);
 
     // 🎨 apply color
@@ -765,7 +765,7 @@ function getSelectedDefuzzType() {
 function readUploadFile(evt) {
     const file = evt.target.files[0];
     if (!file) return;
-    document.getElementById("bar_scores_display").style.display = "block";
+    document.getElementById("bar_scores_display").style.display = "flex";
     document.getElementById("scores_display").style.display = "none";
     const reader = new FileReader();
     reader.onload = function(e) {
