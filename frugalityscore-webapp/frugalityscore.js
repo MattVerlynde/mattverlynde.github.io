@@ -557,7 +557,7 @@ function updatePlot() {
     let scoreMembership;
     let trace_membership_energy_test;
     if (systemType === "ML") {
-        document.getElementById("energy_control_test").style.display = "flex";
+        document.getElementById("energy_control_test").style.display = "block";
         document.getElementById("energy_input_test").style.display = "flex";
         document.getElementById("plot_membership_energy_test").style.display = "flex";
         energy_test = parseFloat(document.getElementById("energy_test").value) || 0;
@@ -823,7 +823,12 @@ function updateSliderLow(time, split = "") {
     if (time > parseInt(document.getElementById("energy_medium" + split).value)) {
         updateSliderMedium(time, split);
     }
-    updatePlot();
+    // if no file uploaded, update plot
+    if (!document.getElementById("input-file").files.length) {
+        updatePlot();
+    } else {
+        readUploadFile({ target: { files: [document.getElementById("input-file").files[0]] } });
+    }
 }
 
 function updateSliderMedium(time, split = "") {
@@ -836,7 +841,12 @@ function updateSliderMedium(time, split = "") {
     if (time < parseInt(document.getElementById("energy_low" + split).value)) {
         updateSliderLow(time, split);
     }
-    updatePlot();
+    // if no file uploaded, update plot
+    if (!document.getElementById("input-file").files.length) {
+        updatePlot();
+    } else {
+        readUploadFile({ target: { files: [document.getElementById("input-file").files[0]] } });
+    }
 }
 
 function updateSliderHigh(time, split = "") {
@@ -848,7 +858,12 @@ function updateSliderHigh(time, split = "") {
     if (time < parseInt(document.getElementById("energy_medium" + split).value)) {
         updateSliderMedium(time, split);
     }
-    updatePlot();
+    // if no file uploaded, update plot
+    if (!document.getElementById("input-file").files.length) {
+        updatePlot();
+    } else {
+        readUploadFile({ target: { files: [document.getElementById("input-file").files[0]] } });
+    }
 }
 
 document.getElementById('input-file').addEventListener('change', readUploadFile);
