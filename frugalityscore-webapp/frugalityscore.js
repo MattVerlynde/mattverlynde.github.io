@@ -808,11 +808,7 @@ function readUploadFile(evt) {
         const perfs = lines.slice(1).map(line => parseFloat(line.split(',')[perfIdx]));
         const energies = lines.slice(1).map(line => parseFloat(line.split(',')[energyIdx]));
         const groups = lines.slice(1).map(line => line.split(',')[groupIdx]);
-        const layout_bar_scores = {
-            xaxis: { title: "Group" },
-            yaxis: { title: "Score", range: [0, 100] },
-            title: "Scores by Group"
-        };
+        
         document.getElementById("score_display").style.display = "none";
         document.getElementById("bar_scores_display").style.display = "block";
 
@@ -830,6 +826,16 @@ function readUploadFile(evt) {
         } else {
             trace_bar_scores = generateDisplayScore(perfs, energies, groups);
         }
+        const layout_bar_scores = {
+            xaxis: { title: "Group" },
+            yaxis: { title: "Score", range: [0, 100] },
+            title: "Scores by Group",
+            annotations: trace_bar_scores.x.map((group, idx) => ({
+                x: group,
+                y: trace_bar_scores.y[idx],
+                text: trace_bar_scores.y[idx].toFixed(2)
+            }))
+        };
         Plotly.newPlot('bar_scores_display', [trace_bar_scores], layout_bar_scores);
     };
     reader.readAsText(file);
