@@ -807,8 +807,8 @@ function generateDisplayScore(perfs, energies, groups) {
         scores.push(defuzzValue);
     }
     return {
-        x: scores,
-        y: groups,
+        x: groups,
+        y: scores,
         type: 'bar',
         marker: {
             color: scores.map(s => getScoreColor(s))
