@@ -766,7 +766,7 @@ function readUploadFile(evt) {
     const file = evt.target.files[0];
     if (!file) return;
     document.getElementById("bar_scores_display").style.display = "flex";
-    document.getElementById("scores_display").style.display = "none";
+    document.getElementById("score_display").style.display = "none";
     const reader = new FileReader();
     reader.onload = function(e) {
         const text = e.target.result.trim();
