@@ -812,17 +812,17 @@ function readUploadFile(evt) {
         document.getElementById("score_display").style.display = "none";
         document.getElementById("bar_scores_display").style.display = "block";
 
-
-        let energy_testIdx;
         let energy_test;
-        let trace_bar_scores
-        if (document.getElementById("systemType").value === "ML") {
-            energy_testIdx = headers.indexOf("energy_test");
+        let energies_test;
+        let trace_bar_scores;
+        if (getSelectedSystemType() === "ML") {
+            let energy_testIdx = headers.indexOf("energy_test");
             if (energy_testIdx === -1) return;
+            energies_test = lines.slice(1).map(line => parseFloat(line.split(',')[energy_testIdx]));
             energy_test = parseFloat(lastLine[energy_testIdx]) || 0;
-            document.getElementById("energy_test").value = energy_test;
-            computeScoreML(perf, energy_train, energy_test)
-            trace_bar_scores = generateDisplayScoreML(perfs, energies, energy_test, groups);
+            document.getElementById("energy_test").value = energies_test;
+            // computeScoreML(perf, energy_train, energies_test)
+            trace_bar_scores = generateDisplayScoreML(perfs, energies, energies_test, groups);
         } else {
             trace_bar_scores = generateDisplayScore(perfs, energies, groups);
         }
