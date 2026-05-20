@@ -423,7 +423,7 @@ const PRESETS = {
   },
   discriminative: {
     label: 'Discriminative',
-    note:  'Discriminative mode — favours extreme score values.',
+    note:  'Discriminative mode — avoids medium scores; promotes extreme frugality scores.',
     // [e=high, e=med, e=low] × [p=low, p=med, p=high]
     matrix: [
       ['very_low', 'very_low',    'medium'  ],  // E=high
@@ -625,8 +625,8 @@ function runFIS(eVal, pVal, defuzzMode='centroid') {
     const mf = mfFrugality(x);
     return fired.reduce((acc,f) => Math.max(acc, Math.min(f.strength, mf[f.out])), 0);
   });
-  const score = defuzzify(xs, agg, defuzzMode);
-  return { fired, agg, xs, score, e, p, outMF: mfFrugality(score) };
+  const defuzz = defuzzify(xs, agg, defuzzMode);
+  return { fired, agg, xs, score: defuzz, e, p, outMF: mfFrugality(defuzz) };
 }
 
 function getScoreInfo(s) {
@@ -747,7 +747,7 @@ function renderGauges(outMF) {
 function updateAggChart(r) {
   const aggData = mfPoints.map(i => r.agg[Math.round(i*4.99)]);
   cAgg.data.datasets[0].data = aggData;
-  const cl = mfPoints.map(x => Math.abs(x-r.centroid)<0.7 ? 1.05 : null);
+  const cl = mfPoints.map(x => Math.abs(x-r.defuzz)<0.7 ? 1.05 : null);
   cAgg.data.datasets[1].data = cl;
   cAgg.update('none');
 }
@@ -775,8 +775,8 @@ function update() {
   document.getElementById('p-med').textContent   = r.p.medium.toFixed(2);
   document.getElementById('p-high').textContent  = r.p.high.toFixed(2);
 
-  document.getElementById('score-val').textContent = r.centroid.toFixed(1);
-  const info = getScoreInfo(r.centroid);
+  document.getElementById('score-val').textContent = r.defuzz.toFixed(1);
+  const info = getScoreInfo(r.defuzz);
   document.getElementById('score-label').innerHTML =
     `<span class="score-badge" style="background:${info.bg};color:${info.text}">${info.label}</span>`;
 
