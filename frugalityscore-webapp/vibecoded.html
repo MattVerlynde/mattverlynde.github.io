@@ -227,6 +227,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
         <button class="preset-btn active" id="preset-normal"    onclick="applyPreset('normal')">Normal</button>
         <button class="preset-btn"        id="preset-lowcost"   onclick="applyPreset('lowcost')">Low cost</button>
         <button class="preset-btn"        id="preset-perf"      onclick="applyPreset('perf')">Performance-first</button>
+        <button class="preset-btn"        id="preset-dicriminative"  onclick="applyPreset('discriminative')">Discriminative</button>
         <button class="preset-btn"        id="preset-balanced"  onclick="applyPreset('balanced')">Balanced</button>
         <button class="preset-btn"        id="preset-custom"    id="preset-custom" style="margin-left:auto;">Custom</button>
       </div>
@@ -426,7 +427,7 @@ const PRESETS = {
     // [e=high, e=med, e=low] × [p=low, p=med, p=high]
     matrix: [
       ['very_low', 'very_low',    'medium'  ],  // E=high
-      ['very_low',      'medium', 'very_high'    ],  // E=medium
+      ['very_low', 'medium',      'very_high'    ],  // E=medium
       ['medium',   'very_high',   'very_high'], // E=low
     ]
   },
