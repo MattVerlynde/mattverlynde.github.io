@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mamdani FIS — Frugality Score</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #f5f5f2;
+  --surface:  #ffffff;
+  --surface2: #f0f0ee;
+  --border:   #ddd;
+  --border2:  #eee;
+  --text:     #1a1a18;
+  --text2:    #555;
+  --text3:    #888;
+  --accent:   #378ADD;
+  --input-bg: #f5f5f2;
+}
+[data-theme="dark"] {
+  --bg:       #141412;
+  --surface:  #1e1e1b;
+  --surface2: #27271f;
+  --border:   #333;
+  --border2:  #2a2a26;
+  --text:     #f0f0ec;
+  --text2:    #aaa;
+  --text3:    #666;
+  --accent:   #5ba4e8;
+  --input-bg: #27271f;
+}
+
+body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; transition: background .2s, color .2s; }
+.dash { max-width: 980px; margin: 0 auto; }
+
+.header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+.header-left h1 { font-size: 18px; font-weight: 500; margin-bottom: 3px; }
+.header-left p  { font-size: 13px; color: var(--text3); }
+.theme-btn { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--surface); color: var(--text2); font-size: 13px; transition: background .15s; }
+.theme-btn:hover { background: var(--surface2); }
+.theme-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.main-tabs { display: flex; gap: 2px; margin-bottom: 20px; border-bottom: 0.5px solid var(--border); }
+.main-tab { font-size: 13px; padding: 8px 18px; border: none; background: transparent; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -0.5px; transition: color .15s; }
+.main-tab:hover { color: var(--text); }
+.main-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 500; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.card { background: var(--surface); border: 0.5px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+.card + .card { margin-top: 12px; }
+.card-title { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.section-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.section-row h3 { font-size: 14px; font-weight: 500; color: var(--text); }
+.mf-type { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--input-bg); color: var(--text3); border: 0.5px solid var(--border); }
+
+.grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-53 { display: grid; grid-template-columns: 5fr 3fr; gap: 12px; }
+
+.metric-val { font-size: 30px; font-weight: 500; line-height: 1; }
+.metric-sub { font-size: 12px; color: var(--text3); margin-top: 5px; }
+
+.slider-label { font-size: 13px; color: var(--text2); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.slider-label strong { font-size: 14px; font-weight: 500; color: var(--text); }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.mf-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+.mf-card { background: var(--input-bg); border-radius: 8px; padding: 8px 10px; text-align: center; }
+.mf-label { font-size: 10px; color: var(--text3); margin-bottom: 2px; text-transform: uppercase; letter-spacing: .05em; }
+.mf-val { font-size: 15px; font-weight: 500; color: var(--text); }
+
+.param-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.param-table th { text-align: left; color: var(--text3); font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 0 12px 8px 0; }
+.param-table td { padding: 6px 12px 6px 0; border-top: 0.5px solid var(--border2); color: var(--text2); }
+.param-table td:first-child { font-weight: 500; color: var(--text); }
+
+.rule-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.rule-table th { text-align: left; color: var(--text3); font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; padding: 0 8px 8px 0; }
+.rule-table td { padding: 5px 8px 5px 0; border-top: 0.5px solid var(--border2); color: var(--text2); vertical-align: middle; }
+.rule-bar-wrap { width: 80px; background: var(--input-bg); border-radius: 4px; height: 6px; overflow: hidden; display:inline-block; }
+.rule-bar { height: 6px; border-radius: 4px; background: var(--accent); }
+
+.chart-wrap   { position: relative; height: 220px; }
+.chart-wrap-lg{ position: relative; height: 260px; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
+.legend-swatch { width: 22px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+
+.score-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 14px; font-size: 13px; font-weight: 500; }
+.gauge-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 12px; }
+.gauge-card { background: var(--input-bg); border-radius: 8px; padding: 10px; text-align: center; border: 0.5px solid var(--border2); }
+.gauge-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.gauge-bar-wrap { width: 100%; height: 6px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.gauge-bar { height: 6px; border-radius: 4px; }
+.gauge-pct { font-size: 13px; font-weight: 500; color: var(--text); margin-top: 5px; }
+.tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; font-weight: 400; }
+
+/* ── Rule matrix ────────────────────────────────────────── */
+.preset-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+.preset-btn { font-size: 12px; padding: 5px 12px; border: 0.5px solid var(--border); border-radius: 8px; cursor: pointer; background: var(--surface); color: var(--text2); transition: background .12s, border-color .12s; white-space: nowrap; }
+.preset-btn:hover { background: var(--surface2); }
+.preset-btn.active { border-color: var(--accent); color: var(--accent); background: var(--surface); font-weight: 500; }
+.preset-label { font-size: 11px; color: var(--text3); margin-right: 4px; }
+
+.matrix-wrap { overflow-x: auto; }
+.rule-matrix { border-collapse: collapse; font-size: 13px; }
+.rule-matrix th, .rule-matrix td { padding: 0; }
+.rm-corner { width: 110px; padding: 0 10px 10px 0; font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; vertical-align: bottom; }
+.rm-col-head { width: 90px; text-align: center; padding-bottom: 10px; font-size: 12px; color: var(--text2); font-weight: 500; }
+.rm-row-head { padding: 4px 12px 4px 0; font-size: 12px; color: var(--text2); font-weight: 500; white-space: nowrap; }
+.rm-cell { padding: 4px; text-align: center; }
+.cell-select {
+  width: 86px;
+  padding: 5px 6px;
+  border: 0.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  appearance: none;
+  text-align: center;
+  transition: border-color .12s, background .12s;
+}
+.cell-select:hover  { border-color: var(--accent); }
+.cell-select:focus  { outline: none; border-color: var(--accent); }
+.cell-select.firing { border-color: var(--accent); background: var(--surface); font-weight: 500; }
+
+/* output level colors applied via JS */
+.lvl-vl { color: #A32D2D; }
+.lvl-lo { color: #854F0B; }
+.lvl-me { color: #0F6E56; }
+.lvl-hi { color: #185FA5; }
+.lvl-vh { color: #534AB7; }
+
+.matrix-note { font-size: 11px; color: var(--text3); margin-top: 10px; }
+
+.act-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<div class="dash">
+
+  <div class="header">
+    <div class="header-left">
+      <h1>Mamdani Fuzzy Inference System</h1>
+      <p>Frugality score · inputs: energy consumption &amp; performance</p>
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()">
+      <svg viewBox="0 0 24 24"><path id="theme-path"/></svg>
+      <span id="theme-label">Dark mode</span>
+    </button>
+  </div>
+
+  <div class="main-tabs">
+    <button class="main-tab active" onclick="switchTab('params')" id="mtab-params">① Parameter definition</button>
+    <button class="main-tab"        onclick="switchTab('viz')"    id="mtab-viz">② Membership visualization</button>
+    <button class="main-tab"        onclick="switchTab('output')" id="mtab-output">③ Output result</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 1 · Parameter Definition
+  ══════════════════════════════════════════════════ -->
+  <div class="panel active" id="panel-params">
+
+    <!-- Input sliders -->
+    <div class="grid-2" style="margin-bottom:12px;">
+      <div class="card">
+        <div class="section-row">
+          <h3>Energy consumption</h3>
+          <span class="mf-type">input · kWh / unit</span>
+        </div>
+        <p class="slider-label">Current value <strong id="e-val-label">50 kWh</strong></p>
+        <input type="range" id="energy-slider" min="0" max="100" value="50" step="1">
+        <div class="mf-grid">
+          <div class="mf-card"><p class="mf-label">low</p><p class="mf-val" id="e-low">—</p></div>
+          <div class="mf-card"><p class="mf-label">medium</p><p class="mf-val" id="e-med">—</p></div>
+          <div class="mf-card"><p class="mf-label">high</p><p class="mf-val" id="e-high">—</p></div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-top:14px;">Membership function parameters</p>
+        <table class="param-table" style="margin-top:6px;">
+          <thead><tr><th>Set</th><th>Type</th><th>Parameters</th></tr></thead>
+          <tbody>
+            <tr><td>low</td><td>Trapezoidal</td><td>[0, 0, 20, 45]</td></tr>
+            <tr><td>medium</td><td>Triangular</td><td>[25, 50, 75]</td></tr>
+            <tr><td>high</td><td>Trapezoidal</td><td>[55, 80, 100, 100]</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="section-row">
+          <h3>Performance</h3>
+          <span class="mf-type">input · % rated output</span>
+        </div>
+        <p class="slider-label">Current value <strong id="p-val-label">50%</strong></p>
+        <input type="range" id="perf-slider" min="0" max="100" value="50" step="1">
+        <div class="mf-grid">
+          <div class="mf-card"><p class="mf-label">low</p><p class="mf-val" id="p-low">—</p></div>
+          <div class="mf-card"><p class="mf-label">medium</p><p class="mf-val" id="p-med">—</p></div>
+          <div class="mf-card"><p class="mf-label">high</p><p class="mf-val" id="p-high">—</p></div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-top:14px;">Membership function parameters</p>
+        <table class="param-table" style="margin-top:6px;">
+          <thead><tr><th>Set</th><th>Type</th><th>Parameters</th></tr></thead>
+          <tbody>
+            <tr><td>low</td><td>Trapezoidal</td><td>[0, 0, 20, 45]</td></tr>
+            <tr><td>medium</td><td>Triangular</td><td>[25, 50, 75]</td></tr>
+            <tr><td>high</td><td>Trapezoidal</td><td>[55, 80, 100, 100]</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Rule matrix -->
+    <div class="card">
+      <div class="section-row">
+        <h3>Rule base matrix</h3>
+        <span style="font-size:11px;color:var(--text3);">rows = energy · columns = performance · cells = frugality output</span>
+      </div>
+
+      <div class="preset-bar">
+        <span class="preset-label">Presets:</span>
+        <button class="preset-btn active" id="preset-normal"    onclick="applyPreset('normal')">Normal</button>
+        <button class="preset-btn"        id="preset-lowcost"   onclick="applyPreset('lowcost')">Low cost</button>
+        <button class="preset-btn"        id="preset-perf"      onclick="applyPreset('perf')">Performance-first</button>
+        <button class="preset-btn"        id="preset-balanced"  onclick="applyPreset('balanced')">Balanced</button>
+        <button class="preset-btn"        id="preset-custom"    id="preset-custom" style="margin-left:auto;">Custom</button>
+      </div>
+
+      <div class="matrix-wrap">
+        <table class="rule-matrix" id="rule-matrix">
+          <thead>
+            <tr>
+              <th class="rm-corner">Energy ↓ &nbsp; Perf →</th>
+              <th class="rm-col-head">P = low</th>
+              <th class="rm-col-head">P = medium</th>
+              <th class="rm-col-head">P = high</th>
+            </tr>
+          </thead>
+          <tbody id="matrix-tbody"></tbody>
+        </table>
+      </div>
+      <p class="matrix-note" id="matrix-note">Preset: <strong>Normal</strong> — standard frugality logic balancing energy and performance symmetrically.</p>
+    </div>
+
+    <!-- Output variable definition -->
+    <div class="card">
+      <div class="section-row">
+        <h3>Output variable: frugality score</h3>
+        <span class="mf-type">output · range [0, 100]</span>
+      </div>
+      <table class="param-table">
+        <thead><tr><th>Set</th><th>Type</th><th>Parameters</th><th>Level</th></tr></thead>
+        <tbody>
+          <tr><td>very low</td><td>Trapezoidal</td><td>[0, 0, 10, 25]</td><td><span class="tag" style="background:#FCEBEB;color:#A32D2D;">very low</span></td></tr>
+          <tr><td>low</td><td>Triangular</td><td>[15, 30, 45]</td><td><span class="tag" style="background:#FAEEDA;color:#854F0B;">low</span></td></tr>
+          <tr><td>medium</td><td>Triangular</td><td>[35, 50, 65]</td><td><span class="tag" style="background:#E1F5EE;color:#0F6E56;">medium</span></td></tr>
+          <tr><td>high</td><td>Triangular</td><td>[55, 70, 85]</td><td><span class="tag" style="background:#E6F1FB;color:#185FA5;">high</span></td></tr>
+          <tr><td>very high</td><td>Trapezoidal</td><td>[75, 90, 100, 100]</td><td><span class="tag" style="background:#EEEDFE;color:#534AB7;">very high</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 2 · Membership Visualization
+  ══════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-viz">
+    <div class="grid-2" style="margin-bottom:12px;">
+      <div class="card">
+        <p class="card-title">Energy consumption membership functions</p>
+        <div class="chart-wrap"><canvas id="chartEnergyMF" role="img" aria-label="Energy consumption membership function curves"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>low</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>medium</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75;"></span>high</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Performance membership functions</p>
+        <div class="chart-wrap"><canvas id="chartPerfMF" role="img" aria-label="Performance membership function curves"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>low</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>medium</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75;"></span>high</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <p class="card-title">Output membership functions — frugality score</p>
+      <div class="chart-wrap-lg"><canvas id="chartOutMF" role="img" aria-label="Output membership function curves"></canvas></div>
+      <div class="legend" id="out-legend"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       TAB 3 · Output Result
+  ══════════════════════════════════════════════════ -->
+  <div class="panel" id="panel-output">
+    <div class="grid-3" style="margin-bottom:12px;">
+      <div class="card">
+        <p class="card-title">Frugality score</p>
+        <p class="metric-val" id="score-val">—</p>
+        <p class="metric-sub" id="score-label">—</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Energy consumption</p>
+        <p class="metric-val" id="energy-display">50</p>
+        <p class="metric-sub">kWh / unit</p>
+      </div>
+      <div class="card">
+        <p class="card-title">Performance</p>
+        <p class="metric-val" id="perf-display">50</p>
+        <p class="metric-sub">% of rated output</p>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:12px;">
+      <p class="card-title">Output fuzzy set membership degrees</p>
+      <div class="gauge-row" id="output-gauges"></div>
+    </div>
+    <div class="grid-53">
+      <div class="card">
+        <p class="card-title">Aggregated output &amp; centroid defuzzification</p>
+        <div class="chart-wrap-lg"><canvas id="aggChart" role="img" aria-label="Aggregated fuzzy output with centroid line"></canvas></div>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>Aggregated set</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>Centroid</span>
+        </div>
+      </div>
+      <div class="card">
+        <p class="card-title">Rule activations</p>
+        <table class="rule-table">
+          <thead><tr><th>Rule</th><th>Strength</th></tr></thead>
+          <tbody id="rule-act-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /dash -->
+<script>
+/* ════════════════════════════════════════════════════
+   THEME
+════════════════════════════════════════════════════ */
+const SUN  = 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.36-6.36-.71.71M6.34 17.66l-.71.71M17.66 17.66l.71.71M6.34 6.34l-.71-.71M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z';
+const MOON = 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z';
+let dark = false;
+document.getElementById('theme-path').setAttribute('d', MOON);
+function toggleTheme() {
+  dark = !dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+  document.getElementById('theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
+  document.getElementById('theme-path').setAttribute('d', dark ? SUN : MOON);
+  refreshChartColors();
+  renderMatrix(); // re-color cells
+}
+
+/* ════════════════════════════════════════════════════
+   FUZZY MATH
+════════════════════════════════════════════════════ */
+function trimf(x,a,b,c)    { if(x<=a||x>=c) return 0; return x<=b?(x-a)/(b-a):(c-x)/(c-b); }
+function trapmf(x,a,b,c,d) { if(x<=a||x>=d) return 0; if(x>=b&&x<=c) return 1; return x<b?(x-a)/(b-a):(d-x)/(d-c); }
+function mfEnergy(x)  { return { low:trapmf(x,0,0,20,45), medium:trimf(x,25,50,75), high:trapmf(x,55,80,100,100) }; }
+function mfPerf(x)    { return { low:trapmf(x,0,0,20,45), medium:trimf(x,25,50,75), high:trapmf(x,55,80,100,100) }; }
+function mfFrugality(x) {
+  return { very_low:trapmf(x,0,0,10,25), low:trimf(x,15,30,45), medium:trimf(x,35,50,65), high:trimf(x,55,70,85), very_high:trapmf(x,75,90,100,100) };
+}
+
+/* ════════════════════════════════════════════════════
+   RULE MATRIX STATE
+   ruleMatrix[eIdx][pIdx] = output key (string)
+   eIdx: 0=high,1=medium,2=low  (rows top→bottom)
+   pIdx: 0=low, 1=medium, 2=high (cols left→right)
+════════════════════════════════════════════════════ */
+const OUTPUT_KEYS = ['very_low','low','medium','high','very_high'];
+const OUTPUT_LABELS = { very_low:'very low', low:'low', medium:'medium', high:'high', very_high:'very high' };
+
+const PRESETS = {
+  normal: {
+    label: 'Normal',
+    note:  'Standard frugality logic — balances energy and performance symmetrically.',
+    // [e=high, e=med, e=low] × [p=low, p=med, p=high]
+    matrix: [
+      ['very_low', 'low',    'medium'  ],  // E=high
+      ['low',      'medium', 'high'    ],  // E=medium
+      ['medium',   'high',   'very_high'], // E=low
+    ]
+  },
+  lowcost: {
+    label: 'Low cost',
+    note:  'Low-cost mode — energy savings dominate; performance is secondary.',
+    matrix: [
+      ['very_low', 'very_low', 'low'    ],
+      ['very_low', 'low',      'medium' ],
+      ['low',      'medium',   'high'   ],
+    ]
+  },
+  perf: {
+    label: 'Performance-first',
+    note:  'Performance-first — high performance always lifts frugality, regardless of energy cost.',
+    matrix: [
+      ['very_low', 'medium',   'high'    ],
+      ['low',      'high',     'very_high'],
+      ['medium',   'very_high','very_high'],
+    ]
+  },
+  balanced: {
+    label: 'Balanced',
+    note:  'Balanced — avoids extremes; promotes medium frugality across all conditions.',
+    matrix: [
+      ['low',    'medium', 'medium'],
+      ['medium', 'medium', 'high'  ],
+      ['medium', 'high',   'high'  ],
+    ]
+  }
+};
+
+let activePreset = 'normal';
+let ruleMatrix = JSON.parse(JSON.stringify(PRESETS.normal.matrix)); // deep copy
+
+function applyPreset(name) {
+  activePreset = name;
+  if (PRESETS[name]) ruleMatrix = JSON.parse(JSON.stringify(PRESETS[name].matrix));
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('preset-' + name);
+  if (btn) btn.classList.add('active');
+  const note = PRESETS[name]
+    ? `Preset: <strong>${PRESETS[name].label}</strong> — ${PRESETS[name].note}`
+    : 'Custom rule matrix — edited manually.';
+  document.getElementById('matrix-note').innerHTML = note;
+  renderMatrix();
+  update();
+}
+
+/* ════════════════════════════════════════════════════
+   BUILD RULE MATRIX TABLE
+════════════════════════════════════════════════════ */
+const E_LABELS = ['E = high','E = medium','E = low'];
+const P_LABELS = ['P = low','P = medium','P = high'];
+
+const CELL_COLORS = {
+  very_low:  { bg:'#FCEBEB', text:'#A32D2D' },
+  low:       { bg:'#FAEEDA', text:'#854F0B' },
+  medium:    { bg:'#E1F5EE', text:'#0F6E56' },
+  high:      { bg:'#E6F1FB', text:'#185FA5' },
+  very_high: { bg:'#EEEDFE', text:'#534AB7' },
+};
+
+function renderMatrix() {
+  const tbody = document.getElementById('matrix-tbody');
+  tbody.innerHTML = '';
+  for (let ei = 0; ei < 3; ei++) {
+    const tr = document.createElement('tr');
+    // row header
+    const th = document.createElement('td');
+    th.className = 'rm-row-head';
+    th.textContent = E_LABELS[ei];
+    tr.appendChild(th);
+    for (let pi = 0; pi < 3; pi++) {
+      const td = document.createElement('td');
+      td.className = 'rm-cell';
+      const sel = document.createElement('select');
+      sel.className = 'cell-select';
+      sel.dataset.ei = ei;
+      sel.dataset.pi = pi;
+      OUTPUT_KEYS.forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k;
+        opt.textContent = OUTPUT_LABELS[k];
+        sel.appendChild(opt);
+      });
+      sel.value = ruleMatrix[ei][pi];
+      styleCell(sel, ruleMatrix[ei][pi]);
+      sel.addEventListener('change', function() {
+        ruleMatrix[this.dataset.ei][this.dataset.pi] = this.value;
+        styleCell(this, this.value);
+        // mark as custom
+        activePreset = 'custom';
+        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('preset-custom').classList.add('active');
+        document.getElementById('matrix-note').innerHTML = 'Custom rule matrix — edited manually.';
+        update();
+      });
+      td.appendChild(sel);
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+function styleCell(sel, key) {
+  const c = CELL_COLORS[key];
+  sel.style.background = c.bg;
+  sel.style.color = c.text;
+  sel.style.borderColor = c.text + '44';
+}
+
+/* Highlight cells that are currently firing (strength > 0) */
+function highlightFiringCells(e, p) {
+  const eKeys = ['high','medium','low'];
+  const pKeys = ['low','medium','high'];
+  document.querySelectorAll('.cell-select').forEach(sel => {
+    const ei = +sel.dataset.ei, pi = +sel.dataset.pi;
+    const str = Math.min(e[eKeys[ei]], p[pKeys[pi]]);
+    sel.classList.toggle('firing', str > 0.001);
+    if (str > 0.001) {
+      sel.style.outline = '2px solid ' + CELL_COLORS[sel.value].text;
+    } else {
+      sel.style.outline = 'none';
+    }
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   BUILD DYNAMIC RULE LIST FROM MATRIX
+════════════════════════════════════════════════════ */
+function getRules() {
+  const eKeys = ['high','medium','low'];
+  const pKeys = ['low','medium','high'];
+  const eLabels = ['high','medium','low'];
+  const pLabels = ['low','medium','high'];
+  const rules = [];
+  for (let ei = 0; ei < 3; ei++) {
+    for (let pi = 0; pi < 3; pi++) {
+      const out = ruleMatrix[ei][pi];
+      rules.push({
+        cond: (e, p) => Math.min(e[eKeys[ei]], p[pKeys[pi]]),
+        out,
+        ant:  `E = ${eLabels[ei]}  ∧  P = ${pLabels[pi]}`,
+        cons: OUTPUT_LABELS[out]
+      });
+    }
+  }
+  return rules;
+}
+
+/* ════════════════════════════════════════════════════
+   FIS ENGINE
+════════════════════════════════════════════════════ */
+function runFIS(eVal, pVal) {
+  const e = mfEnergy(eVal);
+  const p = mfPerf(pVal);
+  const rules = getRules();
+  const fired = rules.map(r => ({ strength: r.cond(e,p), out: r.out, ant: r.ant, cons: r.cons }));
+  const N = 500;
+  const xs = Array.from({length:N}, (_,i) => i*100/(N-1));
+  const agg = xs.map(x => {
+    const mf = mfFrugality(x);
+    return fired.reduce((acc,f) => Math.max(acc, Math.min(f.strength, mf[f.out])), 0);
+  });
+  let num=0, den=0;
+  for(let i=0;i<N;i++){num+=xs[i]*agg[i];den+=agg[i];}
+  const centroid = den > 0 ? num/den : 50;
+  return { fired, agg, xs, centroid, e, p, outMF: mfFrugality(centroid) };
+}
+
+function getScoreInfo(s) {
+  if(s<20) return {label:'very low', bg:'#FCEBEB',text:'#A32D2D',bar:'#E24B4A'};
+  if(s<40) return {label:'low',      bg:'#FAEEDA',text:'#854F0B',bar:'#EF9F27'};
+  if(s<60) return {label:'medium',   bg:'#E1F5EE',text:'#0F6E56',bar:'#1D9E75'};
+  if(s<80) return {label:'high',     bg:'#E6F1FB',text:'#185FA5',bar:'#378ADD'};
+  return           {label:'very high',bg:'#EEEDFE',text:'#534AB7',bar:'#7F77DD'};
+}
+
+/* ════════════════════════════════════════════════════
+   CHARTS
+════════════════════════════════════════════════════ */
+const mfPoints  = Array.from({length:101}, (_,i)=>i);
+const outColors = { very_low:'#E24B4A', low:'#EF9F27', medium:'#378ADD', high:'#1D9E75', very_high:'#7F77DD' };
+const inColors  = ['#E24B4A','#378ADD','#1D9E75'];
+let cEnergyMF, cPerfMF, cOutMF, cAgg;
+
+function axisStyle() {
+  return { grid: dark?'#333':'#e8e8e5', ticks: dark?'#666':'#aaa' };
+}
+
+function makeLineChart(id, labels, datasets, xLabel) {
+  const ax = axisStyle();
+  return new Chart(document.getElementById(id).getContext('2d'), {
+    type:'line', data:{ labels, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        x:{ grid:{color:ax.grid}, ticks:{maxTicksLimit:6,font:{size:11},color:ax.ticks}, title:{display:!!xLabel,text:xLabel||'',font:{size:11},color:ax.ticks} },
+        y:{ min:0, max:1.05, grid:{color:ax.grid}, ticks:{maxTicksLimit:5,font:{size:11},color:ax.ticks} }
+      }
+    }
+  });
+}
+
+function initCharts() {
+  cEnergyMF = makeLineChart('chartEnergyMF', mfPoints, [
+    {label:'low',    data:mfPoints.map(x=>mfEnergy(x).low),    borderColor:inColors[0], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+    {label:'medium', data:mfPoints.map(x=>mfEnergy(x).medium), borderColor:inColors[1], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+    {label:'high',   data:mfPoints.map(x=>mfEnergy(x).high),   borderColor:inColors[2], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+  ], 'Energy (kWh)');
+
+  cPerfMF = makeLineChart('chartPerfMF', mfPoints, [
+    {label:'low',    data:mfPoints.map(x=>mfPerf(x).low),    borderColor:inColors[0], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+    {label:'medium', data:mfPoints.map(x=>mfPerf(x).medium), borderColor:inColors[1], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+    {label:'high',   data:mfPoints.map(x=>mfPerf(x).high),   borderColor:inColors[2], borderWidth:1.5, pointRadius:0, tension:.3, fill:false},
+  ], 'Performance (%)');
+
+  cOutMF = makeLineChart('chartOutMF', mfPoints,
+    Object.entries(outColors).map(([k,c])=>({
+      label:k.replace('_',' '), data:mfPoints.map(x=>mfFrugality(x)[k]),
+      borderColor:c, borderWidth:1.5, pointRadius:0, tension:.3, fill:false
+    })), 'Frugality score');
+
+  const leg = document.getElementById('out-legend');
+  Object.entries(outColors).forEach(([k,c])=>{
+    leg.innerHTML += `<span class="legend-item"><span class="legend-swatch" style="background:${c}"></span>${k.replace('_',' ')}</span>`;
+  });
+
+  cAgg = makeLineChart('aggChart', mfPoints, [
+    {label:'Aggregated', data:[], borderColor:'#378ADD', borderWidth:1.5, backgroundColor:'rgba(55,138,221,0.12)', pointRadius:0, tension:.2, fill:true},
+    {label:'Centroid',   data:[], borderColor:'#E24B4A', borderWidth:2, pointRadius:0, borderDash:[4,3], fill:false}
+  ], 'Frugality score');
+}
+
+function refreshChartColors() {
+  const ax = axisStyle();
+  [cEnergyMF,cPerfMF,cOutMF,cAgg].forEach(ch => {
+    if(!ch) return;
+    ['x','y'].forEach(k=>{
+      ch.options.scales[k].grid.color  = ax.grid;
+      ch.options.scales[k].ticks.color = ax.ticks;
+      if(ch.options.scales[k].title) ch.options.scales[k].title.color = ax.ticks;
+    });
+    ch.update('none');
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   UI RENDERS
+════════════════════════════════════════════════════ */
+function renderRuleAct(fired) {
+  const tbody = document.getElementById('rule-act-body');
+  tbody.innerHTML = '';
+  fired.forEach((f,i) => {
+    const pct = Math.round(f.strength*100);
+    const c   = CELL_COLORS[f.out];
+    tbody.innerHTML += `<tr>
+      <td style="font-size:11px;color:var(--text3);">
+        <span class="act-dot" style="background:${c.bg};border:1px solid ${c.text};"></span>
+        R${i+1} → ${f.cons}
+      </td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="rule-bar-wrap"><div class="rule-bar" style="width:${pct}%"></div></div>
+          <span style="font-size:11px;color:var(--text3);">${pct}%</span>
+        </div>
+      </td>
+    </tr>`;
+  });
+}
+
+function renderGauges(outMF) {
+  const wrap = document.getElementById('output-gauges');
+  wrap.innerHTML = '';
+  Object.entries(outColors).forEach(([k,c])=>{
+    const pct = Math.round(outMF[k]*100);
+    wrap.innerHTML += `<div class="gauge-card">
+      <p class="gauge-label">${k.replace('_',' ')}</p>
+      <div class="gauge-bar-wrap"><div class="gauge-bar" style="width:${pct}%;background:${c}"></div></div>
+      <p class="gauge-pct">${pct}%</p>
+    </div>`;
+  });
+}
+
+function updateAggChart(r) {
+  const aggData = mfPoints.map(i => r.agg[Math.round(i*4.99)]);
+  cAgg.data.datasets[0].data = aggData;
+  const cl = mfPoints.map(x => Math.abs(x-r.centroid)<0.7 ? 1.05 : null);
+  cAgg.data.datasets[1].data = cl;
+  cAgg.update('none');
+}
+
+/* ════════════════════════════════════════════════════
+   MAIN UPDATE
+════════════════════════════════════════════════════ */
+function update() {
+  const eVal = +document.getElementById('energy-slider').value;
+  const pVal = +document.getElementById('perf-slider').value;
+
+  document.getElementById('e-val-label').textContent   = eVal + ' kWh';
+  document.getElementById('p-val-label').textContent   = pVal + '%';
+  document.getElementById('energy-display').textContent = eVal;
+  document.getElementById('perf-display').textContent   = pVal;
+
+  const r = runFIS(eVal, pVal);
+
+  document.getElementById('e-low').textContent   = r.e.low.toFixed(2);
+  document.getElementById('e-med').textContent   = r.e.medium.toFixed(2);
+  document.getElementById('e-high').textContent  = r.e.high.toFixed(2);
+  document.getElementById('p-low').textContent   = r.p.low.toFixed(2);
+  document.getElementById('p-med').textContent   = r.p.medium.toFixed(2);
+  document.getElementById('p-high').textContent  = r.p.high.toFixed(2);
+
+  document.getElementById('score-val').textContent = r.centroid.toFixed(1);
+  const info = getScoreInfo(r.centroid);
+  document.getElementById('score-label').innerHTML =
+    `<span class="score-badge" style="background:${info.bg};color:${info.text}">${info.label}</span>`;
+
+  highlightFiringCells(r.e, r.p);
+  renderRuleAct(r.fired);
+  renderGauges(r.outMF);
+  updateAggChart(r);
+}
+
+/* ════════════════════════════════════════════════════
+   TAB SWITCHING
+════════════════════════════════════════════════════ */
+function switchTab(name) {
+  ['params','viz','output'].forEach(t => {
+    document.getElementById('panel-'+t).classList.toggle('active', t===name);
+    document.getElementById('mtab-'+t).classList.toggle('active',  t===name);
+  });
+}
+
+/* ════════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════════ */
+renderMatrix();
+initCharts();
+update();
+document.getElementById('energy-slider').addEventListener('input', update);
+document.getElementById('perf-slider').addEventListener('input',   update);
+</script>
+</body>
+</html>
