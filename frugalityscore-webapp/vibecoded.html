@@ -302,11 +302,10 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
        TAB 3 · Output Result
   ══════════════════════════════════════════════════ -->
   <div class="panel" id="panel-output">
-    <div class="grid-3" style="margin-bottom:12px;">
-      <div class="card">
-        <!-- Defuzzification function selection -->
-         <p class="card-title">Defuzzification method</p>
-        <div class="section-row">
+    <div class="card">
+      <!-- Defuzzification function selection -->
+      <p class="card-title">Defuzzification method</p>
+      <div class="section-row">
         <select id="defuzz-select" style="padding:6px 10px; border:0.5px solid var(--border); border-radius:8px; background:var(--input-bg); color:var(--text); font-size:13px; cursor:pointer;">
             <option value="centroid">Centroid (center of gravity)</option>
             <option value="bisector">Bisector (middle of the area)</option>
@@ -314,8 +313,9 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
             <option value="som">SOM (smallest of maximum)</option>
             <option value="mom">MOM (mean of maximum)</option>
         </select>
-        </div>
       </div>
+    </div>
+    <div class="grid-3" style="margin-bottom:12px;"></div>
       <div class="card">
         <p class="card-title">Frugality score</p>
         <p class="metric-val" id="score-val">—</p>
