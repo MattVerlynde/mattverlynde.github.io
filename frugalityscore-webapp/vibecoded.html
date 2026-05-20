@@ -303,6 +303,17 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
   <div class="panel" id="panel-output">
     <div class="grid-3" style="margin-bottom:12px;">
       <div class="card">
+        <!-- Defuzzification function selection -->
+         <p class="card-title">Defuzzification method</p>
+        <div class="section-row">
+        <select id="defuzz-select" style="padding:6px 10px; border:0.5px solid var(--border); border-radius:8px; background:var(--input-bg); color:var(--text); font-size:13px; cursor:pointer;">
+            <option value="centroid">Centroid (center of gravity)</option>
+            <option value="lom">LOM (largest of maximum)</option>
+            <option value="som">SOM (smallest of maximum)</option>
+            <option value="mom">MOM (mean of maximum)</option>
+        </select>
+      </div>
+      <div class="card">
         <p class="card-title">Frugality score</p>
         <p class="metric-val" id="score-val">—</p>
         <p class="metric-sub" id="score-label">—</p>
@@ -406,6 +417,16 @@ const PRESETS = {
       ['very_low', 'medium',   'high'    ],
       ['low',      'high',     'very_high'],
       ['medium',   'very_high','very_high'],
+    ]
+  },
+  discriminative: {
+    label: 'Discriminative',
+    note:  'Discriminative mode — favours extreme score values.',
+    // [e=high, e=med, e=low] × [p=low, p=med, p=high]
+    matrix: [
+      ['very_low', 'very_low',    'medium'  ],  // E=high
+      ['very_low',      'medium', 'very_high'    ],  // E=medium
+      ['medium',   'very_high',   'very_high'], // E=low
     ]
   },
   balanced: {
@@ -541,7 +562,57 @@ function getRules() {
 /* ════════════════════════════════════════════════════
    FIS ENGINE
 ════════════════════════════════════════════════════ */
-function runFIS(eVal, pVal) {
+function centroid(xs, ys) {
+  let num=0, den=0;
+  for(let i=0;i<xs.length;i++){num+=xs[i]*ys[i];den+=ys[i];}
+  return den > 0 ? num/den : 50;
+}
+
+function bisector(xs, ys) {
+  let total=0;
+  for(let i=0;i<ys.length;i++) total+=ys[i];
+  let accum=0;
+  for(let i=0;i<xs.length;i++) {
+    accum+=ys[i];
+    if(accum >= total/2) return xs[i];
+  }
+  return 50;
+}
+
+function meanOfMaxima(xs, ys) {
+  let maxY = Math.max(...ys);
+  let maxXs = xs.filter((_,i) => ys[i] === maxY);
+  return maxXs.reduce((a,b) => a+b, 0) / maxXs.length;
+}
+
+function smallestOfMaxima(xs, ys) {
+  let maxY = Math.max(...ys);
+  for(let i=0;i<xs.length;i++) {
+    if(ys[i] === maxY) return xs[i];
+  }
+  return 50;
+}
+
+function largestOfMaxima(xs, ys) {
+  let maxY = Math.max(...ys);
+  for(let i=xs.length-1;i>=0;i--) {
+    if(ys[i] === maxY) return xs[i];
+  }
+  return 50;
+}
+
+function defuzzify(xs, agg, mode='centroid') {
+  switch(mode) {
+    case 'centroid': return centroid(xs, agg);
+    case 'bisector': return bisector(xs, agg);
+    case 'mom': return meanOfMaxima(xs, agg);
+    case 'som': return smallestOfMaxima(xs, agg);
+    case 'lom': return largestOfMaxima(xs, agg);
+    default: return centroid(xs, agg);
+  }
+}
+
+function runFIS(eVal, pVal, defuzzMode='centroid') {
   const e = mfEnergy(eVal);
   const p = mfPerf(pVal);
   const rules = getRules();
@@ -552,10 +623,8 @@ function runFIS(eVal, pVal) {
     const mf = mfFrugality(x);
     return fired.reduce((acc,f) => Math.max(acc, Math.min(f.strength, mf[f.out])), 0);
   });
-  let num=0, den=0;
-  for(let i=0;i<N;i++){num+=xs[i]*agg[i];den+=agg[i];}
-  const centroid = den > 0 ? num/den : 50;
-  return { fired, agg, xs, centroid, e, p, outMF: mfFrugality(centroid) };
+  const score = defuzzify(xs, agg, defuzzMode);
+  return { score, agg, fired };
 }
 
 function getScoreInfo(s) {
@@ -693,7 +762,9 @@ function update() {
   document.getElementById('energy-display').textContent = eVal;
   document.getElementById('perf-display').textContent   = pVal;
 
-  const r = runFIS(eVal, pVal);
+  const defuzzMode = document.getElementById('defuzz-select').value;
+
+  const r = runFIS(eVal, pVal, defuzzMode);
 
   document.getElementById('e-low').textContent   = r.e.low.toFixed(2);
   document.getElementById('e-med').textContent   = r.e.medium.toFixed(2);
