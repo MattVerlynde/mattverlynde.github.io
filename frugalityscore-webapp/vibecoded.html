@@ -342,7 +342,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
         <div class="chart-wrap-lg"><canvas id="aggChart" role="img" aria-label="Aggregated fuzzy output with centroid line"></canvas></div>
         <div class="legend">
           <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>Aggregated set</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>Centroid</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>Defuzzified value</span>
         </div>
       </div>
       <div class="card">
@@ -691,7 +691,7 @@ function initCharts() {
 
   cAgg = makeLineChart('aggChart', mfPoints, [
     {label:'Aggregated', data:[], borderColor:'#378ADD', borderWidth:1.5, backgroundColor:'rgba(55,138,221,0.12)', pointRadius:0, tension:.2, fill:true},
-    {label:'Centroid',   data:[], borderColor:'#E24B4A', borderWidth:2, pointRadius:0, borderDash:[4,3], fill:false}
+    {label:'Defuzzified',   data:[], borderColor:'#E24B4A', borderWidth:2, pointRadius:0, borderDash:[4,3], fill:false}
   ], 'Frugality score');
 }
 
@@ -748,7 +748,7 @@ function renderGauges(outMF) {
 function updateAggChart(r) {
   const aggData = mfPoints.map(i => r.agg[Math.round(i*4.99)]);
   cAgg.data.datasets[0].data = aggData;
-  const cl = mfPoints.map(x => Math.abs(x-r.defuzz)<0.7 ? 1.05 : null);
+  const cl = mfPoints.map(x => Math.abs(x-r.defuzz)<0.7 ? 1.05 : null); // highlight defuzzified point
   cAgg.data.datasets[1].data = cl;
   cAgg.update('none');
 }
