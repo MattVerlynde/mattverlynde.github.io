@@ -748,7 +748,7 @@ function renderGauges(outMF) {
 function updateAggChart(r) {
   const aggData = mfPoints.map(i => r.agg[Math.round(i*4.99)]);
   cAgg.data.datasets[0].data = aggData;
-  const cl = mfPoints.map(x => Math.abs(x-r.defuzz)<0.7 ? 1.05 : null); 
+  const cl = mfPoints.map(i => i === r.defuzz ? r.agg[Math.round(i*4.99)] : null);
   cAgg.data.datasets[1].data = cl;
   cAgg.update('none');
 }
