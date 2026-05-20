@@ -626,7 +626,7 @@ function runFIS(eVal, pVal, defuzzMode='centroid') {
     return fired.reduce((acc,f) => Math.max(acc, Math.min(f.strength, mf[f.out])), 0);
   });
   const defuzz = defuzzify(xs, agg, defuzzMode);
-  return { fired, agg, xs, score: defuzz, e, p, outMF: mfFrugality(defuzz) };
+  return { fired, agg, xs, defuzz, e, p, outMF: mfFrugality(defuzz) };
 }
 
 function getScoreInfo(s) {
