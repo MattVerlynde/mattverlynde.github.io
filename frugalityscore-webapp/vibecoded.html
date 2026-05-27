@@ -399,8 +399,8 @@ const PRESETS = {
     note:  'Standard frugality logic — balances energy and performance symmetrically.',
     // [e=high, e=med, e=low] × [p=low, p=med, p=high]
     matrix: [
-      ['very_low', 'low',    'medium'  ],  // E=high
-      ['low',      'medium', 'high'    ],  // E=medium
+      ['very_low', 'low',    'medium'   ],  // E=high
+      ['low',      'medium', 'high'     ],  // E=medium
       ['medium',   'high',   'very_high'], // E=low
     ]
   },
@@ -408,16 +408,16 @@ const PRESETS = {
     label: 'Low cost',
     note:  'Low-cost mode — energy savings dominate; performance is secondary.',
     matrix: [
-      ['very_low', 'very_low', 'low'    ],
-      ['very_low', 'low',      'medium' ],
-      ['low',      'medium',   'high'   ],
+      ['very_low', 'low',      'medium'   ],  // E=high
+      ['medium',   'high',     'very_high'],  // E=medium
+      ['high',     'very_high','very_high'], // E=low
     ]
   },
   perf: {
     label: 'Performance-first',
     note:  'Performance-first — high performance always lifts frugality, regardless of energy cost.',
     matrix: [
-      ['very_low', 'medium',   'high'    ],
+      ['very_low', 'medium',   'high'     ],
       ['low',      'high',     'very_high'],
       ['medium',   'very_high','very_high'],
     ]
@@ -427,8 +427,8 @@ const PRESETS = {
     note:  'Discriminative mode — avoids medium scores; promotes extreme frugality scores.',
     // [e=high, e=med, e=low] × [p=low, p=med, p=high]
     matrix: [
-      ['very_low', 'very_low',    'medium'  ],  // E=high
-      ['very_low', 'medium',      'very_high'    ],  // E=medium
+      ['very_low', 'very_low',    'medium'   ],  // E=high
+      ['very_low', 'medium',      'very_high'],  // E=medium
       ['medium',   'very_high',   'very_high'], // E=low
     ]
   },
