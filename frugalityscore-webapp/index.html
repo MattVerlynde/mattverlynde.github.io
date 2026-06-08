@@ -7,136 +7,282 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
+<div class="app">
 
-<div class="container">
-  <div class="left-panel">
-    <h2>Parameters</h2>
-    <div class="control">
-            <form>
-            <label>System Type</label>
-            <label><input type="radio" name="systemType" value="Non ML" checked> Non ML</label>
-            <label><input type="radio" name="systemType" value="ML"> ML</label>
-            <!-- <label><input type="radio" name="systemType" value="DL"> DL</label> -->
-            </form>
-        </div>
+<!-- ══════════════════════ SIDEBAR ══════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <h1>Frugality FIS</h1>
+    <p>Mamdani fuzzy inference system</p>
+  </div>
+  <div class="sidebar-body">
 
-        <!-- Performance -->
-        <div class="control">
-            <label for="metric">Performance metric</label>
-            <select id="metric"></select>
-        </div>
-
-        <!-- CPU -->
-       <div class="control-inline">
-            <label for="cpu-select">CPU Model</label>
-            <select id="cpu-select"></select><input type="number" id="cpu-power" min="0" value="6">W
-        </div>
-
-        <!-- Number of cores -->
-        <div class="control">
-            <label for="cores">Number of cores</label>
-            <input type="number" id="cores" min="1" value="1">
-        </div>
-
-        <!-- GPU -->
-       <div class="control-inline">
-            <label for="gpu-select">GPU Model</label>
-            <select id="gpu-select"></select><input type="number" id="gpu-power" min="0" value="6">W
-        </div>
-
-        <!-- Number of GPUs -->
-        <div class="control">
-            <label for="number-gpu">Number of GPUs</label>
-            <input type="number" id="number-gpu" min="0" value="0">
-        </div>
-
-        <!-- Energy -->
-        <div id="energy_control">
-        <label>Time limits (s)</label>
-        <div class="control">
-            <label>
-            <input type="range" id="energy_low" min="0" max="100" value="10">
-            </label><input type="number" id="energyValueLow" min="0" value="10">s (Low)
-        </div>
-        <div class="control">
-            <label>
-            <input type="range" id="energy_medium" min="0" max="100" value="50">
-            </label><input type="number" id="energyValueMedium" min="0" value="50">s (Medium)
-        </div>
-        <div class="control">
-            <label>
-            <input type="range" id="energy_high" min="0" max="100" value="90">
-            </label><input type="number" id="energyValueHigh" min="0" value="90">s (High)
-        </div>
-        </div>
-        <!-- Energy test-->
-        <div id="energy_control_test" style="display:none;">
-            <label>Time limits test (s)</label>
-            <div class="control" id="energy_low_control_test">
-                <label>
-                <input type="range" id="energy_low_test" min="0" max="100" value="10">
-                </label><input type="number" id="energyValueLow_test" min="0" value="10">s (Low)
-            </div>
-            <div class="control" id="energy_medium_control_test">
-                <label>
-                <input type="range" id="energy_medium_test" min="0" max="100" value="50">
-                </label><input type="number" id="energyValueMedium_test" min="0" value="50">s (Medium)
-            </div>
-            <div class="control" id="energy_high_control_test">
-                <label>
-                <input type="range" id="energy_high_test" min="0" max="100" value="90">
-                </label><input type="number" id="energyValueHigh_test" min="0" value="90">s (High)
-        </div>
-        </div>
-
+    <div class="field">
+      <label>System Type</label>
+      <div class="radio-row">
+        <label class="radio-pill"><input type="radio" name="systemType" value="Non ML" checked><span>Non-ML</span></label>
+        <label class="radio-pill"><input type="radio" name="systemType" value="ML"><span>ML</span></label>
+      </div>
     </div>
 
-    <!-- RIGHT PANEL -->
-    <div class="right-panel">
-        <div class="visual-section">
-            <label>Membership Functions</label>
-            <div id="plot_membership" class="plot"></div>
-            <div id="plot_membership_energy" class="plot"></div>
-            <div id="plot_membership_energy_test" class="plot" style="display:none;"></div>
-        </div>
-
-        <!-- <div class="output-displays"> -->
-            <!-- Input values -->
-            <div class="input-summary">
-                <div><label>Performance
-                <input type="number" id="perf" value="0" step="0.01"></label>
-                </div>
-                <div id="energy_input"><label>Energy Consumption (J)
-                <input type="number" id="energy" min="0" value="0" step="1"></label>
-                </div>
-                <div id="energy_input_test" style="display:none;"><label>Energy Consumption Test (J)
-                <input type="number" id="energy_test" min="0" value="0" step="1"></label>
-                </div>
-                <div><label>Upload CSV
-                <input type="file" id="input-file" accept=".csv" />
-                </div>
-            </div>
-            <div class="output-summary">
-                <div id="plot_membership_score" class="plot"></div>
-                <div id="plot_membership_score_agg" class="plot"></div>
-            </div>
-            <div class="output-summary">
-                <div id="score_display" class="score-display"></div>
-                <div id="bar_scores_display" class="plot" style="display:none;"></div>
-                <div id="defuzz_display" class="radio-group">
-                    <label>Defuzzification Type</label>
-                    <label><input type="radio" name="defuzz" value="centroid" checked> Centroid</label>
-                    <label><input type="radio" name="defuzz" value="bisector"> Bisector</label>
-                    <label><input type="radio" name="defuzz" value="som"> SOM</label>
-                    <label><input type="radio" name="defuzz" value="mom"> MOM</label>
-                    <label><input type="radio" name="defuzz" value="lom"> LOM</label>
-                </div>
-            </div>
-        <!-- </div> -->
+    <div class="field">
+      <label>Performance metric</label>
+      <select id="metric"></select>
     </div>
-</div>
 
-<script type="text/javascript" src="frugalityscore.js"></script>
+    <div class="field">
+      <label>CPU Model</label>
+      <div class="inline-row">
+        <select id="cpu-select"></select>
+        <input type="number" id="cpu-power" class="compact" min="0" value="6">
+        <span class="unit">W</span>
+      </div>
+    </div>
 
-</body>
-</html>
+    <div class="field">
+      <label>CPU Cores</label>
+      <input type="number" id="cores" min="1" value="1">
+    </div>
+
+    <div class="field">
+      <label>GPU Model</label>
+      <div class="inline-row">
+        <select id="gpu-select"></select>
+        <input type="number" id="gpu-power" class="compact" min="0" value="6">
+        <span class="unit">W</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Number of GPUs</label>
+      <input type="number" id="number-gpu" min="0" value="0">
+    </div>
+
+    <div class="field" id="energy_control">
+      <label>Train time limits (s)</label>
+      <div class="time-limits">
+        <div class="time-row">
+          <span class="time-badge">Low</span>
+          <input type="range" id="energy_low" min="0" max="100" value="10">
+          <input type="number" id="energyValueLow" class="compact" min="0" value="10">
+        </div>
+        <div class="time-row">
+          <span class="time-badge">Med</span>
+          <input type="range" id="energy_medium" min="0" max="100" value="50">
+          <input type="number" id="energyValueMedium" class="compact" min="0" value="50">
+        </div>
+        <div class="time-row">
+          <span class="time-badge">High</span>
+          <input type="range" id="energy_high" min="0" max="100" value="90">
+          <input type="number" id="energyValueHigh" class="compact" min="0" value="90">
+        </div>
+      </div>
+    </div>
+
+    <div class="field" id="energy_control_test" style="display:none;">
+      <label>Test time limits (s)</label>
+      <div class="time-limits">
+        <div class="time-row">
+          <span class="time-badge">Low</span>
+          <input type="range" id="energy_low_test" min="0" max="100" value="10">
+          <input type="number" id="energyValueLow_test" class="compact" min="0" value="10">
+        </div>
+        <div class="time-row">
+          <span class="time-badge">Med</span>
+          <input type="range" id="energy_medium_test" min="0" max="100" value="50">
+          <input type="number" id="energyValueMedium_test" class="compact" min="0" value="50">
+        </div>
+        <div class="time-row">
+          <span class="time-badge">High</span>
+          <input type="range" id="energy_high_test" min="0" max="100" value="90">
+          <input type="number" id="energyValueHigh_test" class="compact" min="0" value="90">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sidebar-body -->
+  <div class="sidebar-footer">
+    <div class="field" style="margin-bottom:10px;">
+      <label>Performance</label>
+      <input type="number" id="perf" value="0" step="0.01">
+    </div>
+    <div class="field" id="energy_input" style="margin-bottom:10px;">
+      <label>Energy (J)</label>
+      <input type="number" id="energy" min="0" value="0">
+    </div>
+    <div class="field" id="energy_input_test" style="display:none; margin-bottom:10px;">
+      <label>Energy test (J)</label>
+      <input type="number" id="energy_test" min="0" value="0">
+    </div>
+    <label class="upload-area">
+      <input type="file" id="input-file" accept=".csv">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Upload CSV
+    </label>
+  </div>
+</aside>
+
+<!-- ══════════════════════ MAIN ══════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <button class="tab-btn active" onclick="switchTab('result')"  id="tab-result">① Result</button>
+    <button class="tab-btn"        onclick="switchTab('mf')"      id="tab-mf">② Membership functions</button>
+    <button class="tab-btn"        onclick="switchTab('rules')"   id="tab-rules">③ Rule base</button>
+    <button class="tab-btn"        onclick="switchTab('params')"  id="tab-params">④ Parameters</button>
+    <div class="topbar-right">
+      <button class="theme-toggle" onclick="toggleTheme()">☽ Dark</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ── TAB 1: RESULT ── -->
+    <div class="panel active" id="panel-result">
+
+      <div class="defuzz-sel-wrap">
+        <label>Defuzzification</label>
+        <select id="defuzz-select">
+          <option value="centroid">Centroid (center of gravity)</option>
+          <option value="bisector">Bisector (area midpoint)</option>
+          <option value="som">SOM (smallest of maximum)</option>
+          <option value="mom">MOM (mean of maximum)</option>
+          <option value="lom">LOM (largest of maximum)</option>
+        </select>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Frugality score</span></div>
+          <div class="score-hero">
+            <div class="score-number" id="score-val" style="color:var(--accent)">—</div>
+            <div class="score-right">
+              <span class="score-badge" id="score-badge">—</span>
+              <span style="font-size:11px;color:var(--text3);">/ 100</span>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Energy membership</span></div>
+          <div class="mf-trio">
+            <div class="mf-mini"><div class="mf-mini-label">Low</div><div class="mf-mini-val" id="e-low">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">Med</div><div class="mf-mini-val" id="e-med">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">High</div><div class="mf-mini-val" id="e-high">—</div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Performance membership</span></div>
+          <div class="mf-trio">
+            <div class="mf-mini"><div class="mf-mini-label">Low</div><div class="mf-mini-val" id="p-low">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">Med</div><div class="mf-mini-val" id="p-med">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">High</div><div class="mf-mini-val" id="p-high">—</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-head"><span class="card-title">Output fuzzy set activations</span></div>
+        <div class="gauge-5" id="output-gauges"></div>
+      </div>
+
+      <div class="grid-62">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Aggregated output &amp; defuzzification</span></div>
+          <div class="plot-wrap tall" id="plot_agg"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Rule activations</span></div>
+          <div class="rule-list" id="rule-act-list"></div>
+        </div>
+      </div>
+
+      <!-- CSV bar chart (hidden until file loaded) -->
+      <div class="card" id="bar-card" style="display:none; margin-top:12px;">
+        <div class="card-head"><span class="card-title">Scores by group (CSV)</span></div>
+        <div class="plot-wrap tall" id="bar_scores_display"></div>
+      </div>
+
+    </div><!-- /panel-result -->
+
+    <!-- ── TAB 2: MF ── -->
+    <div class="panel" id="panel-mf">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Performance membership functions</span><span class="chip" id="mf-metric-chip">—</span></div>
+          <div class="plot-wrap" id="plot_membership_perf"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Energy membership functions (train)</span></div>
+          <div class="plot-wrap" id="plot_membership_energy"></div>
+        </div>
+      </div>
+      <div class="card" id="mf-test-card" style="display:none;">
+        <div class="card-head"><span class="card-title">Energy membership functions (test)</span></div>
+        <div class="plot-wrap" id="plot_membership_energy_test"></div>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <div class="card-head"><span class="card-title">Score output membership functions</span></div>
+        <div class="plot-wrap" id="plot_membership_score"></div>
+      </div>
+    </div><!-- /panel-mf -->
+
+    <!-- ── TAB 3: RULES ── -->
+    <div class="panel" id="panel-rules">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Rule base matrix</span>
+          <span style="font-size:10px;color:var(--text3);">rows = energy · cols = performance · cells = score output</span>
+        </div>
+        <div class="preset-row" id="preset-row"></div>
+        <div style="overflow-x:auto;">
+          <table class="rule-matrix" id="rule-matrix-table">
+            <thead>
+              <tr>
+                <th class="rm-corner">E ↓ &nbsp; P →</th>
+                <th>P = low</th><th>P = medium</th><th>P = high</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody"></tbody>
+          </table>
+        </div>
+        <p class="matrix-note" id="matrix-note"></p>
+      </div>
+    </div><!-- /panel-rules -->
+
+    <!-- ── TAB 4: PARAMS ── -->
+    <div class="panel" id="panel-params">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Energy consumption MFs</span><span class="chip">input</span></div>
+          <table class="params-table">
+            <thead><tr><th>Set</th><th>Type</th><th>Parameters</th></tr></thead>
+            <tbody>
+              <tr><td>low</td><td>Z-MF (zmf)</td><td>[ energy_low × power,  energy_medium × power ]</td></tr>
+              <tr><td>medium</td><td>Triangular</td><td>[ energy_low, energy_medium, energy_high ] × power</td></tr>
+              <tr><td>high</td><td>S-MF (smf)</td><td>[ energy_medium × power,  energy_high × power ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Performance MFs</span><span class="chip">input · data-driven</span></div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:8px;">Loaded from <code>referencePerformance.json</code>. Supports trimf &amp; trapmf per metric.</p>
+          <p style="font-size:11px;color:var(--text3);" id="metric-info">Select a metric to inspect its parameters.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Score output MFs</span><span class="chip">output · [0, 100]</span></div>
+        <table class="params-table">
+          <thead><tr><th>Set</th><th>Type</th><th>Parameters</th><th>Level</th></tr></thead>
+          <tbody>
+            <tr><td>1 · very low</td><td>trimf</td><td>[0, 0, 25]</td><td><span class="score-badge lvl-vl" style="font-size:10px;">very low</span></td></tr>
+            <tr><td>2 · low</td><td>trimf</td><td>[0, 25, 50]</td><td><span class="score-badge lvl-lo" style="font-size:10px;">low</span></td></tr>
+            <tr><td>3 · medium</td><td>trimf</td><td>[25, 50, 75]</td><td><span class="score-badge lvl-me" style="font-size:10px;">medium</span></td></tr>
+            <tr><td>4 · high</td><td>trimf</td><td>[50, 75, 100]</td><td><span class="score-badge lvl-hi" style="font-size:10px;">high</span></td></tr>
+            <tr><td>5 · very high</td><td>trimf</td><td>[75, 100, 100]</td><td><span class="score-badge lvl-vh" style="font-size:10px;">very high</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div><!-- /panel-params -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
