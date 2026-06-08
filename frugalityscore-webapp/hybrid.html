@@ -1021,7 +1021,7 @@ function updatePlot() {
   });
   perfTraces.push({x:[safeP,safeP],y:[0,1],mode:'lines',line:{dash:'dash',color:'#c44536',width:1.5},showlegend:false,name:'input',type:'scatter'});
   Plotly.react('plot_membership', perfTraces, plotlyLayout(metric,'μ'), plotlyConfig);
-  document.getElementById('mf-metric-chip').textContent = metric;
+  document.getElementById('mf-metric-chip').textContent = performanceData.performance_names[metric];
 
   // ── MF Tab: Energy ──
   const power = cpuFactor*cores + gpuFactor*ngpu;
