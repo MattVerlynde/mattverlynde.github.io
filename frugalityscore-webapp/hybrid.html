@@ -588,7 +588,8 @@ async function loadPerformanceData() {
   const metricSelect = document.getElementById("metric");
   Object.keys(performanceData.performance_minmax).forEach((metric, index) => {
     const option = document.createElement("option");
-    option.value = metric; option.textContent = performanceData.performance_names[metric]
+    // for display, the name of the metric is looked up in the performance_names mapping; the value remains the original metric key for internal use
+    option.value = metric; option.textContent = performanceData.performance_names[metric];
     if (index === 0) option.selected = true;
     metricSelect.appendChild(option);
   });
