@@ -773,7 +773,7 @@ function scoreMFAt(x) {
 function computeScoreMembership(perfMem, energyMem) {
   const rules = [
     [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],
-    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],
+    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],
     [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]
   ];
   let sm = [0,0,0,0,0];
@@ -781,7 +781,7 @@ function computeScoreMembership(perfMem, energyMem) {
     for (let j=0; j<energyMem.length; j++) {
       const str = Math.min(perfMem[i], energyMem[j]);
       for (let s=0; s<5; s++)
-        sm[s] = Math.max(sm[s], Math.min(str, rules[i*energyMem.length+j][s]));
+        sm[s] = Math.max(sm[s], Math.min(str, rules[j*energyMem.length+i][s]));
     }
   return sm;
 }
@@ -797,7 +797,7 @@ function computeScoreMLMembership(perfMem, energyTrainMem, energyTestMem) {
     for (let j=0; j<energyTrainMem.length; j++)
       for (let k=0; k<energyTestMem.length; k++) {
         const str = Math.min(perfMem[i], energyTrainMem[j], energyTestMem[k]);
-        const ruleIdx = (k*energyTrainMem.length + j)*perfMem.length + i;
+        const ruleIdx = (k*perfMem.length + j)*energyTrainMem.length + i;
         for (let s=0; s<5; s++)
           sm[s] = Math.max(sm[s], Math.min(str, rules[ruleIdx][s]));
       }
