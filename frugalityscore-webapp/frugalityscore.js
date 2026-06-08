@@ -134,7 +134,7 @@ function applyPreset(name) {
   document.getElementById('matrix-note').innerHTML = p
     ? `<strong>${p.label}</strong> — ${p.note}`
     : 'Custom rule matrix — edited manually.';
-  renderMatrix();
+  renderMatrixML();
   updatePlot();
 }
 
