@@ -89,11 +89,11 @@ const OUTPUT_KEYS   = ['very_low','low','medium','high','very_high'];
 const OUTPUT_LABELS_MAP = {very_low:'very low',low:'low',medium:'medium',high:'high',very_high:'very high'};
 const LEVEL_CLASS   = {very_low:'lvl-vl',low:'lvl-lo',medium:'lvl-me',high:'lvl-hi',very_high:'lvl-vh'};
 const LEVEL_COLORS  = {
-  very_low: {bg:'#f2c2fe',text:'#8a00bb'},
-  low:      {bg:'#b8c4e0',text:'#2a3d6e'},
-  medium:   {bg:'#a8eae7',text:'#156962'},
-  high:     {bg:'#bbe7bc',text:'#1e6b22'},
-  very_high:{bg:'#fff7c1',text:'#857000'}
+  very_low: {bg:'#f2c2fe',text:'#440154'},
+  low:      {bg:'#b8c4e0',text:'#3b528b'},
+  medium:   {bg:'#a8eae7',text:'#21918c'},
+  high:     {bg:'#bbe7bc',text:'#4DC151'},
+  very_high:{bg:'#fff7c1',text:'#eeca00'}
 };
 
 const PRESETS = {
@@ -286,7 +286,7 @@ function runMatrixFIS(perfMem, energyMem) {
    PLOTLY HELPERS
 ════════════════════════════════════════════════ */
 const PLOTLY_COLORS = ['#2d6a4f','#52b788','#b7e4c7','#1b4332','#74c69d'];
-const SCORE_COLORS  = ['#8a00bb','#2a3d6e','#156962','#1e6b22','#857000'];
+const SCORE_COLORS  = ['#440154','#3b528b','#21918c','#4DC151','#eeca00'];
 
 function plotlyLayout(xTitle, yTitle, extra={}) {
   const gridColor = dark ? '#2a2a24' : '#eae9e3';
