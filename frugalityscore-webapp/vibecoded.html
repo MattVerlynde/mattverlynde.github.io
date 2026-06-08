@@ -17,7 +17,7 @@
   --text:     #1a1a18;
   --text2:    #555;
   --text3:    #888;
-  --accent:   #378ADD;
+  --accent:   #33a54c;
   --input-bg: #f5f5f2;
 }
 [data-theme="dark"] {
@@ -29,7 +29,7 @@
   --text:     #f0f0ec;
   --text2:    #aaa;
   --text3:    #666;
-  --accent:   #5ba4e8;
+  --accent:   #34be52;
   --input-bg: #27271f;
 }
 
@@ -58,9 +58,15 @@ body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--t
 .section-row h3 { font-size: 14px; font-weight: 500; color: var(--text); }
 .mf-type { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; background: var(--input-bg); color: var(--text3); border: 0.5px solid var(--border); }
 
-.grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-.grid-53 { display: grid; grid-template-columns: 5fr 3fr; gap: 12px; }
+.grid-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start;}
+.grid-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; align-items: start;}
+.grid-53 { display: grid; grid-template-columns: 5fr 3fr; gap: 12px; align-items: start;}
+
+.grid-2,
+.grid-3,
+.grid-53 {
+  align-items: start;
+}
 
 .metric-val { font-size: 30px; font-weight: 500; line-height: 1; }
 .metric-sub { font-size: 12px; color: var(--text3); margin-top: 5px; }
@@ -131,15 +137,25 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .cell-select.firing { border-color: var(--accent); background: var(--surface); font-weight: 500; }
 
 /* output level colors applied via JS */
-.lvl-vl { color: #A32D2D; }
-.lvl-lo { color: #854F0B; }
-.lvl-me { color: #0F6E56; }
-.lvl-hi { color: #185FA5; }
-.lvl-vh { color: #534AB7; }
+.lvl-vl { color: #440154; }
+.lvl-lo { color: #3b528b; }
+.lvl-me { color: #21918c; }
+.lvl-hi { color: #4DC151; }
+.lvl-vh { color: #fde725; }
 
 .matrix-note { font-size: 11px; color: var(--text3); margin-top: 10px; }
 
 .act-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+
+.defuzz-row { margin-bottom: 12px; }
+.defuzz-row .card { display: flex; align-items: center; gap: 16px; }
+.defuzz-row .card-title { margin-bottom: 0; white-space: nowrap; }
+.defuzz-select {
+  flex: 1; max-width: 320px; padding: 6px 10px;
+  border: 0.5px solid var(--border); border-radius: 8px;
+  background: var(--input-bg); color: var(--text);
+  font-size: 13px; cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -257,11 +273,11 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
       <table class="param-table">
         <thead><tr><th>Set</th><th>Type</th><th>Parameters</th><th>Level</th></tr></thead>
         <tbody>
-          <tr><td>very low</td><td>Trapezoidal</td><td>[0, 0, 10, 25]</td><td><span class="tag" style="background:#FCEBEB;color:#A32D2D;">very low</span></td></tr>
-          <tr><td>low</td><td>Triangular</td><td>[15, 30, 45]</td><td><span class="tag" style="background:#FAEEDA;color:#854F0B;">low</span></td></tr>
-          <tr><td>medium</td><td>Triangular</td><td>[35, 50, 65]</td><td><span class="tag" style="background:#E1F5EE;color:#0F6E56;">medium</span></td></tr>
-          <tr><td>high</td><td>Triangular</td><td>[55, 70, 85]</td><td><span class="tag" style="background:#E6F1FB;color:#185FA5;">high</span></td></tr>
-          <tr><td>very high</td><td>Trapezoidal</td><td>[75, 90, 100, 100]</td><td><span class="tag" style="background:#EEEDFE;color:#534AB7;">very high</span></td></tr>
+          <tr><td>very low</td><td>Trapezoidal</td><td>[0, 0, 10, 25]</td><td><span class="tag" style="background:#F2C2FE;color:#B104DC;">very low</span></td></tr>
+          <tr><td>low</td><td>Triangular</td><td>[15, 30, 45]</td><td><span class="tag" style="background:#B8C4E0;color:#3b528b;">low</span></td></tr>
+          <tr><td>medium</td><td>Triangular</td><td>[35, 50, 65]</td><td><span class="tag" style="background:#A8EAE7;color:#21918c;">medium</span></td></tr>
+          <tr><td>high</td><td>Triangular</td><td>[55, 70, 85]</td><td><span class="tag" style="background:#BBE7BC;color:#4DC151;">high</span></td></tr>
+          <tr><td>very high</td><td>Trapezoidal</td><td>[75, 90, 100, 100]</td><td><span class="tag" style="background:#FFF7C1;color:#D6BD00;">very high</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -276,18 +292,18 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
         <p class="card-title">Energy consumption membership functions</p>
         <div class="chart-wrap"><canvas id="chartEnergyMF" role="img" aria-label="Energy consumption membership function curves"></canvas></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>low</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>medium</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75;"></span>high</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#B104DC;"></span>low</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#21918c;"></span>medium</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#D6BD00;"></span>high</span>
         </div>
       </div>
       <div class="card">
         <p class="card-title">Performance membership functions</p>
         <div class="chart-wrap"><canvas id="chartPerfMF" role="img" aria-label="Performance membership function curves"></canvas></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>low</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>medium</span>
-          <span class="legend-item"><span class="legend-swatch" style="background:#1D9E75;"></span>high</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#B104DC;"></span>low</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#21918c;"></span>medium</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#D6BD00;"></span>high</span>
         </div>
       </div>
     </div>
@@ -302,20 +318,21 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
        TAB 3 · Output Result
   ══════════════════════════════════════════════════ -->
   <div class="panel" id="panel-output">
-    <div class="grid-3" style="margin-bottom:12px;">
-      <div class="card" style="margin-bottom:12px;">
+      <div class="defuzz-row">
+        <div class="card">
         <!-- Defuzzification function selection -->
-         <p class="card-title">Defuzzification method</p>
-        <div class="section-row">
-        <select id="defuzz-select" style="padding:6px 10px; border:0.5px solid var(--border); border-radius:8px; background:var(--input-bg); color:var(--text); font-size:13px; cursor:pointer;">
+          <p class="card-title">Defuzzification method</p>
+          <select id="defuzz-select" class="defuzz-select">
             <option value="centroid">Centroid (center of gravity)</option>
             <option value="bisector">Bisector (middle of the area)</option>
             <option value="lom">LOM (largest of maximum)</option>
             <option value="som">SOM (smallest of maximum)</option>
             <option value="mom">MOM (mean of maximum)</option>
-        </select>
+          </select>
         </div>
       </div>
+
+      <div class="grid-3" style="margin-bottom:12px;">
       <div class="card">
         <p class="card-title">Frugality score</p>
         <p class="metric-val" id="score-val">—</p>
@@ -324,7 +341,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
       <div class="card">
         <p class="card-title">Energy consumption</p>
         <p class="metric-val" id="energy-display">50</p>
-        <p class="metric-sub">kWh / unit</p>
+        <p class="metric-sub">kWh</p>
       </div>
       <div class="card">
         <p class="card-title">Performance</p>
@@ -341,7 +358,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
         <p class="card-title">Aggregated output &amp; centroid defuzzification</p>
         <div class="chart-wrap-lg"><canvas id="aggChart" role="img" aria-label="Aggregated fuzzy output with centroid line"></canvas></div>
         <div class="legend">
-          <span class="legend-item"><span class="legend-swatch" style="background:#378ADD;"></span>Aggregated set</span>
+          <span class="legend-item"><span class="legend-swatch" style="background:#33a54c;"></span>Aggregated set</span>
           <span class="legend-item"><span class="legend-swatch" style="background:#E24B4A;"></span>Defuzzified value</span>
         </div>
       </div>
@@ -467,11 +484,11 @@ const E_LABELS = ['E = high','E = medium','E = low'];
 const P_LABELS = ['P = low','P = medium','P = high'];
 
 const CELL_COLORS = {
-  very_low:  { bg:'#FCEBEB', text:'#A32D2D' },
-  low:       { bg:'#FAEEDA', text:'#854F0B' },
-  medium:    { bg:'#E1F5EE', text:'#0F6E56' },
-  high:      { bg:'#E6F1FB', text:'#185FA5' },
-  very_high: { bg:'#EEEDFE', text:'#534AB7' },
+  very_low:  { bg:'#F2C2FE', text:'#B104DC' },
+  low:       { bg:'#B8C4E0', text:'#3b528b' },
+  medium:    { bg:'#A8EAE7', text:'#21918c' },
+  high:      { bg:'#BBE7BC', text:'#4DC151' },
+  very_high: { bg:'#FFF7C1', text:'#D6BD00' },
 };
 
 function renderMatrix() {
@@ -631,19 +648,19 @@ function runFIS(eVal, pVal, defuzzMode='centroid') {
 }
 
 function getScoreInfo(s) {
-  if(s<20) return {label:'very low', bg:'#FCEBEB',text:'#A32D2D',bar:'#E24B4A'};
-  if(s<40) return {label:'low',      bg:'#FAEEDA',text:'#854F0B',bar:'#EF9F27'};
-  if(s<60) return {label:'medium',   bg:'#E1F5EE',text:'#0F6E56',bar:'#1D9E75'};
-  if(s<80) return {label:'high',     bg:'#E6F1FB',text:'#185FA5',bar:'#378ADD'};
-  return           {label:'very high',bg:'#EEEDFE',text:'#534AB7',bar:'#7F77DD'};
+  if(s<20) return {label:'very low', bg:CELL_COLORS.very_low.bg,text:CELL_COLORS.very_low.text,bar:CELL_COLORS.very_low.text};
+  if(s<40) return {label:'low',      bg:CELL_COLORS.low.bg,text:CELL_COLORS.low.text,bar:CELL_COLORS.low.text};
+  if(s<60) return {label:'medium',   bg:CELL_COLORS.medium.bg,text:CELL_COLORS.medium.text,bar:CELL_COLORS.medium.text};
+  if(s<80) return {label:'high',     bg:CELL_COLORS.high.bg,text:CELL_COLORS.high.text,bar:CELL_COLORS.high.text};
+  return           {label:'very high',bg:CELL_COLORS.very_high.bg,text:CELL_COLORS.very_high.text,bar:CELL_COLORS.very_high.text};
 }
 
 /* ════════════════════════════════════════════════════
    CHARTS
 ════════════════════════════════════════════════════ */
 const mfPoints  = Array.from({length:101}, (_,i)=>i);
-const outColors = { very_low:'#E24B4A', low:'#EF9F27', medium:'#378ADD', high:'#1D9E75', very_high:'#7F77DD' };
-const inColors  = ['#E24B4A','#378ADD','#1D9E75'];
+const outColors = { very_low:CELL_COLORS.very_low.text, low:CELL_COLORS.low.text, medium:CELL_COLORS.medium.text, high:CELL_COLORS.high.text, very_high:CELL_COLORS.very_high.text };
+const inColors  = [CELL_COLORS.very_low.text,CELL_COLORS.medium.text,CELL_COLORS.very_high.text];
 let cEnergyMF, cPerfMF, cOutMF, cAgg;
 
 function axisStyle() {
@@ -690,7 +707,7 @@ function initCharts() {
   });
 
   cAgg = makeLineChart('aggChart', mfPoints, [
-    {label:'Aggregated', data:[], borderColor:'#378ADD', borderWidth:1.5, backgroundColor:'rgba(55,138,221,0.12)', pointRadius:0, tension:.2, fill:true},
+    {label:'Aggregated', data:[], borderColor:'#33a54c', borderWidth:1.5, backgroundColor:'rgba(51,165,76,0.12)', pointRadius:0, tension:.2, fill:true},
     {label:'Defuzzified',   data:[], borderColor:'#E24B4A', borderWidth:2, pointRadius:0, borderDash:[4,3], fill:false}
   ], 'Frugality score');
 }
