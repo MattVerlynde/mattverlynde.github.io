@@ -197,7 +197,7 @@ function renderMatrixML() {
         th.className = 'row-label'; th.textContent = E_TEST_LABELS[etei];
         if (etri === 0) {
             th.textContent = E_TRAIN_LABELS[etri] + ' / ' + th.textContent;
-            th.rowSpan = 3;
+            // th.rowSpan = 3;
         }
         tr.appendChild(th);
         for (let pi=0; pi<3; pi++) {
