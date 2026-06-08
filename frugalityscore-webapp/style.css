@@ -43,6 +43,7 @@ body {
   border-right: 1px solid var(--border);
   flex-shrink: 0;
   box-sizing: border-box;
+  overflow-y: auto;     /* scroll if controls overflow */
 }
 
 .left-panel h2 {
@@ -76,11 +77,14 @@ label {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  min-height: 0;        /* allows flex child to shrink below content size */
+  overflow-y: auto;     /* scroll instead of invisible overflow */
+  box-sizing: border-box;
 }
 
 /* Visualization sections stacked vertically */
 .visual-section {
-  flex: 1;
+  flex-shrink: 0;       /* don't shrink — let plots keep their explicit heights */
   display: flex;
   flex-direction: column;
   gap: 10px;
