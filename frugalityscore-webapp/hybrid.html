@@ -486,7 +486,7 @@ input[type=number].compact { width: 52px; padding: 6px 6px; font-family: var(--m
       <div class="grid-2">
         <div class="card">
           <div class="card-head"><span class="card-title">Performance membership functions</span><span class="chip" id="mf-metric-chip">—</span></div>
-          <div class="plot-wrap" id="plot_membership"></div>
+          <div class="plot-wrap" id="plot_membership_perf"></div>
         </div>
         <div class="card">
           <div class="card-head"><span class="card-title">Energy membership functions (train)</span></div>
@@ -1020,7 +1020,7 @@ function updatePlot() {
     return traceLine(perfX, perfX.map(x=>computeMembership(metric,x)[fi]), label, mfColors[fi]);
   });
   perfTraces.push({x:[safeP,safeP],y:[0,1],mode:'lines',line:{dash:'dash',color:'#c44536',width:1.5},showlegend:false,name:'input',type:'scatter'});
-  Plotly.react('plot_membership', perfTraces, plotlyLayout(metric,'μ'), plotlyConfig);
+  Plotly.react('plot_membership_perf', perfTraces, plotlyLayout(performanceData.performance_names[metric],'μ'), plotlyConfig);
   document.getElementById('mf-metric-chip').textContent = performanceData.performance_names[metric];
 
   // ── MF Tab: Energy ──
