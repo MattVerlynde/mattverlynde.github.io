@@ -109,8 +109,22 @@ const PRESETS = {
     m: [['low','medium','medium'],['medium','medium','high'],['medium','high','high']] }
 };
 
+const PRESETS_ML = {
+  normal:        { label:'Normal',          note:'Standard — balances energy and performance symmetrically.',
+    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+  lowcost:       { label:'Low cost',        note:'Energy savings dominate; performance is secondary.',
+    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+  perf:          { label:'Performance-first',note:'High performance always lifts score regardless of energy.',
+    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+  discriminative:{ label:'Discriminative',  note:'Avoids medium scores; promotes extreme frugality outputs.',
+    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+  balanced:      { label:'Balanced',        note:'Avoids extremes; promotes medium scores across conditions.',
+    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] }
+};
+
 let activePreset = 'normal';
 let ruleMatrix = JSON.parse(JSON.stringify(PRESETS.normal.m));
+let ruleMatrixML = JSON.parse(JSON.stringify(PRESETS_ML.normal.m));
 
 function applyPreset(name) {
   activePreset = name;
@@ -168,6 +182,48 @@ function renderMatrix() {
       td.appendChild(sel); tr.appendChild(td);
     }
     tbody.appendChild(tr);
+  }
+}
+
+function renderMatrixML() {
+  const tbody = document.getElementById('matrix-tbody');
+  tbody.innerHTML = '';
+  const E_TRAIN_LABELS = ['E (train) = high','E (train) = medium','E (train) = low'];
+  const E_TEST_LABELS = ['E (test) = high','E (test) = medium','E (test) = low'];
+  for (let etri=0; etri<3; etri++) {
+    for (let etei=0; etei<3; etei++) {
+        const tr = document.createElement('tr');
+        const th = document.createElement('td');
+        th.className = 'row-label'; th.textContent = E_TEST_LABELS[etei];
+        if (etri === 0) {
+            th.textContent = E_TRAIN_LABELS[etri] + ' / ' + th.textContent;
+            th.rowSpan = 3;
+        }
+        tr.appendChild(th);
+        for (let pi=0; pi<3; pi++) {
+        const td = document.createElement('td');
+        const sel = document.createElement('select');
+        sel.className = 'cell-select';
+        sel.dataset.etei = etei; sel.dataset.etri = etri; sel.dataset.pi = pi;
+        OUTPUT_KEYS.forEach(k => {
+            const opt = document.createElement('option');
+            opt.value = k; opt.textContent = OUTPUT_LABELS_MAP[k];
+            sel.appendChild(opt);
+        });
+        sel.value = ruleMatrix_ML[etri][etei][pi];
+        styleCell(sel, ruleMatrix_ML[etri][etei][pi]);
+        sel.addEventListener('change', function() {
+            ruleMatrix_ML[this.dataset.etri][this.dataset.etei][this.dataset.pi] = this.value;
+            styleCell(this, this.value);
+            activePreset = 'custom';
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset==='custom'));
+            document.getElementById('matrix-note').innerHTML = 'Custom rule matrix — edited manually.';
+            updatePlot();
+        });
+        td.appendChild(sel); tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    }
   }
 }
 
@@ -644,7 +700,7 @@ document.getElementById('gpu-select').addEventListener('change', ()=>{
    BOOT
 ════════════════════════════════════════════════ */
 buildPresetButtons();
-renderMatrix();
+renderMatrixML();
 applyPreset('normal');
 
 Promise.all([loadCPUs(), loadGPUs(), loadPerformanceData()])
