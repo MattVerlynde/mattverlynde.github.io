@@ -252,17 +252,17 @@ input[type=number].compact { width: 52px; padding: 6px 6px; font-family: var(--m
 .matrix-note { font-size: 11px; color: var(--text3); margin-top: 8px; font-style: italic; }
 
 /* ── LEVEL COLORS ── */
-.lvl-vl { background: #f2c2fe; color: #8a00bb; }
-.lvl-lo { background: #b8c4e0; color: #2a3d6e; }
-.lvl-me { background: #a8eae7; color: #156962; }
-.lvl-hi { background: #bbe7bc; color: #1e6b22; }
-.lvl-vh { background: #fff7c1; color: #857000; }
+.lvl-vl { background: #f2c2fe; color: #440154; }
+.lvl-lo { background: #b8c4e0; color: #3b528b; }
+.lvl-me { background: #a8eae7; color: #21918c; }
+.lvl-hi { background: #bbe7bc; color: #4DC151; }
+.lvl-vh { background: #fff7c1; color: #eeca00; }
 
-.lvl-vl-text { color: #8a00bb; }
-.lvl-lo-text { color: #2a3d6e; }
-.lvl-me-text { color: #156962; }
-.lvl-hi-text { color: #1e6b22; }
-.lvl-vh-text { color: #857000; }
+.lvl-vl-text { color: #440154; }
+.lvl-lo-text { color: #3b528b; }
+.lvl-me-text { color: #21918c; }
+.lvl-hi-text { color: #4DC151; }
+.lvl-vh-text { color: #eeca00; }
 
 /* ── PARAMS TABLE ── */
 .params-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
