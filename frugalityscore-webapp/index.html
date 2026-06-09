@@ -126,7 +126,8 @@
 <!-- ══════════════════════ MAIN ══════════════════════ -->
 <div class="main">
   <div class="topbar">
-    <button class="tab-btn active" onclick="switchTab('result')"  id="tab-result">① Result</button>
+    <button class="tab-btn active" onclick="switchTab('info')"    id="tab-info">Info</button>
+    <button class="tab-btn"        onclick="switchTab('result')"  id="tab-result">① Result</button>
     <button class="tab-btn"        onclick="switchTab('mf')"      id="tab-mf">② Membership functions</button>
     <button class="tab-btn"        onclick="switchTab('rules')"   id="tab-rules">③ Rule base</button>
     <!-- <button class="tab-btn"        onclick="switchTab('params')"  id="tab-params">④ Parameters</button> -->
@@ -137,8 +138,43 @@
 
   <div class="content">
 
+    <!-- ── TAB 0: INFO ── -->
+    <div class="panel active" id="panel-info">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Energy consumption MFs</span><span class="chip">input</span></div>
+          <table class="params-table">
+            <thead><tr><th>Set</th><th>Type</th><th>Parameters</th></tr></thead>
+            <tbody>
+              <tr><td>low</td><td>Z-MF (zmf)</td><td>[ energy_low × power,  energy_medium × power ]</td></tr>
+              <tr><td>medium</td><td>Triangular</td><td>[ energy_low, energy_medium, energy_high ] × power</td></tr>
+              <tr><td>high</td><td>S-MF (smf)</td><td>[ energy_medium × power,  energy_high × power ]</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Performance MFs</span><span class="chip">input · data-driven</span></div>
+          <p style="font-size:12px;color:var(--text3);margin-bottom:8px;">Loaded from <code>referencePerformance.json</code>. Supports trimf &amp; trapmf per metric.</p>
+          <p style="font-size:11px;color:var(--text3);" id="metric-info">Select a metric to inspect its parameters.</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><span class="card-title">Score output MFs</span><span class="chip">output · [0, 100]</span></div>
+        <table class="params-table">
+          <thead><tr><th>Set</th><th>Type</th><th>Parameters</th><th>Level</th></tr></thead>
+          <tbody>
+            <tr><td>1 · very low</td><td>trimf</td><td>[0, 0, 25]</td><td><span class="score-badge lvl-vl" style="font-size:10px;">very low</span></td></tr>
+            <tr><td>2 · low</td><td>trimf</td><td>[0, 25, 50]</td><td><span class="score-badge lvl-lo" style="font-size:10px;">low</span></td></tr>
+            <tr><td>3 · medium</td><td>trimf</td><td>[25, 50, 75]</td><td><span class="score-badge lvl-me" style="font-size:10px;">medium</span></td></tr>
+            <tr><td>4 · high</td><td>trimf</td><td>[50, 75, 100]</td><td><span class="score-badge lvl-hi" style="font-size:10px;">high</span></td></tr>
+            <tr><td>5 · very high</td><td>trimf</td><td>[75, 100, 100]</td><td><span class="score-badge lvl-vh" style="font-size:10px;">very high</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div> <!-- /panel-info --> 
+
     <!-- ── TAB 1: RESULT ── -->
-    <div class="panel active" id="panel-result">
+    <div class="panel" id="panel-result">
 
       <div class="defuzz-sel-wrap">
         <label>Defuzzification</label>
