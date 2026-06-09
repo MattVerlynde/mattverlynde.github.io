@@ -259,6 +259,11 @@ function scoreMFAt(x) {
 }
 
 function computeScoreMembership(rules, perfMem, energyMem) {
+  const rules = [
+    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],
+    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],
+    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]
+  ];
   let sm = [0,0,0,0,0];
   for (let i=0; i<perfMem.length; i++)
     for (let j=0; j<energyMem.length; j++) {
@@ -270,6 +275,11 @@ function computeScoreMembership(rules, perfMem, energyMem) {
 }
 
 function computeScoreMLMembership(rules, perfMem, energyTrainMem, energyTestMem) {
+  const rules = [
+    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],
+    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],
+    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]
+  ];
   let sm = [0,0,0,0,0];
   for (let i=0; i<perfMem.length; i++)
     for (let j=0; j<energyTrainMem.length; j++)
@@ -328,6 +338,27 @@ function runMatrixFIS(perfMem, energyMem) {
   return { fired, xs, ys };
 }
 
+// function runMatrixFISML(perfMem, energyTrainMem, energyTestMem) {
+//   const rules = getRules();
+//   const eKeys = ['high','medium','low'];
+//   const pKeys = ['low','medium','high'];
+//   const eTrainMem  = {high:energyTrainMem[2],medium:energyTrainMem[1],low:energyTrainMem[0]};
+//   const eTestMem   = {high:energyTestMem[2],medium:energyTestMem[1],low:energyTestMem[0]};
+//   const pMem  = {low:perfMem[0],medium:perfMem[1],high:perfMem[2]};
+//   const fired = rules.map(r => ({ strength:r.cond(eTrainMem,eTestMem,pMem), out:r.out, ant:r.ant }));
+
+//   // aggregate
+//   const xs = Array.from({length:101},(_,i)=>i);
+//   const ys = xs.map(x => {
+//     const mf = scoreMFAt(x);
+//     return fired.reduce((acc,f)=>{
+//       const outIdx = OUTPUT_KEYS.indexOf(f.out);
+//       return Math.max(acc, Math.min(f.strength, mf[outIdx]));
+//     }, 0);
+//   });
+//   return { fired, xs, ys };
+// }
+
 /* ════════════════════════════════════════════════
    PLOTLY HELPERS
 ════════════════════════════════════════════════ */
@@ -369,6 +400,80 @@ function getScoreInfo(s) {
 }
 
 /* ════════════════════════════════════════════════
+   SCORE CALCULATION
+════════════════════════════════════════════════ */
+
+function calcScore({ perfMem, energyMem, energyTestMem = null, defuzzMethod }) {
+  let fired, xs, ys;
+
+  if (energyTestMem) {
+    // ML mode — 3-input rules from ruleMatrixML
+    ({ fired, xs, ys } = runMatrixFISML(perfMem, energyMem, energyTestMem));
+  } else {
+    // Standard mode — 2-input rules from ruleMatrix
+    ({ fired, xs, ys } = runMatrixFIS(perfMem, energyMem));
+  }
+
+  // Per-output-level membership strengths (for gauges)
+  const scoreMem = OUTPUT_KEYS.map(key =>
+    fired.reduce((acc, f) => f.out === key ? Math.max(acc, f.strength) : acc, 0)
+  );
+
+  const score = defuzz(xs, ys, defuzzMethod);
+  return { scoreMem, xs, ys, score, fired };
+}
+
+function runMatrixFIS(perfMem, energyMem) {
+  const rules = getRules();
+  const eMem = { high: energyMem[2], medium: energyMem[1], low: energyMem[0] };
+  const pMem = { low: perfMem[0], medium: perfMem[1], high: perfMem[2] };
+  const fired = rules.map(r => ({ strength: r.cond(eMem, pMem), out: r.out, ant: r.ant }));
+
+  const xs = Array.from({ length: 101 }, (_, i) => i);
+  const ys = xs.map(x => {
+    const mf = scoreMFAt(x);
+    return fired.reduce((acc, f) => {
+      const outIdx = OUTPUT_KEYS.indexOf(f.out);
+      return Math.max(acc, Math.min(f.strength, mf[outIdx]));
+    }, 0);
+  });
+  return { fired, xs, ys };
+}
+
+function getRulesML() {
+  const eKeys = ['high', 'medium', 'low'];
+  const pKeys = ['low', 'medium', 'high'];
+  const rules = [];
+  for (let etri = 0; etri < 3; etri++)
+    for (let etei = 0; etei < 3; etei++)
+      for (let pi = 0; pi < 3; pi++)
+        rules.push({
+          cond: (eTr, eTe, p) => Math.min(eTr[eKeys[etri]], eTe[eKeys[etei]], p[pKeys[pi]]),
+          out: ruleMatrixML[etri][etei][pi],
+          ant: `ETr=${eKeys[etri]} ∧ ETe=${eKeys[etei]} ∧ P=${pKeys[pi]}`
+        });
+  return rules;
+}
+
+function runMatrixFISML(perfMem, energyTrainMem, energyTestMem) {
+  const rules = getRulesML();
+  const eTrainMem = { high: energyTrainMem[2], medium: energyTrainMem[1], low: energyTrainMem[0] };
+  const eTestMem  = { high: energyTestMem[2],  medium: energyTestMem[1],  low: energyTestMem[0]  };
+  const pMem      = { low: perfMem[0], medium: perfMem[1], high: perfMem[2] };
+  const fired = rules.map(r => ({ strength: r.cond(eTrainMem, eTestMem, pMem), out: r.out, ant: r.ant }));
+
+  const xs = Array.from({ length: 101 }, (_, i) => i);
+  const ys = xs.map(x => {
+    const mf = scoreMFAt(x);
+    return fired.reduce((acc, f) => {
+      const outIdx = OUTPUT_KEYS.indexOf(f.out);
+      return Math.max(acc, Math.min(f.strength, mf[outIdx]));
+    }, 0);
+  });
+  return { fired, xs, ys };
+}
+
+/* ════════════════════════════════════════════════
    MAIN UPDATE
 ════════════════════════════════════════════════ */
 function updatePlot() {
@@ -392,36 +497,45 @@ function updatePlot() {
 
   const perfMem   = computePerfMembership(metric, safeP);
   const energyMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,safeE);
-
   const rules = getRules();
 
-  // ML mode
-  let scoreMem;
-  let safeEt=0, tlt=0, tmt=0, tht=0;
-  const isML = systemType==='ML';
-  document.getElementById("energy_control_test").style.display = isML?'block':'none';
-  document.getElementById("energy_input_test").style.display   = isML?'block':'none';
-  document.getElementById("mf-test-card").style.display        = isML?'block':'none';
+  // // ML mode
+  // let scoreMem;
+  // let safeEt=0, tlt=0, tmt=0, tht=0;
+  // const isML = systemType==='ML';
+  // document.getElementById("energy_control_test").style.display = isML?'block':'none';
+  // document.getElementById("energy_input_test").style.display   = isML?'block':'none';
+  // document.getElementById("mf-test-card").style.display        = isML?'block':'none';
 
-  if (isML) {
-    const et = parseFloat(document.getElementById("energy_test").value)||0;
-    safeEt = Math.max(0, et);
-    tlt = parseFloat(document.getElementById("energy_low_test").value)||0;
-    tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
-    tht = parseFloat(document.getElementById("energy_high_test").value)||0;
-    const energyTestMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tlt,tmt,tht,safeEt);
-    scoreMem = computeScoreMLMembership(rules, perfMem, energyMem, energyTestMem);
-  } else {
-    scoreMem = computeScoreMembership(rules, perfMem, energyMem);
-  }
+  // if (isML) {
+  //   const et = parseFloat(document.getElementById("energy_test").value)||0;
+  //   safeEt = Math.max(0, et);
+  //   tlt = parseFloat(document.getElementById("energy_low_test").value)||0;
+  //   tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
+  //   tht = parseFloat(document.getElementById("energy_high_test").value)||0;
+  //   const energyTestMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tlt,tmt,tht,safeEt);
+  //   scoreMem = computeScoreMLMembership(rules, perfMem, energyMem, energyTestMem);
+  // } else {
+  //   scoreMem = computeScoreMembership(rules, perfMem, energyMem);
+  // }
 
-  // Aggregate & defuzz
+  // // Aggregate & defuzz
+  // const defuzzMethod = document.getElementById("defuzz-select").value;
+  // const { xs, ys } = aggregateOutput(scoreMem);
+  // const score = defuzz(xs, ys, defuzzMethod);
+
+  // // Also run matrix FIS for rule activations display
+  // const matrixResult = runMatrixFIS(perfMem, energyMem);
+
   const defuzzMethod = document.getElementById("defuzz-select").value;
-  const { xs, ys } = aggregateOutput(scoreMem);
-  const score = defuzz(xs, ys, defuzzMethod);
-
-  // Also run matrix FIS for rule activations display
-  const matrixResult = runMatrixFIS(perfMem, energyMem);
+  const { scoreMem, xs, ys, score, fired } = calcScore({
+    perfMem,
+    energyMem,
+    energyTestMem: isML
+      ? computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tlt, tmt, tht, safeEt)
+      : null,
+    defuzzMethod
+  });
 
   // ── Update score card ──
   const info = getScoreInfo(score);
@@ -567,20 +681,40 @@ function updateSliderHigh(v, suf='') {
 /* ════════════════════════════════════════════════
    CSV UPLOAD
 ════════════════════════════════════════════════ */
+// function computeScore(perf, energy) {
+//   const metric = document.getElementById("metric").value;
+//   const cpuFactor = parseFloat(document.getElementById("cpu-power").value)||1;
+//   const cores     = parseInt(document.getElementById("cores").value)||1;
+//   const gpuFactor = parseFloat(document.getElementById("gpu-power").value)||1;
+//   const ngpu      = parseInt(document.getElementById("number-gpu").value)||0;
+//   const tl=parseFloat(document.getElementById("energy_low").value)||0;
+//   const tm=parseFloat(document.getElementById("energy_medium").value)||0;
+//   const th=parseFloat(document.getElementById("energy_high").value)||0;
+//   const pm = computePerfMembership(metric, perf);
+//   const em = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,energy);
+//   const sm = computeScoreMembership(pm, em);
+//   const {xs,ys} = aggregateOutput(sm);
+//   return defuzz(xs,ys,document.getElementById("defuzz-select").value);
+// }
+
 function computeScore(perf, energy) {
-  const metric = document.getElementById("metric").value;
-  const cpuFactor = parseFloat(document.getElementById("cpu-power").value)||1;
-  const cores     = parseInt(document.getElementById("cores").value)||1;
-  const gpuFactor = parseFloat(document.getElementById("gpu-power").value)||1;
-  const ngpu      = parseInt(document.getElementById("number-gpu").value)||0;
-  const tl=parseFloat(document.getElementById("energy_low").value)||0;
-  const tm=parseFloat(document.getElementById("energy_medium").value)||0;
-  const th=parseFloat(document.getElementById("energy_high").value)||0;
-  const pm = computePerfMembership(metric, perf);
-  const em = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,energy);
-  const sm = computeScoreMembership(pm, em);
-  const {xs,ys} = aggregateOutput(sm);
-  return defuzz(xs,ys,document.getElementById("defuzz-select").value);
+  const metric    = document.getElementById("metric").value;
+  const cpuFactor = parseFloat(document.getElementById("cpu-power").value) || 1;
+  const cores     = parseInt(document.getElementById("cores").value) || 1;
+  const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
+  const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
+  const tl = parseFloat(document.getElementById("energy_low").value)    || 0;
+  const tm = parseFloat(document.getElementById("energy_medium").value) || 0;
+  const th = parseFloat(document.getElementById("energy_high").value)   || 0;
+
+  const perfMem   = computePerfMembership(metric, perf);
+  const energyMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl, tm, th, energy);
+  const { score } = calcScore({
+    perfMem,
+    energyMem,
+    defuzzMethod: document.getElementById("defuzz-select").value
+  });
+  return score;
 }
 
 function readUploadFile(evt) {
