@@ -524,8 +524,8 @@ function updatePlot() {
   // const { xs, ys } = aggregateOutput(scoreMem);
   // const score = defuzz(xs, ys, defuzzMethod);
 
-  // // Also run matrix FIS for rule activations display
-  // const matrixResult = runMatrixFIS(perfMem, energyMem);
+  // Also run matrix FIS for rule activations display
+  const matrixResult = runMatrixFIS(perfMem, energyMem);
 
   const defuzzMethod = document.getElementById("defuzz-select").value;
   const { scoreMem, xs, ys, score, fired } = calcScore({
