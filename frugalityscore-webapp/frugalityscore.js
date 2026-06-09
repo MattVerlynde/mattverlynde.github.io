@@ -766,7 +766,7 @@ function readUploadFile(evt) {
 ════════════════════════════════════════════════ */
 function switchTab(name) {
 //   ['result','mf','rules','params'].forEach(t=>{
-  ['result','mf','rules'].forEach(t=>{
+  ['info','result','mf','rules'].forEach(t=>{
     document.getElementById('panel-'+t).classList.toggle('active', t===name);
     document.getElementById('tab-'+t).classList.toggle('active',   t===name);
   });
