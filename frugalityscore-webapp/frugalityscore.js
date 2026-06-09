@@ -341,7 +341,7 @@ function runMatrixFIS(perfMem, energyMem) {
 /* ════════════════════════════════════════════════
    PLOTLY HELPERS
 ════════════════════════════════════════════════ */
-const PLOTLY_COLORS = ['#2d6a4f','#52b788','#b7e4c7','#1b4332','#74c69d'];
+const PLOTLY_COLORS = ['#f10000','#164cff','#00ad1d','#d300fd','#00f3e7'];
 const SCORE_COLORS  = ['#440154','#3b528b','#21918c','#4DC151','#eeca00'];
 
 function plotlyLayout(xTitle, yTitle, extra={}) {
