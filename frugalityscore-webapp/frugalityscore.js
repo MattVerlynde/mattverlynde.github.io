@@ -134,7 +134,7 @@ function applyPreset(name) {
   document.getElementById('matrix-note').innerHTML = p
     ? `<strong>${p.label}</strong> — ${p.note}`
     : 'Custom rule matrix — edited manually.';
-  renderMatrix();
+  renderMatrixML();
   updatePlot();
 }
 
@@ -210,10 +210,10 @@ function renderMatrixML() {
             opt.value = k; opt.textContent = OUTPUT_LABELS_MAP[k];
             sel.appendChild(opt);
         });
-        sel.value = ruleMatrix_ML[etri][etei][pi];
-        styleCell(sel, ruleMatrix_ML[etri][etei][pi]);
+        sel.value = ruleMatrixML[etri][etei][pi];
+        styleCell(sel, ruleMatrixML[etri][etei][pi]);
         sel.addEventListener('change', function() {
-            ruleMatrix_ML[this.dataset.etri][this.dataset.etei][this.dataset.pi] = this.value;
+            ruleMatrixML[this.dataset.etri][this.dataset.etei][this.dataset.pi] = this.value;
             styleCell(this, this.value);
             activePreset = 'custom';
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset==='custom'));
@@ -700,7 +700,7 @@ document.getElementById('gpu-select').addEventListener('change', ()=>{
    BOOT
 ════════════════════════════════════════════════ */
 buildPresetButtons();
-renderMatrix();
+renderMatrixML();
 applyPreset('normal');
 
 Promise.all([loadCPUs(), loadGPUs(), loadPerformanceData()])
