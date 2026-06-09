@@ -502,10 +502,10 @@ function updatePlot() {
   // // ML mode
   // let scoreMem;
   // let safeEt=0, tlt=0, tmt=0, tht=0;
-  // const isML = systemType==='ML';
-  // document.getElementById("energy_control_test").style.display = isML?'block':'none';
-  // document.getElementById("energy_input_test").style.display   = isML?'block':'none';
-  // document.getElementById("mf-test-card").style.display        = isML?'block':'none';
+  const isML = systemType==='ML';
+  document.getElementById("energy_control_test").style.display = isML?'block':'none';
+  document.getElementById("energy_input_test").style.display   = isML?'block':'none';
+  document.getElementById("mf-test-card").style.display        = isML?'block':'none';
 
   // if (isML) {
   //   const et = parseFloat(document.getElementById("energy_test").value)||0;
