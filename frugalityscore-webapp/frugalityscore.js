@@ -290,7 +290,7 @@ function scoreMFAt(x) {
 //           sm[s] = Math.max(sm[s], Math.min(str, rules[ruleIdx][s]));
 //       }
 //   return sm;
-}
+// }
 
 function aggregateOutput(scoreMem) {
   const xs = Array.from({length:101},(_,i)=>i);
