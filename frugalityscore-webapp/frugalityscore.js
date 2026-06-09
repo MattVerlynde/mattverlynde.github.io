@@ -134,7 +134,7 @@ function applyPreset(name) {
   document.getElementById('matrix-note').innerHTML = p
     ? `<strong>${p.label}</strong> — ${p.note}`
     : 'Custom rule matrix — edited manually.';
-  renderMatrixML();
+  renderMatrix();
   updatePlot();
 }
 
@@ -700,7 +700,7 @@ document.getElementById('gpu-select').addEventListener('change', ()=>{
    BOOT
 ════════════════════════════════════════════════ */
 buildPresetButtons();
-renderMatrixML();
+renderMatrix();
 applyPreset('normal');
 
 Promise.all([loadCPUs(), loadGPUs(), loadPerformanceData()])
