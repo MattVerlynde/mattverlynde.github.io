@@ -258,38 +258,38 @@ function scoreMFAt(x) {
   return [trimf(x,[0,0,25]),trimf(x,[0,25,50]),trimf(x,[25,50,75]),trimf(x,[50,75,100]),trimf(x,[75,100,100])];
 }
 
-function computeScoreMembership(rules, perfMem, energyMem) {
-  const rules = [
-    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],
-    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],
-    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]
-  ];
-  let sm = [0,0,0,0,0];
-  for (let i=0; i<perfMem.length; i++)
-    for (let j=0; j<energyMem.length; j++) {
-      const str = Math.min(perfMem[i], energyMem[j]);
-      for (let s=0; s<5; s++)
-        sm[s] = Math.max(sm[s], Math.min(str, rules[j*energyMem.length+i][s]));
-    }
-  return sm;
-}
+// function computeScoreMembership(rules, perfMem, energyMem) {
+//   const rules = [
+//     [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],
+//     [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],
+//     [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]
+//   ];
+//   let sm = [0,0,0,0,0];
+//   for (let i=0; i<perfMem.length; i++)
+//     for (let j=0; j<energyMem.length; j++) {
+//       const str = Math.min(perfMem[i], energyMem[j]);
+//       for (let s=0; s<5; s++)
+//         sm[s] = Math.max(sm[s], Math.min(str, rules[j*energyMem.length+i][s]));
+//     }
+//   return sm;
+// }
 
-function computeScoreMLMembership(rules, perfMem, energyTrainMem, energyTestMem) {
-  const rules = [
-    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],
-    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],
-    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]
-  ];
-  let sm = [0,0,0,0,0];
-  for (let i=0; i<perfMem.length; i++)
-    for (let j=0; j<energyTrainMem.length; j++)
-      for (let k=0; k<energyTestMem.length; k++) {
-        const str = Math.min(perfMem[i], energyTrainMem[j], energyTestMem[k]);
-        const ruleIdx = (k*perfMem.length + j)*energyTrainMem.length + i;
-        for (let s=0; s<5; s++)
-          sm[s] = Math.max(sm[s], Math.min(str, rules[ruleIdx][s]));
-      }
-  return sm;
+// function computeScoreMLMembership(rules, perfMem, energyTrainMem, energyTestMem) {
+//   const rules = [
+//     [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],
+//     [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],
+//     [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]
+//   ];
+//   let sm = [0,0,0,0,0];
+//   for (let i=0; i<perfMem.length; i++)
+//     for (let j=0; j<energyTrainMem.length; j++)
+//       for (let k=0; k<energyTestMem.length; k++) {
+//         const str = Math.min(perfMem[i], energyTrainMem[j], energyTestMem[k]);
+//         const ruleIdx = (k*perfMem.length + j)*energyTrainMem.length + i;
+//         for (let s=0; s<5; s++)
+//           sm[s] = Math.max(sm[s], Math.min(str, rules[ruleIdx][s]));
+//       }
+//   return sm;
 }
 
 function aggregateOutput(scoreMem) {
@@ -497,7 +497,7 @@ function updatePlot() {
 
   const perfMem   = computePerfMembership(metric, safeP);
   const energyMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,safeE);
-  const rules = getRules();
+  // const rules = getRules();
 
   // // ML mode
   // let scoreMem;
