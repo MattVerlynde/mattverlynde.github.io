@@ -258,12 +258,7 @@ function scoreMFAt(x) {
   return [trimf(x,[0,0,25]),trimf(x,[0,25,50]),trimf(x,[25,50,75]),trimf(x,[50,75,100]),trimf(x,[75,100,100])];
 }
 
-function computeScoreMembership(perfMem, energyMem) {
-  const rules = [
-    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],
-    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],
-    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0]
-  ];
+function computeScoreMembership(rules, perfMem, energyMem) {
   let sm = [0,0,0,0,0];
   for (let i=0; i<perfMem.length; i++)
     for (let j=0; j<energyMem.length; j++) {
@@ -274,12 +269,7 @@ function computeScoreMembership(perfMem, energyMem) {
   return sm;
 }
 
-function computeScoreMLMembership(perfMem, energyTrainMem, energyTestMem) {
-  const rules = [
-    [0,0,1,0,0],[0,0,0,1,0],[0,0,0,0,1],[0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],
-    [0,1,0,0,0],[0,0,1,0,0],[0,0,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],
-    [1,0,0,0,0],[0,1,0,0,0],[0,0,1,0,0],[1,0,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]
-  ];
+function computeScoreMLMembership(rules, perfMem, energyTrainMem, energyTestMem) {
   let sm = [0,0,0,0,0];
   for (let i=0; i<perfMem.length; i++)
     for (let j=0; j<energyTrainMem.length; j++)
@@ -403,6 +393,8 @@ function updatePlot() {
   const perfMem   = computePerfMembership(metric, safeP);
   const energyMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,safeE);
 
+  const rules = getRules();
+
   // ML mode
   let scoreMem;
   let safeEt=0, tlt=0, tmt=0, tht=0;
@@ -418,9 +410,9 @@ function updatePlot() {
     tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
     tht = parseFloat(document.getElementById("energy_high_test").value)||0;
     const energyTestMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tlt,tmt,tht,safeEt);
-    scoreMem = computeScoreMLMembership(perfMem, energyMem, energyTestMem);
+    scoreMem = computeScoreMLMembership(rules, perfMem, energyMem, energyTestMem);
   } else {
-    scoreMem = computeScoreMembership(perfMem, energyMem);
+    scoreMem = computeScoreMembership(rules, perfMem, energyMem);
   }
 
   // Aggregate & defuzz
