@@ -140,78 +140,55 @@
 
     <!-- ── TAB 0: INFO ── -->
     <div class="panel active" id="panel-info">
-      <!-- <div class="grid-2">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Energy consumption MFs</span><span class="chip">input</span></div>
-          <table class="params-table">
-            <thead><tr><th>Set</th><th>Type</th><th>Parameters</th></tr></thead>
-            <tbody>
-              <tr><td>low</td><td>Z-MF (zmf)</td><td>[ energy_low × power,  energy_medium × power ]</td></tr>
-              <tr><td>medium</td><td>Triangular</td><td>[ energy_low, energy_medium, energy_high ] × power</td></tr>
-              <tr><td>high</td><td>S-MF (smf)</td><td>[ energy_medium × power,  energy_high × power ]</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card">
-          <div class="card-head"><span class="card-title">Performance MFs</span><span class="chip">input · data-driven</span></div>
-          <p style="font-size:12px;color:var(--text3);margin-bottom:8px;">Loaded from <code>referencePerformance.json</code>. Supports trimf &amp; trapmf per metric.</p>
-          <p style="font-size:11px;color:var(--text3);" id="metric-info">Select a metric to inspect its parameters.</p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head"><span class="card-title">Score output MFs</span><span class="chip">output · [0, 100]</span></div>
-        <table class="params-table">
-          <thead><tr><th>Set</th><th>Type</th><th>Parameters</th><th>Level</th></tr></thead>
-          <tbody>
-            <tr><td>1 · very low</td><td>trimf</td><td>[0, 0, 25]</td><td><span class="score-badge lvl-vl" style="font-size:10px;">very low</span></td></tr>
-            <tr><td>2 · low</td><td>trimf</td><td>[0, 25, 50]</td><td><span class="score-badge lvl-lo" style="font-size:10px;">low</span></td></tr>
-            <tr><td>3 · medium</td><td>trimf</td><td>[25, 50, 75]</td><td><span class="score-badge lvl-me" style="font-size:10px;">medium</span></td></tr>
-            <tr><td>4 · high</td><td>trimf</td><td>[50, 75, 100]</td><td><span class="score-badge lvl-hi" style="font-size:10px;">high</span></td></tr>
-            <tr><td>5 · very high</td><td>trimf</td><td>[75, 100, 100]</td><td><span class="score-badge lvl-vh" style="font-size:10px;">very high</span></td></tr>
-          </tbody>
-        </table>
-      </div> -->
+      <!-- include doc.html -->
       <div class="grid-2">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Energy consumption in data processing</span></div>
-          <p style="font-size:14px;color:var(--text);font-style:bold;">
-            This dashboard implements a Mamdani fuzzy inference system to compute a frugality score based on performance and energy consumption. Use the sidebar to input system parameters and toggle between tabs to explore the membership functions, rule base, and results.
-          </p>
-        </div>
-        <div class="card">
-          <div class="card-head"><span class="card-title">Frugality over efficiency</span></div>
-          <p style="font-size:14px;color:var(--text);font-style:bold;">
-            This dashboard implements a Mamdani fuzzy inference system to compute a frugality score based on performance and energy consumption. Use the sidebar to input system parameters and toggle between tabs to explore the membership functions, rule base, and results.
-          </p>
-        </div>
+          <div class="card">
+              <div class="card-head"><span class="card-title">Energy consumption in data processing</span></div>
+              <p style="font-size:14px;color:var(--text);font-style:bold;">
+                  The machine learning community is increasingly aware of the environmental impact of data processing, especially since the emergence 
+                  of deep learning models. The increase power consumption to train and deploy deep leanring models has set the machine learning community
+                  to consider efficiency as a key aspect of their designs. However, recent studies [1, 2, 3] and regulations [4] tend to shift the focus towards a different 
+                  concept: frugality.
+              </p>
+          </div>
+          <div class="card">
+              <div class="card-head"><span class="card-title">Frugality over efficiency</span></div>
+              <p style="font-size:14px;color:var(--text);font-style:bold;">
+                  As most of the literature focuses on optimizing for efficiency, this dashboard encapsulates the concept of frugality.
+                  Efficiency aims for the maximization of the performance to energy ratio, with little to no consideration of the context of use. 
+                  Frugality, on the other hand, is context specific and aims to optimize the performance and energy consumption based on real-life 
+                  interpretable rules. As such, frugality questions the objectives of an application, and can lead to more sustainable, realistic, 
+                  and user-centric designs.
+              </p>
+          </div>
       </div>
       <div class="card">
-        <div class="card-head"><span class="card-title">Fuzzy-Based Frugality Score</span></div>
-        <!-- here explanation text -->
-        <p style="font-size:14px;color:var(--text2);">
-          This dashboard implements a Mamdani fuzzy inference system to compute a frugality score based on performance and energy consumption. Use the sidebar to input system parameters and toggle between tabs to explore the membership functions, rule base, and results.
-        </p>
-      </div>
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Energy consumption</span><span class="chip">input</span></div>
+          <div class="card-head"><span class="card-title">Fuzzy-Based Frugality Score</span></div>
           <p style="font-size:14px;color:var(--text2);">
-            This dashboard implements a Mamdani fuzzy inference system to compute a frugality score based on performance and energy consumption. Use the sidebar to input system parameters and toggle between tabs to explore the membership functions, rule base, and results.
+              This dashboard implements a Mamdani fuzzy inference system (FIS) [5] to compute a frugality score based on performance 
+              and energy consumption. Fuzzy logic is particularly suitable for multi-criteria decision-making tasks involving uncertainty and human subjectivity [6, 7].
+              As the performance and energy consumption of a system can be considered as human subjective concepts, a fuzzy-based 
+              approach permits to formalize the reasoning process of the user and to compute an interpretable frugality score.
           </p>
-        </div>
-        <div class="card">
-          <div class="card-head"><span class="card-title">Performance</span><span class="chip">input · data-driven</span></div>
-          <p style="font-size:14px;color:var(--text2);">
-            This dashboard implements a Mamdani fuzzy inference system to compute a frugality score based on performance and energy consumption. Use the sidebar to input system parameters and toggle between tabs to explore the membership functions, rule base, and results.
-          </p>
-        </div>
       </div>
       <div class="card">
-        <div class="card-head"><span class="card-title">Guide</span></div>
-        <!-- here explanation text -->
-        <p style="font-size:14px;color:var(--text2);">
-          Guide on how to use this dashboard here.
-        </p>
+          <div class="card-head"><span class="card-title">Guide</span></div>
+          <p style="font-size:14px;color:var(--text2);">
+              Use the sidebar to input system parameters and toggle between tabs to explore the membership 
+              functions, rule base, and results.
+          </p>
+      </div>
+      <div class="card">
+          <div class="card-head"><span class="card-title">References</span></div>
+          <p style="font-size:14px;color:var(--text2);">
+              [1] N. Girdhar, A. Raj, D. Sharma, V. Singh, A. Doucet, and M. Renz, “A comprehensive review of frugal artificial intelligence: challenges, applications, and the road to sustainable AI,” Soft Computing, vol. 29, pp. 4823–4856, July 2025.
+              [2] R. Basu, P. Banerjee, and E. Sweeny, “Frugal Innovation: Core Competencies to Address Global Sustainability,” Journal of Management for Global Sustainability, vol. 1, Dec. 2013.
+              [3] IPCC, “Summary for policymakers,” in Climate Change 2022: Mitigation of Climate Change. Contribution of Working Group III to the Sixth Assessment Report of the Intergovernmental Panel on Climate Change (P. Shukla, J. Skea, R. Slade, A. A. Khourdajie, R. van Diemen, D. McCollum, M. Pathak, S. Some, P. Vyas, R. Fradera, M. Belkacemi, A. Hasija, G. Lisboa, S. Luz, and J. Malley, eds.), Cambridge, UK and New York, NY, USA: Cambridge University Press, 2022.
+              [4] AFNOR, “AFNOR SPEC 2314: Référentiel général pour l'IA frugale – Mesurer et réduire l'impact environnemental de l'IA,” AFNOR Éditions, 2024.
+              [5] E. H. Mamdani and S. Assilian, “An experiment in linguistic synthesis with a fuzzy logic controller,” International Journal of Man-Machine Studies, vol. 7, pp. 1–13, Jan. 1975.
+              [6] F. A. Lootsma, Fuzzy Logic for Planning and Decision Making. Springer Science & Business Media, Mar. 2013. Google-Books-ID: 7GXmB-wAAQBAJ.
+              [7] L. Chen, G. Duan, S. Wang, and J. Ma, “A Choquet integral based fuzzy logic approach to solve uncertain multi-criteria decision making problem,” Expert Systems with Applications, vol. 149, p. 113303, July 2020.
+          </p>
       </div>
     </div> <!-- /panel-info --> 
 
