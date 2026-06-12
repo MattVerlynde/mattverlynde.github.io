@@ -15,7 +15,7 @@ function toggleTheme() {
 let performanceData = {};
 
 async function loadPerformanceData() {
-  const response = await fetch('../frugalityscore/src/data/referencePerformance.json');
+  const response = await fetch('./data/referencePerformance.json');
   performanceData = await response.json();
   const metricSelect = document.getElementById("metric");
   Object.keys(performanceData.performance_minmax).forEach((metric, index) => {
@@ -28,7 +28,7 @@ async function loadPerformanceData() {
 }
 
 async function loadCPUs() {
-  const response = await fetch('../frugalityscore/src/data/CPUs.csv');
+  const response = await fetch('./data/CPUs.csv');
   const text = await response.text();
   const lines = text.split(/\r?\n/).slice(1);
   const sel = document.getElementById("cpu-select");
@@ -45,7 +45,7 @@ async function loadCPUs() {
 }
 
 async function loadGPUs() {
-  const response = await fetch('../frugalityscore/src/data/GPUs.csv');
+  const response = await fetch('./data/GPUs.csv');
   const text = await response.text();
   const lines = text.split(/\r?\n/).slice(1);
   const sel = document.getElementById("gpu-select");
