@@ -10,13 +10,238 @@ function toggleTheme() {
 }
 
 /* ════════════════════════════════════════════════
+   DATA AVAILABLE
+════════════════════════════════════════════════ */
+
+
+const textCPU = `model,TDP,n_cores,TDP_per_core,Release_year,source
+A8-7680,45,4,11.3,,https://www.techpowerup.com/cpu-specs/
+A9-9425 SoC,15,2,7.5,,https://www.techpowerup.com/cpu-specs/
+AMD 7552,200,48,4.2,,https://www.amd.com/system/files/documents/AMD-EPYC-7002-Series-Datasheet.pdf
+AMD EPYC 7251,120,8,15.0,,https://www.amd.com/en/products/cpu/amd-epyc-7251
+AMD EPYC 7343,190,16,11.9,,https://www.amd.com/en/products/cpu/amd-epyc-7343
+AMD EPYC 7513,200,32,6.3,,https://www.amd.com/en/products/cpu/amd-epyc-7513
+AMD EPYC 7642,225,48,4.7,,https://www.techpowerup.com/cpu-specs/epyc-7642.c2247
+AMD EPYC 7763,280,64,4.4,,https://www.amd.com/en/products/cpu/amd-epyc-7763 
+AMD EPYC 7773X,280,64,4.4,,https://www.amd.com/en/products/cpu/amd-epyc-7773x 
+AMD EPYC 7H12,280,64,4.4,,https://www.amd.com/en/product/9131 
+AMD EPYC 7V73X,280,64,4.4,,https://wccftech.com/amd-epyc-7v73x-cpu-with-3d-v-cache-tested-milan-x-offers-impressive-cache-latency-better-boost-clocks-versus-standard-milan/
+Any,,,12.0,,
+Athlon 3000G,35,2,17.5,,https://www.techpowerup.com/cpu-specs/
+Core 2 Quad Q6600,95,4,23.8,,https://www.techpowerup.com/cpu-specs/
+Core i3-10100,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Core i3-10300,62,4,15.5,,https://www.techpowerup.com/cpu-specs/
+Core i3-10320,91,4,22.8,,https://www.techpowerup.com/cpu-specs/
+Core i3-10350K,91,4,22.8,,https://www.techpowerup.com/cpu-specs/
+Core i3-9100,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Core i3-9100F,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Core i5-10400,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-10400F,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-10500,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-10600,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-10600K,95,6,15.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-1145G7,28,4,7.0,,https://www.intel.co.uk/content/www/uk/en/products/sku/208660/intel-core-i51145g7-processor-8m-cache-up-to-4-40-ghz-with-ipu/specifications.html
+Core i5-3570K,77,4,19.3,,https://www.techpowerup.com/cpu-specs/
+Core i5-4460,84,4,21.0,,https://ark.intel.com/content/www/us/en/ark/products/80817/intel-core-i5-4460-processor-6m-cache-up-to-3-40-ghz.html
+Core i5-9400,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-9400F,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Core i5-9600KF,95,6,15.8,,https://www.techpowerup.com/cpu-specs/
+Core i7-10700,65,8,8.1,,https://www.techpowerup.com/cpu-specs/
+Core i7-10700K,125,8,15.6,,https://www.techpowerup.com/cpu-specs/
+Core i7-4790,84,4,21.0,,https://www.intel.co.uk/content/www/uk/en/products/sku/80806/intel-core-i74790-processor-8m-cache-up-to-4-00-ghz/specifications.html
+Core i7-4930K,130,6,21.7,,https://www.techpowerup.com/cpu-specs/
+Core i7-6700K,95,4,23.8,,https://www.techpowerup.com/cpu-specs/
+Core i7-8700K,95,6,15.8,,https://www.techpowerup.com/cpu-specs/
+Core i7-9700F,65,8,8.1,,https://www.techpowerup.com/cpu-specs/
+Core i7-9700K,95,8,11.9,,https://www.techpowerup.com/cpu-specs/
+Core i9-10900K,125,10,12.5,,https://www.techpowerup.com/cpu-specs/
+Core i9-10900KF,105,10,10.5,,https://www.techpowerup.com/cpu-specs/
+Core i9-10900XE,165,10,16.5,,https://www.techpowerup.com/cpu-specs/
+Core i9-10920XE,165,12,13.8,,https://www.techpowerup.com/cpu-specs/
+Core i9-12900K,125,16,7.8,,https://ark.intel.com/content/www/us/en/ark/products/134599/intel-core-i912900k-processor-30m-cache-up-to-5-20-ghz.html
+Core i9-9900K,95,8,11.9,,https://www.techpowerup.com/cpu-specs/
+FX-6300,95,6,15.8,,https://www.techpowerup.com/cpu-specs/
+FX-8350,125,8,15.6,,https://www.techpowerup.com/cpu-specs/
+Rasberry Pi 4,6.4,4,1.6,,https://raspberrypi.stackexchange.com/questions/114239/pi-4-maximum-power-consumption 
+Ryzen 3 2200G,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 3200G,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 3200U,15,2,7.5,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 1600,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 2600,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3400G,65,4,16.3,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3500U,15,4,3.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600,65,6,10.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600X,95,6,15.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 2700X,105,8,13.1,,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3700X,65,8,8.1,,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3800X,105,8,13.1,,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3900X,125,12,10.4,,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3950X,105,16,6.6,,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 2990WX,250,32,7.8,,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 3990X,280,64,4.4,,https://www.techpowerup.com/cpu-specs/
+Xeon E5-2650 v2,95,8,11.9,,https://www.techpowerup.com/cpu-specs/xeon-e5-2650-v2.c1661
+Xeon E5-2660 v3,105,10,10.5,,https://ark.intel.com/content/www/us/en/ark/products/81706/intel-xeon-processor-e5-2660-v3-25m-cache-2-60-ghz.html
+Xeon E5-2665,115,8,14.4,,https://ark.intel.com/content/www/us/en/ark/products/64597/intel-xeon-processor-e5-2665-20m-cache-2-40-ghz-8-00-gt-s-intel-qpi.html
+Xeon E5-2670,115,8,14.4,,https://ark.intel.com/content/www/us/en/ark/products/64595/intel-xeon-processor-e5-2670-20m-cache-2-60-ghz-8-00-gt-s-intel-qpi.html
+Xeon E5-2670 v2,115,10,11.5,,https://ark.intel.com/content/www/us/en/ark/products/75275/intel-xeon-processor-e5-2670-v2-25m-cache-2-50-ghz.html
+Xeon E5-2680 v3,120,12,10.0,,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e5-processors/e5-2680-v3.html
+Xeon E5-2683 v4,120,16,7.5,,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e5-processors/e5-2683-v4.html
+Xeon E5-2690 v2,130,10,13.0,,https://ark.intel.com/content/www/us/en/ark/products/75279/intel-xeon-processor-e5-2690-v2-25m-cache-3-00-ghz.html
+Xeon E5-2690 v3,135,12,11.3,,https://ark.intel.com/content/www/us/en/ark/products/81713/intel-xeon-processor-e5-2690-v3-30m-cache-2-60-ghz.html
+Xeon E5-2695 v3,120,14,8.6,,https://www.techpowerup.com/cpu-specs/xeon-e5-2695-v3.c2894
+Xeon E5-2695 v4,120,18,6.7,,https://ark.intel.com/content/www/us/en/ark/products/91316/intel-xeon-processor-e5-2695-v4-45m-cache-2-10-ghz.html
+Xeon E5-2697 v4,145,18,8.1,,https://ark.intel.com/content/www/us/en/ark/products/91755/intel-xeon-processor-e5-2697-v4-45m-cache-2-30-ghz.html
+Xeon E5-2699 v3,145,18,8.1,,https://ark.intel.com/content/www/us/en/ark/products/81061/intel-xeon-processor-e5-2699-v3-45m-cache-2-30-ghz.html
+Xeon E5-2699 v4,145,22,6.6,,https://ark.intel.com/content/www/us/en/ark/products/91317/intel-xeon-processor-e5-2699-v4-55m-cache-2-20-ghz.html
+Xeon E5-4610 v4,105,10,10.5,,https://ark.intel.com/content/www/us/en/ark/products/93812/intel-xeon-processor-e5-4610-v4-25m-cache-1-80-ghz.html
+Xeon E5-4620,95,8,11.9,,https://ark.intel.com/content/www/us/en/ark/products/64607/intel-xeon-processor-e5-4620-16m-cache-2-20-ghz-7-20-gt-s-intel-qpi.html
+Xeon E5-4650L,115,8,14.4,,https://ark.intel.com/content/www/us/en/ark/products/64606/intel-xeon-processor-e5-4650l-20m-cache-2-60-ghz-8-00-gt-s-intel-qpi.html
+Xeon E7-4850 v2,105,12,8.8,,https://ark.intel.com/content/www/us/en/ark/products/75248/intel-xeon-processor-e7-4850-v2-24m-cache-2-30-ghz.html
+Xeon E7-8867 v3,165,16,10.3,,https://ark.intel.com/content/www/us/en/ark/products/84681/intel-xeon-processor-e7-8867-v3-45m-cache-2-50-ghz.html
+Xeon E7-8880 v4,150,22,6.8,,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e7-processors/e7-8880-v4.html
+Xeon Gold 6142,150,16,9.4,,https://ark.intel.com/content/www/us/en/ark/products/120487/intel-xeon-gold-6142-processor-22m-cache-2-60-ghz.html
+Xeon Gold 6148,150,20,7.5,,https://ark.intel.com/content/www/us/en/ark/products/120489/intel-xeon-gold-6148-processor-27-5m-cache-2-40-ghz.html
+Xeon Gold 6248,150,20,7.5,,https://ark.intel.com/content/www/us/en/ark/products/192446/intel-xeon-gold-6248-processor-27-5m-cache-2-50-ghz.html
+Xeon Gold 6252,150,24,6.3,,https://ark.intel.com/content/www/us/en/ark/products/192447/intel-xeon-gold-6252-processor-35-75m-cache-2-10-ghz.html
+Xeon L5640 ,60,6,10.0,,https://ark.intel.com/content/www/us/en/ark/products/47926/intel-xeon-processor-l5640-12m-cache-2-26-ghz-5-86-gt-s-intel-qpi.html
+Xeon Phi 5110P,225,60,3.8,,https://ark.intel.com/content/www/us/en/ark/products/71992/intel-xeon-phi-coprocessor-5110p-8gb-1-053-ghz-60-core.html
+Xeon Platinum 8260,165,24,6.9,,https://www.intel.com/content/www/us/en/products/sku/192474/intel-xeon-platinum-8260-processor-35-75m-cache-2-40-ghz/specifications.html
+Xeon Platinum 8268,205,24,8.5,,https://www.intel.com/content/www/us/en/products/sku/192481/intel-xeon-platinum-8268-processor-35-75m-cache-2-90-ghz/specifications.html
+Xeon Platinum 9282,400,56,7.1,,https://www.techpowerup.com/cpu-specs/
+Xeon X3430,95,4,23.8,,https://ark.intel.com/content/www/us/en/ark/products/42927/intel-xeon-processor-x3430-8m-cache-2-40-ghz.html
+Xeon X5660,95,6,15.8,,https://ark.intel.com/content/www/us/en/ark/products/47921/intel-xeon-processor-x5660-12m-cache-2-80-ghz-6-40-gt-s-intel-qpi.html`;
+
+const textGPU = `model,TDP,n_cores,TDP_per_core,Release_year,source
+AMD RX480,150,,150,,techpowerup.com
+Any,200,1,200,,
+NVIDIA A100 40GB PCIe,250,,250,,https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/a100-80gb-datasheet-update-nvidia-us-1521051-r2-web.pdf
+NVIDIA A100 80GB PCIe,300,,300,,https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/PB-10577-001_v02.pdf 
+NVIDIA GTX 1080,180,,180,,techpowerup.com
+NVIDIA GTX 1080 Ti,250,,250,,techpowerup.com
+NVIDIA GTX TITAN X,250,,250,,techpowerup.com
+NVIDIA Jetson AGX Xavier,30,,30,,https://www.techpowerup.com/gpu-specs/jetson-agx-xavier.c3232
+NVIDIA RTX 2080,215,,215,,techpowerup.com
+NVIDIA RTX 2080 Ti,250,,250,,techpowerup.com
+NVIDIA Tesla K80,300,,300,,https://www.techpowerup.com/gpu-specs/tesla-k80.c2616
+NVIDIA Tesla P100,250,,250,,https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/tesla-p100/pdf/nvidia-tesla-p100-PCIe-datasheet.pdf
+NVIDIA Tesla P100 PCIe,250,,250,,techpowerup.com
+NVIDIA Tesla P4,75,,75,,https://www.techpowerup.com/gpu-specs/tesla-p4.c2879
+NVIDIA Tesla T4,70,,70,,https://www.techpowerup.com/gpu-specs/tesla-t4.c3316
+NVIDIA Tesla V100,300,,300,,techpowerup.com
+NVIDIA Tesla V100S,250,,250,,https://technical.city/en/video/Tesla-V100S-PCIe-32-GB
+NVIDIA Titan V,250,,250,,techpowerup.com
+NVIDIA TITAN X Pascal,250,,250,,techpowerup.com
+TPU v2,280,,280,,http://arxiv.org/abs/2104.10350 
+TPU v3,220,,220,,https://cloud.google.com/tpu/docs/v3
+TPU v4,170,,170,,https://cloud.google.com/tpu/docs/system-architecture-tpu-vm`;
+
+const performanceData = {
+  "performance_functions": {
+    "accuracy": ["trimf", "trimf", "trimf"],
+    "precision": ["trimf", "trimf", "trimf"],
+    "recall": ["trimf", "trimf", "trimf"],
+    "f1": ["trimf", "trimf", "trimf"],
+    "auc": ["trapmf", "trimf", "trimf"],
+    "rand": ["trimf", "trimf", "trimf"],
+    "adjusted_rand": ["trimf", "trimf", "trimf"],
+    "silhouette": ["trapmf", "trimf", "trimf"],
+    "calinski_harabasz": ["trapmf", "trimf", "trapmf"],
+    "davies_bouldin": ["trapmf", "trimf", "trapmf"]
+  },
+  "performance_names": {
+    "accuracy": "Accuracy",
+    "precision": "Precision",
+    "recall": "Recall",
+    "f1": "F1-Score",
+    "auc": "AUC",
+    "rand": "Rand Index",
+    "adjusted_rand": "Adjusted Rand Index",
+    "silhouette": "Silhouette Score",
+    "calinski_harabasz": "Calinski-Harabasz Index",
+    "davies_bouldin": "Davies-Bouldin Index"
+  },
+  "performance_params": {
+    "accuracy": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "precision": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "recall": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "f1": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "auc": [[0, 0, 0.5, 0.75], [0.5, 0.75, 1], [0.75, 1, 1]],
+    "rand": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "adjusted_rand": [[0, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "silhouette": [[-1, -1, 0, 0.5], [0, 0.5, 1], [0.5, 1, 1]],
+    "calinski_harabasz": [[0, 0, 1, 5], [1, 5, 10], [5, 10, 100, 100]],
+    "davies_bouldin": [[5, 10, 100, 100], [1, 5, 10], [0, 0, 1, 5]]
+  },
+  "performance_minmax": {
+    "accuracy": [0, 1],
+    "precision": [0, 1],
+    "recall": [0, 1],
+    "f1": [0, 1],
+    "auc": [0, 1],
+    "rand": [0, 1],
+    "adjusted_rand": [0, 1],
+    "silhouette": [-1, 1],
+    "calinski_harabasz": [0, 100],
+    "davies_bouldin": [0, 100]
+  }
+};
+
+const DataCIFAR = ``;
+
+const MetadataCIFAR = {
+  "data": DataCIFAR,
+  "cpu": "",
+  "ncpu": 1,
+  "gpu": "",
+  "ngpu": 1,
+  "energy_low_train": 1,
+  "energy_medium_train": 1,
+  "energy_high_train": 1,
+  "energy_low_test": 1,
+  "energy_medium_test": 1,
+  "energy_high_test": 1,
+};
+
+const DataMNIST = ``
+
+const MetadataMNIST = {
+  "data": DataMNIST,
+  "cpu": "",
+  "ncpu": 1,
+  "gpu": "",
+  "ngpu": 1,
+  "energy_low_train": 1,
+  "energy_medium_train": 1,
+  "energy_high_train": 1,
+  "energy_low_test": 1,
+  "energy_medium_test": 1,
+  "energy_high_test": 1,
+};
+
+const DataImageNet = ``;
+
+const MetadataImageNet
+ = {
+  "data": DataImageNet,
+  "cpu": "",
+  "ncpu": 1,
+  "gpu": "",
+  "ngpu": 1,
+  "energy_low_train": 1,
+  "energy_medium_train": 1,
+  "energy_high_train": 1,
+  "energy_low_test": 1,
+  "energy_medium_test": 1,
+  "energy_high_test": 1,
+};
+
+/* ════════════════════════════════════════════════
    DATA LOADING
 ════════════════════════════════════════════════ */
-let performanceData = {};
-
+let text = "";
 async function loadPerformanceData() {
-  const response = await fetch('./data/referencePerformance.json');
-  performanceData = await response.json();
+  // const response = await fetch('./data/referencePerformance.json');
+  // performanceData = await response.json();
   const metricSelect = document.getElementById("metric");
   Object.keys(performanceData.performance_minmax).forEach((metric, index) => {
     const option = document.createElement("option");
@@ -28,8 +253,9 @@ async function loadPerformanceData() {
 }
 
 async function loadCPUs() {
-  const response = await fetch('./data/CPUs.csv');
-  const text = await response.text();
+  // const response = await fetch('./data/CPUs.csv');
+  // const text = await response.text();
+  text = textCPU;
   const lines = text.split(/\r?\n/).slice(1);
   const sel = document.getElementById("cpu-select");
   const def = document.createElement("option");
@@ -45,8 +271,9 @@ async function loadCPUs() {
 }
 
 async function loadGPUs() {
-  const response = await fetch('./data/GPUs.csv');
-  const text = await response.text();
+  // const response = await fetch('./data/GPUs.csv');
+  // const text = await response.text();
+  text = textGPU;
   const lines = text.split(/\r?\n/).slice(1);
   const sel = document.getElementById("gpu-select");
   const def = document.createElement("option");
@@ -501,23 +728,23 @@ function updatePlot() {
 
   // // ML mode
   // let scoreMem;
-  // let safeEt=0, tlt=0, tmt=0, tht=0;
+  let safeEt=0, tlt=0, tmt=0, tht=0;
   const isML = systemType==='ML';
   document.getElementById("energy_control_test").style.display = isML?'block':'none';
   document.getElementById("energy_input_test").style.display   = isML?'block':'none';
   document.getElementById("mf-test-card").style.display        = isML?'block':'none';
 
-  // if (isML) {
-  //   const et = parseFloat(document.getElementById("energy_test").value)||0;
-  //   safeEt = Math.max(0, et);
-  //   tlt = parseFloat(document.getElementById("energy_low_test").value)||0;
-  //   tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
-  //   tht = parseFloat(document.getElementById("energy_high_test").value)||0;
-  //   const energyTestMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tlt,tmt,tht,safeEt);
-  //   scoreMem = computeScoreMLMembership(rules, perfMem, energyMem, energyTestMem);
-  // } else {
-  //   scoreMem = computeScoreMembership(rules, perfMem, energyMem);
-  // }
+  if (isML) {
+    const et = parseFloat(document.getElementById("energy_test").value)||0;
+    safeEt = Math.max(0, et);
+    tlt = parseFloat(document.getElementById("energy_low_test").value)||0;
+    tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
+    tht = parseFloat(document.getElementById("energy_high_test").value)||0;
+    // const energyTestMem = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tlt,tmt,tht,safeEt);
+    // scoreMem = computeScoreMLMembership(rules, perfMem, energyMem, energyTestMem);
+  }// else {
+  //  scoreMem = computeScoreMembership(rules, perfMem, energyMem);
+  //}
 
   // // Aggregate & defuzz
   // const defuzzMethod = document.getElementById("defuzz-select").value;
@@ -681,21 +908,6 @@ function updateSliderHigh(v, suf='') {
 /* ════════════════════════════════════════════════
    CSV UPLOAD
 ════════════════════════════════════════════════ */
-// function computeScore(perf, energy) {
-//   const metric = document.getElementById("metric").value;
-//   const cpuFactor = parseFloat(document.getElementById("cpu-power").value)||1;
-//   const cores     = parseInt(document.getElementById("cores").value)||1;
-//   const gpuFactor = parseFloat(document.getElementById("gpu-power").value)||1;
-//   const ngpu      = parseInt(document.getElementById("number-gpu").value)||0;
-//   const tl=parseFloat(document.getElementById("energy_low").value)||0;
-//   const tm=parseFloat(document.getElementById("energy_medium").value)||0;
-//   const th=parseFloat(document.getElementById("energy_high").value)||0;
-//   const pm = computePerfMembership(metric, perf);
-//   const em = computeEnergyMembership(cpuFactor,cores,gpuFactor,ngpu,tl,tm,th,energy);
-//   const sm = computeScoreMembership(pm, em);
-//   const {xs,ys} = aggregateOutput(sm);
-//   return defuzz(xs,ys,document.getElementById("defuzz-select").value);
-// }
 
 function computeScore(perf, energy) {
   const metric    = document.getElementById("metric").value;
@@ -717,7 +929,39 @@ function computeScore(perf, energy) {
   return score;
 }
 
+function computeScoreML(perf, energy_train, energy_test) {
+  const metric    = document.getElementById("metric").value;
+  const cpuFactor = parseFloat(document.getElementById("cpu-power").value) || 1;
+  const cores     = parseInt(document.getElementById("cores").value) || 1;
+  const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
+  const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
+  const tl_train = parseFloat(document.getElementById("energy_low").value)    || 0;
+  const tm_train = parseFloat(document.getElementById("energy_medium").value) || 0;
+  const th_train = parseFloat(document.getElementById("energy_high").value)   || 0;
+  const tl_test = parseFloat(document.getElementById("energy_low_test").value)    || 0;
+  const tm_test = parseFloat(document.getElementById("energy_medium_test").value) || 0;
+  const th_test = parseFloat(document.getElementById("energy_high_test").value)   || 0;
+
+  const perfMem   = computePerfMembership(metric, perf);
+  const energyTrainMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl_train, tm_train, th_train, energy_train);
+  const energyTestMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl_test, tm_test, th_test, energy_test);
+  const { score } = calcScore({
+    perfMem,
+    energyTrainMem,
+    energyTestMem,
+    defuzzMethod: document.getElementById("defuzz-select").value
+  });
+  return score;
+}
+
 function readUploadFile(evt) {
+  const systemType = document.querySelector('input[name="systemType"]:checked')?.value;
+  const isML = systemType==='ML';
+  if (isML) readUploadFileML(evt);
+  else readUploadFileNML(evt);
+}
+
+function readUploadFileNML(evt) {
   const file = evt.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -760,6 +1004,55 @@ function readUploadFile(evt) {
   };
   reader.readAsText(file);
 }
+
+function readUploadFileML(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result.trim();
+    const lines = text.split(/\r?\n/);
+    if (lines.length < 2) return;
+    const headers = lines[0].split(',').map(h=>h.trim());
+    const perfIdx  = headers.indexOf("perf");
+    const energyTrainIdx= headers.indexOf("energyTrain");
+    const energyTestIdx= headers.indexOf("energyTest");
+    const groupIdx = headers.indexOf("group");
+    if (perfIdx===-1 || energyTrainIdx===-1 || energyTestIdx===-1) return;
+
+    const perfs   = lines.slice(1).map(l=>parseFloat(l.split(',')[perfIdx]));
+    const energiesTrain= lines.slice(1).map(l=>parseFloat(l.split(',')[energyTrainIdx]));
+    const energiesTest= lines.slice(1).map(l=>parseFloat(l.split(',')[energyTestIdx]));
+    const groups  = lines.slice(1).map(l=>l.split(',')[groupIdx]||'default');
+
+    const scores = perfs.map((p,i)=>computeScoreML(p,energiesTrain[i],energiesTest[i]));
+    const grouped = {};
+    groups.forEach((g,i)=>{ if(!grouped[g])grouped[g]=[]; grouped[g].push(scores[i]); });
+    const means = Object.values(grouped).map(s=>s.reduce((a,b)=>a+b,0)/s.length);
+    const stds  = Object.values(grouped).map(s=>{
+      const m=s.reduce((a,b)=>a+b,0)/s.length;
+      return Math.sqrt(s.map(x=>(x-m)**2).reduce((a,b)=>a+b,0)/s.length);
+    });
+    const barTrace = {
+      x:Object.keys(grouped), y:means, type:'bar',
+      marker:{color:means.map(s=>getScoreInfo(s).bar)},
+      error_y:{type:'data',array:stds,visible:true,color:'var(--text3)',thickness:1.5,width:4}
+    };
+
+    const lastMeans = means[means.length-1]
+    document.getElementById("perf").value   = parseFloat(lastMeans[perfIdx])||0;
+    document.getElementById("energy").value = parseFloat(lastMeans[energyTrainIdx])||0;
+    document.getElementById("energy_test").value = parseFloat(lastMeans[energyTestIdx])||0;
+    updatePlot();
+
+    document.getElementById("bar-card").style.display = 'block';
+    Plotly.react('bar_scores_display', [barTrace],
+      {...plotlyLayout('Group','Score'),yaxis:{...plotlyLayout('','').yaxis,range:[0,100]}},
+      plotlyConfig);
+  };
+  reader.readAsText(file);
+}
+
 
 /* ════════════════════════════════════════════════
    TAB SWITCHING
