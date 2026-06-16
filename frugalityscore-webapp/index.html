@@ -101,6 +101,25 @@
       </div>
     </div>
 
+    <div class="field">
+      <label>Demo mode</label>
+      <div class="radio-row">
+        <label class="radio-pill"><input type="radio" name="demoMode" value="yes"><span>Yes</span></label>
+        <label class="radio-pill"><input type="radio" name="demoMode" value="no" checked><span>No</span></label>
+      </div>
+    </div>
+
+    <div class="field" id="demo_control_scenario" style="display:none;">
+      <label>Scenario</label>
+      <div class="radio-row">
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="mnist"><span>1</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="imagenet"><span>2</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-scratch"><span>3</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-pretrained"><span>4</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="buttere"><span>5</span></label>
+      </div>
+    </div>
+
   </div><!-- /sidebar-body -->
   <div class="sidebar-footer">
     <div class="field" style="margin-bottom:10px;">
@@ -127,9 +146,9 @@
 <div class="main">
   <div class="topbar">
     <button class="tab-btn active" onclick="switchTab('info')"    id="tab-info">⓪ Info</button>
-    <button class="tab-btn"        onclick="switchTab('result')"  id="tab-result">① Result</button>
-    <button class="tab-btn"        onclick="switchTab('mf')"      id="tab-mf">② Membership functions</button>
-    <button class="tab-btn"        onclick="switchTab('rules')"   id="tab-rules">③ Rule base</button>
+    <button class="tab-btn"        onclick="switchTab('mf')"      id="tab-mf">① Membership functions</button>
+    <button class="tab-btn"        onclick="switchTab('rules')"   id="tab-rules">② Rule base</button>
+    <button class="tab-btn"        onclick="switchTab('result')"  id="tab-result">③ Result</button>
     <!-- <button class="tab-btn"        onclick="switchTab('params')"  id="tab-params">④ Parameters</button> -->
     <div class="topbar-right">
       <button class="theme-toggle" onclick="toggleTheme()">☽ Dark</button>
@@ -141,7 +160,7 @@
     <!-- ── TAB 0: INFO ── -->
     <div class="panel active" id="panel-info">
       <!-- include doc.html -->
-      <div class="grid-2">
+      <div class="grid-3">
           <div class="card">
               <div class="card-head"><span class="card-title">Energy consumption in data processing</span></div>
               <p style="font-size:14px;color:var(--text);font-style:bold;">
@@ -160,6 +179,16 @@
                   interpretable rules. As such, frugality questions the objectives of an application, and can lead to more sustainable, realistic, 
                   and user-centric designs.
               </p>
+          </div>
+          <div class="card">
+            <div class="card-head"><span class="card-title">Frugality score</span></div>
+            <div class="score-hero">
+              <div class="score-number" id="score-val-front" style="color:var(--accent)">—</div>
+              <div class="score-right">
+                <span class="score-badge" id="score-badge-front">—</span>
+                <span style="font-size:11px;color:var(--text3);">/ 100</span>
+              </div>
+            </div>
           </div>
       </div>
       <div class="card">
@@ -190,7 +219,19 @@
               Output is visible on page "① Result" <br>
               Defuzzification mode can be selected on this page. <br>
               <br>
-              Rue definition and customisation is availabel on page "③ Rule base"
+              Rule definition and customisation is availabel on page "③ Rule base"
+          </p>
+      </div>
+      <div class="card">
+          <div class="card-head"><span class="card-title">Demo mode</span></div>
+          <p style="font-size:14px;color:var(--text2);">
+              You can toggle DEMO MODE in the sidebar to choose an execution scenario applied on the data analysed within the linked paper.<br>
+              These scenarii are: <br>
+              1. Training of non-neural-network based classification methods on MNIST <br>
+              2. Training of benchmark neural networks on ImageNet from scratch <br>
+              3. Training of benchmark neural networks on CIFAR100 from scratch <br>
+              4. Training of benchmark neural networks on CIFAR100 pretrained on ImageNet <br>
+              5. Training of rectangular-shaped multi-layer perceptrons with different depths on MNIST (from BUTTER-E) <br>
           </p>
       </div>
       <div class="card" style="margin-top:12px;">
@@ -214,7 +255,52 @@
       </div>
     </div> <!-- /panel-info --> 
 
-    <!-- ── TAB 1: RESULT ── -->
+    <!-- ── TAB 1: MF ── -->
+    <div class="panel" id="panel-mf">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><span class="card-title">Performance membership functions</span><span class="chip" id="mf-metric-chip">—</span></div>
+          <div class="plot-wrap" id="plot_membership_perf"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-title">Energy membership functions (train)</span></div>
+          <div class="plot-wrap" id="plot_membership_energy"></div>
+        </div>
+      </div>
+      <div class="card" id="mf-test-card" style="display:none;">
+        <div class="card-head"><span class="card-title">Energy membership functions (test)</span></div>
+        <div class="plot-wrap" id="plot_membership_energy_test"></div>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <div class="card-head"><span class="card-title">Score output membership functions</span></div>
+        <div class="plot-wrap" id="plot_membership_score"></div>
+      </div>
+    </div><!-- /panel-mf -->
+
+    <!-- ── TAB 2: RULES ── -->
+    <div class="panel" id="panel-rules">
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Rule base matrix</span>
+          <span style="font-size:10px;color:var(--text3);">rows = energy · cols = performance · cells = score output</span>
+        </div>
+        <div class="preset-row" id="preset-row"></div>
+        <div style="overflow-x:auto;">
+          <table class="rule-matrix" id="rule-matrix-table">
+            <thead>
+              <tr>
+                <th class="rm-corner">E ↓ &nbsp; P →</th>
+                <th>P = low</th><th>P = medium</th><th>P = high</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-tbody"></tbody>
+          </table>
+        </div>
+        <p class="matrix-note" id="matrix-note"></p>
+      </div>
+    </div><!-- /panel-rules -->
+
+    <!-- ── TAB 3: RESULT ── -->
     <div class="panel" id="panel-result">
 
       <div class="defuzz-sel-wrap">
@@ -280,51 +366,6 @@
       </div>
 
     </div><!-- /panel-result -->
-
-    <!-- ── TAB 2: MF ── -->
-    <div class="panel" id="panel-mf">
-      <div class="grid-2">
-        <div class="card">
-          <div class="card-head"><span class="card-title">Performance membership functions</span><span class="chip" id="mf-metric-chip">—</span></div>
-          <div class="plot-wrap" id="plot_membership_perf"></div>
-        </div>
-        <div class="card">
-          <div class="card-head"><span class="card-title">Energy membership functions (train)</span></div>
-          <div class="plot-wrap" id="plot_membership_energy"></div>
-        </div>
-      </div>
-      <div class="card" id="mf-test-card" style="display:none;">
-        <div class="card-head"><span class="card-title">Energy membership functions (test)</span></div>
-        <div class="plot-wrap" id="plot_membership_energy_test"></div>
-      </div>
-      <div class="card" style="margin-top:12px;">
-        <div class="card-head"><span class="card-title">Score output membership functions</span></div>
-        <div class="plot-wrap" id="plot_membership_score"></div>
-      </div>
-    </div><!-- /panel-mf -->
-
-    <!-- ── TAB 3: RULES ── -->
-    <div class="panel" id="panel-rules">
-      <div class="card">
-        <div class="card-head">
-          <span class="card-title">Rule base matrix</span>
-          <span style="font-size:10px;color:var(--text3);">rows = energy · cols = performance · cells = score output</span>
-        </div>
-        <div class="preset-row" id="preset-row"></div>
-        <div style="overflow-x:auto;">
-          <table class="rule-matrix" id="rule-matrix-table">
-            <thead>
-              <tr>
-                <th class="rm-corner">E ↓ &nbsp; P →</th>
-                <th>P = low</th><th>P = medium</th><th>P = high</th>
-              </tr>
-            </thead>
-            <tbody id="matrix-tbody"></tbody>
-          </table>
-        </div>
-        <p class="matrix-note" id="matrix-note"></p>
-      </div>
-    </div><!-- /panel-rules -->
 
     <!-- ── TAB 4: PARAMS ── -->
     <!-- <div class="panel" id="panel-params">
