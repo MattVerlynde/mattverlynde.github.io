@@ -1117,13 +1117,15 @@ let ruleMatrixML = JSON.parse(JSON.stringify(PRESETS_ML.normal.m));
 
 function applyPreset(name) {
   activePreset = name;
+  const isML = document.querySelector('input[name="systemType"]:checked')?.value==='ML';
+
   if (PRESETS[name]) ruleMatrix = JSON.parse(JSON.stringify(PRESETS[name].m));
+  if (PRESETS_ML[name]) ruleMatrixML = JSON.parse(JSON.stringify(PRESETS_ML[name].m));
   document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.preset===name));
   const p = PRESETS[name];
   document.getElementById('matrix-note').innerHTML = p
     ? `<strong>${p.label}</strong> — ${p.note}`
     : 'Custom rule matrix — edited manually.';
-  const isML = document.querySelector('input[name="systemType"]:checked')?.value==='ML';
   if (isML) renderMatrixML();
   else renderMatrix();
   updatePlot();
