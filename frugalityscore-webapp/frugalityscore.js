@@ -1494,9 +1494,6 @@ function updatePlot() {
     renderMatrixML();
   };
 
-  // Also run matrix FIS for rule activations display
-  const matrixResult = runMatrixFIS(perfMem, energyTrainMem);
-
   const defuzzMethod = document.getElementById("defuzz-select").value;
   const { scoreMem, xs, ys, score, fired } = calcScore({
     perfMem,
@@ -1506,6 +1503,9 @@ function updatePlot() {
       : null,
     defuzzMethod
   });
+
+  // Also run matrix FIS for rule activations display
+  const matrixResult = isML ? runMatrixFISML(perfMem, energyTrainMem, computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tlt, tmt, tht, safeEt)) : runMatrixFIS(perfMem, energyTrainMem);
 
   // ── Update score card ──
   const info = getScoreInfo(score);
