@@ -1100,15 +1100,15 @@ const PRESETS = {
 
 const PRESETS_ML = {
   normal:        { label:'Normal',          note:'Standard — balances energy and performance symmetrically.',
-    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+    m: [[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']]] },
   lowcost:       { label:'Low cost',        note:'Energy savings dominate; performance is secondary.',
-    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+    m: [[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']]] },
   perf:          { label:'Performance-first',note:'High performance always lifts score regardless of energy.',
-    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+    m: [[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']]] },
   discriminative:{ label:'Discriminative',  note:'Avoids medium scores; promotes extreme frugality outputs.',
-    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] },
+    m: [[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']]] },
   balanced:      { label:'Balanced',        note:'Avoids extremes; promotes medium scores across conditions.',
-    m: [[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']]] }
+    m: [[['very_low','very_low','very_low'],['very_low','very_low','low'],['very_low','low','medium']],[['very_low','very_low','low'],['very_low','low','medium'],['low','medium','high']],[['very_low','low','medium'],['low','medium','high'],['medium','high','very_high']]] },
 };
 
 let activePreset = 'normal';
