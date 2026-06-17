@@ -1,0 +1,128 @@
+
+<style>
+  .info-root { padding: 1.5rem 0; font-family: var(--font-sans); }
+  .hero-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .concept-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; position: relative; overflow: hidden; }
+  .concept-card .icon-bg { font-size: 48px; position: absolute; right: 12px; top: 10px; opacity: 0.07; pointer-events: none; }
+  .concept-card .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px; }
+  .tag-frugal { background: #E1F5EE; color: #085041; }
+  .tag-efficient { background: #E6F1FB; color: #0C447C; }
+  .concept-card h3 { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 6px; }
+  .concept-card p { font-size: 13px; color: var(--color-text-secondary); line-height: 1.6; }
+
+  .fis-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 12px; }
+  .fis-card h3 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: var(--color-text-secondary); margin-bottom: 12px; }
+
+  .flow-row { display: flex; align-items: center; gap: 6px; }
+  .flow-chip { background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 13px; font-size: 13px; color: var(--color-text-primary); white-space: nowrap; }
+  .flow-arrow { color: var(--color-text-secondary); font-size: 16px; flex-shrink: 0; }
+  .flow-chip.accent { background: #E1F5EE; border-color: #5DCAA5; color: #085041; font-weight: 500; }
+
+  .guide-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 12px; }
+  .guide-card h3 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: var(--color-text-secondary); margin-bottom: 12px; }
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+  .step-item { display: flex; gap: 10px; align-items: flex-start; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-secondary); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--color-text-secondary); flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: var(--color-text-secondary); line-height: 1.5; }
+  .step-text strong { display: block; font-weight: 500; color: var(--color-text-primary); font-size: 13px; margin-bottom: 1px; }
+
+  .demo-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; margin-bottom: 12px; }
+  .demo-card h3 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: var(--color-text-secondary); margin-bottom: 12px; }
+  .scenarios-list { display: flex; flex-direction: column; gap: 6px; }
+  .scenario-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; background: var(--color-background-secondary); border-radius: var(--border-radius-md); }
+  .scenario-num { font-size: 11px; font-weight: 500; font-family: var(--font-mono); color: var(--color-text-secondary); width: 16px; flex-shrink: 0; padding-top: 1px; }
+  .scenario-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.4; }
+
+  .refs-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; }
+  .refs-card h3 { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: .07em; color: var(--color-text-secondary); margin-bottom: 10px; }
+  .ref-row { display: flex; gap: 10px; padding: 7px 0; border-top: 0.5px solid var(--color-border-tertiary); }
+  .ref-row:first-of-type { border-top: none; padding-top: 0; }
+  .ref-num { font-size: 11px; font-family: var(--font-mono); color: var(--color-text-secondary); width: 22px; flex-shrink: 0; padding-top: 2px; }
+  .ref-body { font-size: 12px; color: var(--color-text-secondary); line-height: 1.5; }
+  .ref-body em { font-style: normal; color: var(--color-text-primary); }
+</style>
+
+<div class="info-root">
+  <h2 class="sr-only">Frugality scoring dashboard — information and guide</h2>
+
+  <div class="hero-strip">
+    <div class="concept-card">
+      <div class="icon-bg" aria-hidden="true"><i class="ti ti-bolt"></i></div>
+      <span class="tag tag-efficient">Efficiency</span>
+      <h3>Performance-to-energy ratio</h3>
+      <p>Traditional efficiency maximises the performance-to-energy ratio with little regard for context of use or real-world objectives.</p>
+    </div>
+    <div class="concept-card">
+      <div class="icon-bg" aria-hidden="true"><i class="ti ti-leaf"></i></div>
+      <span class="tag tag-frugal">Frugality</span>
+      <h3>Context-aware sustainability</h3>
+      <p>Frugality is context-specific — it questions application objectives and leads to more sustainable, realistic, and user-centric designs.</p>
+    </div>
+  </div>
+
+  <div class="fis-card">
+    <h3>How the score is computed</h3>
+    <div class="flow-row">
+      <div class="flow-chip"><i class="ti ti-cpu" aria-hidden="true" style="margin-right:5px"></i>Performance</div>
+      <div class="flow-arrow">+</div>
+      <div class="flow-chip"><i class="ti ti-flame" aria-hidden="true" style="margin-right:5px"></i>Energy (J)</div>
+      <div class="flow-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="flow-chip">Fuzzy rules</div>
+      <div class="flow-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="flow-chip">Aggregation</div>
+      <div class="flow-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="flow-chip accent"><i class="ti ti-award" aria-hidden="true" style="margin-right:5px"></i>Frugality score</div>
+    </div>
+    <p style="font-size:13px; color:var(--color-text-secondary); margin-top:12px; line-height:1.6;">
+      A Mamdani fuzzy inference system (FIS) formalises the human reasoning process: membership functions capture linguistic uncertainty in "low", "medium", and "high" performance and energy consumption, and a rule base maps those to an interpretable score out of 100.
+    </p>
+  </div>
+
+  <div class="guide-card">
+    <h3>How to use this dashboard</h3>
+    <div class="steps-grid">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>System type</strong>Non-ML (single energy) or ML (train + inference energy)</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Hardware</strong>Select CPU / GPU models — power draws are auto-filled and editable</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>Thresholds</strong>Set time limits to shape the energy membership functions</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-text"><strong>Your values</strong>Enter your measured performance and energy consumption</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-text"><strong>Explore tabs</strong>View MFs on ①, tune rules on ②, read the score on ③</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-card">
+    <h3>Demo scenarios</h3>
+    <div class="scenarios-list">
+      <div class="scenario-row"><div class="scenario-num">1</div><div class="scenario-text">Non-neural classifiers trained on MNIST</div></div>
+      <div class="scenario-row"><div class="scenario-num">2</div><div class="scenario-text">Benchmark neural networks on ImageNet from scratch</div></div>
+      <div class="scenario-row"><div class="scenario-num">3</div><div class="scenario-text">Benchmark networks on CIFAR-100 from scratch</div></div>
+      <div class="scenario-row"><div class="scenario-num">4</div><div class="scenario-text">Benchmark networks on CIFAR-100, pretrained on ImageNet</div></div>
+      <div class="scenario-row"><div class="scenario-num">5</div><div class="scenario-text">Rectangular MLPs with varying depth on MNIST (BUTTER-E)</div></div>
+    </div>
+  </div>
+
+  <div class="refs-card">
+    <h3>References</h3>
+    <div class="ref-row"><div class="ref-num">[1]</div><div class="ref-body"><em>Girdhar et al.</em> — "A comprehensive review of frugal artificial intelligence." Soft Computing, 2025.</div></div>
+    <div class="ref-row"><div class="ref-num">[2]</div><div class="ref-body"><em>Basu et al.</em> — "Frugal Innovation: Core Competencies to Address Global Sustainability." Journal of Management for Global Sustainability, 2013.</div></div>
+    <div class="ref-row"><div class="ref-num">[3]</div><div class="ref-body"><em>IPCC</em> — "Summary for Policymakers." Climate Change 2022: Mitigation of Climate Change. Cambridge University Press, 2022.</div></div>
+    <div class="ref-row"><div class="ref-num">[4]</div><div class="ref-body"><em>AFNOR SPEC 2314</em> — "Référentiel général pour l'IA frugale." AFNOR Éditions, 2024.</div></div>
+    <div class="ref-row"><div class="ref-num">[5]</div><div class="ref-body"><em>Mamdani & Assilian</em> — "An experiment in linguistic synthesis with a fuzzy logic controller." Int. J. Man-Machine Studies, 1975.</div></div>
+    <div class="ref-row"><div class="ref-num">[6]</div><div class="ref-body"><em>Lootsma</em> — Fuzzy Logic for Planning and Decision Making. Springer, 2013.</div></div>
+    <div class="ref-row"><div class="ref-num">[7]</div><div class="ref-body"><em>Chen et al.</em> — "A Choquet integral based fuzzy logic approach…" Expert Systems with Applications, 2020.</div></div>
+  </div>
+</div>
