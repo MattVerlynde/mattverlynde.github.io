@@ -274,7 +274,7 @@ input[type=number].compact { width: 52px; padding: 6px 6px; font-family: var(--m
 .info-hero-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
 .info-concept-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; position: relative; overflow: hidden; box-shadow: var(--shadow);}
 .info-icon-bg { font-size: 48px; position: absolute; right: 12px; top: 10px; opacity: 0.07; pointer-events: none; }
-.info-tag { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px; }
+.info-tag { display: inline-block; font-size: 25px; font-weight: 500; padding: 3px 9px; border-radius: 20px; margin-bottom: 10px; }
 .info-tag-frugal { background: #E1F5EE; color: #085041; }
 .info-tag-efficient { background: #E6F1FB; color: #0C447C; }
 [data-theme="dark"] .info-tag-frugal { background: #064e3b; color: #6ee7b7; }
