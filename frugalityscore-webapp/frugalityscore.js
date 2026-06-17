@@ -1185,7 +1185,8 @@ function renderMatrixML() {
     for (let ei=0; ei<3; ei++) {
       const tr = document.createElement('tr');
       const th = document.createElement('td');
-      th.className = 'row-label'; th.textContent = E_TRAIN_LABELS[etri] + ' / ' + E_TEST_LABELS[ei];
+      th.className = 'row-label'; 
+      th.textContent = ei===0 ? E_TRAIN_LABELS[etri] + ' / ' + E_TEST_LABELS[ei] : E_TEST_LABELS[ei];
       tr.appendChild(th);
       for (let pi=0; pi<3; pi++) {
         const td = document.createElement('td');
