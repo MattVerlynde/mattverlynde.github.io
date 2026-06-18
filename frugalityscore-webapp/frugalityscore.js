@@ -268,12 +268,12 @@ const MetadataCIFARfalse = {
   "gpupower": 210,
   "ngpu": 1,
   "metric": "accuracy",
-  "energy_low_train": 300,
-  "energy_medium_train": 3600,
-  "energy_high_train": 18000,
-  "energy_low_test": 30,
-  "energy_medium_test": 60,
-  "energy_high_test": 120,
+  "energy_low_train": 0,
+  "energy_medium_train": 300,
+  "energy_high_train": 3600,
+  "energy_low_test": 0,
+  "energy_medium_test": 30,
+  "energy_high_test": 60,
 };
 
 const DataCIFARtrue = `energyTrain,energyTest,perf,group
@@ -346,12 +346,12 @@ const MetadataCIFARtrue = {
   "gpupower": 210,
   "ngpu": 1,
   "metric": "accuracy",
-  "energy_low_train": 300,
-  "energy_medium_train": 3600,
-  "energy_high_train": 18000,
-  "energy_low_test": 30,
-  "energy_medium_test": 60,
-  "energy_high_test": 120,
+  "energy_low_train": 0,
+  "energy_medium_train": 300,
+  "energy_high_train": 3600,
+  "energy_low_test": 0,
+  "energy_medium_test": 30,
+  "energy_high_test": 60,
 };
 
 const DataMNIST = `energyTrain,energyTest,perf,group
@@ -576,12 +576,12 @@ const MetadataMNIST = {
   "gpupower": 210,
   "ngpu": 1,
   "metric": "accuracy",
-  "energy_low_train": 5,
-  "energy_medium_train": 60,
-  "energy_high_train": 180,
-  "energy_low_test": 5,
-  "energy_medium_test": 60,
-  "energy_high_test": 120,
+  "energy_low_train": 0,
+  "energy_medium_train": 5,
+  "energy_high_train": 60,
+  "energy_low_test": 0,
+  "energy_medium_test": 5,
+  "energy_high_test": 60,
 };
 
 const DataImageNet = `energyTrain,energyTest,perf,group
@@ -602,12 +602,12 @@ const MetadataImageNet = {
   "gpupower": 210,
   "ngpu": 1,
   "metric": "accuracy",
-  "energy_low_train": 86400,
-  "energy_medium_train": 259200,
-  "energy_high_train": 1814400,
-  "energy_low_test": 10,
-  "energy_medium_test": 30,
-  "energy_high_test": 120,
+  "energy_low_train": 0,
+  "energy_medium_train": 86400,
+  "energy_high_train": 259200,
+  "energy_low_test": 0,
+  "energy_medium_test": 10,
+  "energy_high_test": 30,
 };
 
 const DataBUTTERE = `energyTrain,perf,group
@@ -629,9 +629,9 @@ const MetadataBUTTERE = {
   "gpupower": 250,
   "ngpu": 2,
   "metric": "accuracy",
-  "energy_low_train": 3600,
-  "energy_medium_train": 10800,
-  "energy_high_train": 21600,
+  "energy_low_train": 0,
+  "energy_medium_train": 3600,
+  "energy_high_train": 10800,
 };
 
 /* ════════════════════════════════════════════════
