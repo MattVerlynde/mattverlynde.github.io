@@ -1270,18 +1270,18 @@ function updatePlot() {
    SLIDER HELPERS
 ════════════════════════════════════════════════ */
 function updateSliderLow(v, suf='') {
-  const el = document.getElementById("energy_low"+suf);
-  if (+v >= +el.max) el.max = +v * 1.2;
-  document.getElementById("energy_low"+suf).value = v;
+  // const el = document.getElementById("energy_low"+suf);
+  // if (v >= document.getElementById("energy_low"+suf).max) document.getElementById("energy_low"+suf).max = v * 1.2;
+  // document.getElementById("energy_low"+suf).value = v;
   document.getElementById("energyValueLow"+suf).value = v;
   // if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   // if (!document.getElementById("input-file").files.length) updatePlot()
   // else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderMedium(v, suf='') {
-  const el = document.getElementById("energy_medium"+suf);
-  if (+v >= +el.max) el.max = +v * 1.2;
-  document.getElementById("energy_medium"+suf).value = v;
+  // const el = document.getElementById("energy_medium"+suf);
+  // if (v >= document.getElementById("energy_medium"+suf).max) document.getElementById("energy_medium"+suf).max = v * 1.2;
+  // document.getElementById("energy_medium"+suf).value = v;
   document.getElementById("energyValueMedium"+suf).value = v;
   // if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
   // if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
@@ -1289,9 +1289,9 @@ function updateSliderMedium(v, suf='') {
   // else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderHigh(v, suf='') {
-  const el = document.getElementById("energy_high"+suf);
-  if (+v >= +el.max) el.max = +v * 1.2;
-  document.getElementById("energy_high"+suf).value = v;
+  // const el = document.getElementById("energy_high"+suf);
+  // if (v >= document.getElementById("energy_high"+suf).max) document.getElementById("energy_high"+suf).max = v * 1.2;
+  // document.getElementById("energy_high"+suf).value = v;
   document.getElementById("energyValueHigh"+suf).value = v;
   // if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   // if (!document.getElementById("input-file").files.length) updatePlot()
