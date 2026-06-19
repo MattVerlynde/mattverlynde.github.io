@@ -1119,11 +1119,11 @@ function updatePlot() {
   document.getElementById("demo_control_scenario").style.display = isDemo?'block':'none';
   renderMatrix();
   if (isML) {
-    const et = parseFloat(document.getElementById("energy_test").value)||0;
+    const et = parseFloat(document.getElementById("energy_test")?.value)||0;
     safeEt = Math.max(0, et);
-    tlt = parseFloat(document.getElementById("energyValueLow_test").value)||0;
-    tmt = parseFloat(document.getElementById("energyValueMedium_test").value)||0;
-    tht = parseFloat(document.getElementById("energyValueHigh_test").value)||0;
+    tlt = parseFloat(document.getElementById("energyValueLow_test")?.value)||0;
+    tmt = parseFloat(document.getElementById("energyValueMedium_test")?.value)||0;
+    tht = parseFloat(document.getElementById("energyValueHigh_test")?.value)||0;
     renderMatrixML();
   };
 
