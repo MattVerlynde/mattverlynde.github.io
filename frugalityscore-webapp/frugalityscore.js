@@ -1275,8 +1275,8 @@ function updateSliderLow(v, suf='') {
   document.getElementById("energy_low"+suf).value = v;
   document.getElementById("energyValueLow"+suf).value = v;
   // if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot()
-  else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
+  // if (!document.getElementById("input-file").files.length) updatePlot()
+  // else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderMedium(v, suf='') {
   const el = document.getElementById("energy_medium"+suf);
@@ -1285,8 +1285,8 @@ function updateSliderMedium(v, suf='') {
   document.getElementById("energyValueMedium"+suf).value = v;
   // if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
   // if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot()
-  else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
+  // if (!document.getElementById("input-file").files.length) updatePlot()
+  // else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderHigh(v, suf='') {
   const el = document.getElementById("energy_high"+suf);
@@ -1294,8 +1294,8 @@ function updateSliderHigh(v, suf='') {
   document.getElementById("energy_high"+suf).value = v;
   document.getElementById("energyValueHigh"+suf).value = v;
   // if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot()
-  else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
+  // if (!document.getElementById("input-file").files.length) updatePlot()
+  // else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 
 /* ════════════════════════════════════════════════
@@ -1308,9 +1308,9 @@ function computeScore(perf, energy) {
   const cores     = parseInt(document.getElementById("cores").value) || 1;
   const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
   const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
-  const tl = parseFloat(document.getElementById("energy_low").value)    || 0;
+  const tl = parseFloat(document.getElementById("energy_low").value) || 0;
   const tm = parseFloat(document.getElementById("energy_medium").value) || 0;
-  const th = parseFloat(document.getElementById("energy_high").value)   || 0;
+  const th = parseFloat(document.getElementById("energy_high").value) || 0;
 
   const perfMem   = computePerfMembership(metric, perf);
   const energyTrainMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl, tm, th, energy);
@@ -1328,12 +1328,12 @@ function computeScoreML(perf, energy_train, energy_test) {
   const cores     = parseInt(document.getElementById("cores").value) || 1;
   const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
   const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
-  const tl_train = parseFloat(document.getElementById("energy_low").value)    || 0;
+  const tl_train = parseFloat(document.getElementById("energy_low").value) || 0;
   const tm_train = parseFloat(document.getElementById("energy_medium").value) || 0;
-  const th_train = parseFloat(document.getElementById("energy_high").value)   || 0;
-  const tl_test = parseFloat(document.getElementById("energy_low_test").value)    || 0;
+  const th_train = parseFloat(document.getElementById("energy_high").value) || 0;
+  const tl_test = parseFloat(document.getElementById("energy_low_test").value) || 0;
   const tm_test = parseFloat(document.getElementById("energy_medium_test").value) || 0;
-  const th_test = parseFloat(document.getElementById("energy_high_test").value)   || 0;
+  const th_test = parseFloat(document.getElementById("energy_high_test").value) || 0;
 
   const perfMem   = computePerfMembership(metric, perf);
   const energyTrainMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl_train, tm_train, th_train, energy_train);
