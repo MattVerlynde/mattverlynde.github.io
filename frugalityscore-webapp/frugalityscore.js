@@ -1272,15 +1272,19 @@ function updatePlot() {
 function updateSliderLow(v, suf='') {
   document.getElementById("energy_low"+suf).value = v;
   document.getElementById("energyValueLow"+suf).value = v;
-  if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
+  const el = document.getElementById("energy_low"+suf);
+  if (+v >= +el.max) el.max = +v * 1.2;
+  // if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   if (!document.getElementById("input-file").files.length) updatePlot();
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderMedium(v, suf='') {
   document.getElementById("energy_medium"+suf).value = v;
   document.getElementById("energyValueMedium"+suf).value = v;
-  if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
-  if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
+  const el = document.getElementById("energy_medium"+suf);
+  if (+v >= +el.max) el.max = +v * 1.2;
+  // if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
+  // if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
   if (!document.getElementById("input-file").files.length) updatePlot();
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
@@ -1289,7 +1293,7 @@ function updateSliderHigh(v, suf='') {
   document.getElementById("energyValueHigh"+suf).value = v;
   const el = document.getElementById("energy_high"+suf);
   if (+v >= +el.max) el.max = +v * 1.2;
-  if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
+  // if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   if (!document.getElementById("input-file").files.length) updatePlot();
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
