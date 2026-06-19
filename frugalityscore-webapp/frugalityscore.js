@@ -1093,9 +1093,9 @@ function updatePlot() {
   const cores     = parseInt(document.getElementById("cores").value)||1;
   const gpuFactor = parseFloat(document.getElementById("gpu-power").value)||1;
   const ngpu      = parseInt(document.getElementById("number-gpu").value)||0;
-  const tl        = parseFloat(document.getElementById("energy_low").value)||0;
-  const tm        = parseFloat(document.getElementById("energy_medium").value)||0;
-  const th        = parseFloat(document.getElementById("energy_high").value)||0;
+  const tl        = parseFloat(document.getElementById("energyValueLow").value)||0;
+  const tm        = parseFloat(document.getElementById("energyValueMedium").value)||0;
+  const th        = parseFloat(document.getElementById("energyValueHigh").value)||0;
 
   const perf   = parseFloat(document.getElementById("perf").value)||0;
   const safeP  = Math.max(minVal, Math.min(maxVal, perf));
@@ -1121,9 +1121,9 @@ function updatePlot() {
   if (isML) {
     const et = parseFloat(document.getElementById("energy_test").value)||0;
     safeEt = Math.max(0, et);
-    tlt = parseFloat(document.getElementById("energy_low_test").value)||0;
-    tmt = parseFloat(document.getElementById("energy_medium_test").value)||0;
-    tht = parseFloat(document.getElementById("energy_high_test").value)||0;
+    tlt = parseFloat(document.getElementById("energyValueLow_test").value)||0;
+    tmt = parseFloat(document.getElementById("energyValueMedium_test").value)||0;
+    tht = parseFloat(document.getElementById("energyValueHigh_test").value)||0;
     renderMatrixML();
   };
 
@@ -1271,8 +1271,8 @@ function updatePlot() {
 ════════════════════════════════════════════════ */
 function updateSliderLow(v, suf='') {
   // const el = document.getElementById("energy_low"+suf);
-  // if (v >= document.getElementById("energy_low"+suf).max) document.getElementById("energy_low"+suf).max = v * 1.2;
-  // document.getElementById("energy_low"+suf).value = v;
+  if (v >= document.getElementById("energy_low"+suf).max) document.getElementById("energy_low"+suf).max = v * 1.2;
+  document.getElementById("energy_low"+suf).value = v;
   document.getElementById("energyValueLow"+suf).value = v;
   // if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   // if (!document.getElementById("input-file").files.length) updatePlot()
@@ -1280,8 +1280,8 @@ function updateSliderLow(v, suf='') {
 }
 function updateSliderMedium(v, suf='') {
   // const el = document.getElementById("energy_medium"+suf);
-  // if (v >= document.getElementById("energy_medium"+suf).max) document.getElementById("energy_medium"+suf).max = v * 1.2;
-  // document.getElementById("energy_medium"+suf).value = v;
+  if (v >= document.getElementById("energy_medium"+suf).max) document.getElementById("energy_medium"+suf).max = v * 1.2;
+  document.getElementById("energy_medium"+suf).value = v;
   document.getElementById("energyValueMedium"+suf).value = v;
   // if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
   // if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
@@ -1290,8 +1290,8 @@ function updateSliderMedium(v, suf='') {
 }
 function updateSliderHigh(v, suf='') {
   // const el = document.getElementById("energy_high"+suf);
-  // if (v >= document.getElementById("energy_high"+suf).max) document.getElementById("energy_high"+suf).max = v * 1.2;
-  // document.getElementById("energy_high"+suf).value = v;
+  if (v >= document.getElementById("energy_high"+suf).max) document.getElementById("energy_high"+suf).max = v * 1.2;
+  document.getElementById("energy_high"+suf).value = v;
   document.getElementById("energyValueHigh"+suf).value = v;
   // if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
   // if (!document.getElementById("input-file").files.length) updatePlot()
@@ -1308,9 +1308,9 @@ function computeScore(perf, energy) {
   const cores     = parseInt(document.getElementById("cores").value) || 1;
   const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
   const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
-  const tl = parseFloat(document.getElementById("energy_low").value) || 0;
-  const tm = parseFloat(document.getElementById("energy_medium").value) || 0;
-  const th = parseFloat(document.getElementById("energy_high").value) || 0;
+  const tl = parseFloat(document.getElementById("energyValueLow").value) || 0;
+  const tm = parseFloat(document.getElementById("energyValueMedium").value) || 0;
+  const th = parseFloat(document.getElementById("energyValueHigh").value) || 0;
 
   const perfMem   = computePerfMembership(metric, perf);
   const energyTrainMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl, tm, th, energy);
@@ -1328,12 +1328,12 @@ function computeScoreML(perf, energy_train, energy_test) {
   const cores     = parseInt(document.getElementById("cores").value) || 1;
   const gpuFactor = parseFloat(document.getElementById("gpu-power").value) || 1;
   const ngpu      = parseInt(document.getElementById("number-gpu").value) || 0;
-  const tl_train = parseFloat(document.getElementById("energy_low").value) || 0;
-  const tm_train = parseFloat(document.getElementById("energy_medium").value) || 0;
-  const th_train = parseFloat(document.getElementById("energy_high").value) || 0;
-  const tl_test = parseFloat(document.getElementById("energy_low_test").value) || 0;
-  const tm_test = parseFloat(document.getElementById("energy_medium_test").value) || 0;
-  const th_test = parseFloat(document.getElementById("energy_high_test").value) || 0;
+  const tl_train = parseFloat(document.getElementById("energyValueLow").value) || 0;
+  const tm_train = parseFloat(document.getElementById("energyValueMedium").value) || 0;
+  const th_train = parseFloat(document.getElementById("energyValueHigh").value) || 0;
+  const tl_test = parseFloat(document.getElementById("energyValueLow_test").value) || 0;
+  const tm_test = parseFloat(document.getElementById("energyValueMedium_test").value) || 0;
+  const th_test = parseFloat(document.getElementById("energyValueHigh_test").value) || 0;
 
   const perfMem   = computePerfMembership(metric, perf);
   const energyTrainMem = computeEnergyMembership(cpuFactor, cores, gpuFactor, ngpu, tl_train, tm_train, th_train, energy_train);
@@ -1479,7 +1479,7 @@ function prepareDemo(metadata) {
 
   if (metadata.mode === "ML") {
     updateSliderLow(metadata.energy_low_test,'_test')
-    updateSliderMedium(metadata.energy_medium__test,'_test')
+    updateSliderMedium(metadata.energy_medium_test,'_test')
     updateSliderHigh(metadata.energy_high_test,'_test')
 
     // document.getElementById("energy_low_test").value = metadata.energy_low_test;
