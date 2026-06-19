@@ -1270,31 +1270,46 @@ function updatePlot() {
    SLIDER HELPERS
 ════════════════════════════════════════════════ */
 function updateSliderLow(v, suf='') {
-  document.getElementById("energy_low"+suf).value = v;
-  document.getElementById("energyValueLow"+suf).value = v;
   const el = document.getElementById("energy_low"+suf);
   if (+v >= +el.max) el.max = +v * 1.2;
+  document.getElementById("energy_low"+suf).value = v;
+  document.getElementById("energyValueLow"+suf).value = v;
   // if (+v > +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot();
+  if (!document.getElementById("input-file").files.length) {
+    if (!document.querySelector('input[name="demo_scenario"]:checked')?.value) {
+      readDemo()
+    }
+    else updatePlot()
+  }
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderMedium(v, suf='') {
-  document.getElementById("energy_medium"+suf).value = v;
-  document.getElementById("energyValueMedium"+suf).value = v;
   const el = document.getElementById("energy_medium"+suf);
   if (+v >= +el.max) el.max = +v * 1.2;
+  document.getElementById("energy_medium"+suf).value = v;
+  document.getElementById("energyValueMedium"+suf).value = v;
   // if (+v > +document.getElementById("energy_high"+suf).value) updateSliderHigh(v, suf);
   // if (+v < +document.getElementById("energy_low"+suf).value)  updateSliderLow(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot();
+  if (!document.getElementById("input-file").files.length) {
+    if (!document.querySelector('input[name="demo_scenario"]:checked')?.value) {
+      readDemo()
+    }
+    else updatePlot()
+  }
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 function updateSliderHigh(v, suf='') {
-  document.getElementById("energy_high"+suf).value = v;
-  document.getElementById("energyValueHigh"+suf).value = v;
   const el = document.getElementById("energy_high"+suf);
   if (+v >= +el.max) el.max = +v * 1.2;
+  document.getElementById("energy_high"+suf).value = v;
+  document.getElementById("energyValueHigh"+suf).value = v;
   // if (+v < +document.getElementById("energy_medium"+suf).value) updateSliderMedium(v, suf);
-  if (!document.getElementById("input-file").files.length) updatePlot();
+  if (!document.getElementById("input-file").files.length) {
+    if (!document.querySelector('input[name="demo_scenario"]:checked')?.value) {
+      readDemo()
+    }
+    else updatePlot()
+  }
   else readUploadFile({target:{files:[document.getElementById("input-file").files[0]]}});
 }
 
@@ -1451,12 +1466,16 @@ function readUploadFileML(evt) {
 ════════════════════════════════════════════════ */
 
 function prepareDemo(metadata) {
-  document.getElementById("energy_low").value = metadata.energy_low_train;
-  document.getElementById("energyValueLow").value = metadata.energy_low_train;
-  document.getElementById("energy_medium").value = metadata.energy_medium_train;
-  document.getElementById("energyValueMedium").value = metadata.energy_medium_train;
-  document.getElementById("energy_high").value = metadata.energy_high_train;
-  document.getElementById("energyValueHigh").value = metadata.energy_high_train;
+  updateSliderLow(metadata.energy_low_train)
+  updateSliderMedium(metadata.energy_medium_train)
+  updateSliderHigh(metadata.energy_high_train)
+
+  // document.getElementById("energy_low").value = metadata.energy_low_train;
+  // document.getElementById("energyValueLow").value = metadata.energy_low_train;
+  // document.getElementById("energy_medium").value = metadata.energy_medium_train;
+  // document.getElementById("energyValueMedium").value = metadata.energy_medium_train;
+  // document.getElementById("energy_high").value = metadata.energy_high_train;
+  // document.getElementById("energyValueHigh").value = metadata.energy_high_train;
   document.getElementById("metric").value = metadata.metric;
   document.getElementById("cpu-select").value = metadata.cpu;
   document.getElementById("cpu-power").value = metadata.cpupower;
@@ -1474,12 +1493,16 @@ function prepareDemo(metadata) {
   if (OtherradioBtn) OtherradioBtn.checked = false;
 
   if (metadata.mode === "ML") {
-    document.getElementById("energy_low_test").value = metadata.energy_low_test;
-    document.getElementById("energyValueLow_test").value = metadata.energy_low_test;
-    document.getElementById("energy_medium_test").value = metadata.energy_medium_test;
-    document.getElementById("energyValueMedium_test").value = metadata.energy_medium_test;
-    document.getElementById("energy_high_test").value = metadata.energy_high_test;
-    document.getElementById("energyValueHigh_test").value = metadata.energy_high_test;
+    updateSliderLow(metadata.energy_low_test,'_test')
+    updateSliderMedium(metadata.energy_medium__test,'_test')
+    updateSliderHigh(metadata.energy_high_test,'_test')
+
+    // document.getElementById("energy_low_test").value = metadata.energy_low_test;
+    // document.getElementById("energyValueLow_test").value = metadata.energy_low_test;
+    // document.getElementById("energy_medium_test").value = metadata.energy_medium_test;
+    // document.getElementById("energyValueMedium_test").value = metadata.energy_medium_test;
+    // document.getElementById("energy_high_test").value = metadata.energy_high_test;
+    // document.getElementById("energyValueHigh_test").value = metadata.energy_high_test;
     updatePlot();
     return;
   }
