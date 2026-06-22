@@ -261,6 +261,7 @@ const DataCIFARfalse = `energyTrain,energyTest,perf,group
 const MetadataCIFARfalse = {
   "data": DataCIFARfalse,
   "mode": "ML",
+  "groupname": "Classifier",
   "cpu": "Core i5-12600",
   "cpupower": 10.8333333333333,
   "ncpu": 6,
@@ -339,6 +340,7 @@ const DataCIFARtrue = `energyTrain,energyTest,perf,group
 const MetadataCIFARtrue = {
   "data": DataCIFARtrue,
   "mode": "ML",
+  "groupname": "Classifier",
   "cpu": "Core i5-12600",
   "cpupower": 10.8333333333333,
   "ncpu": 6,
@@ -569,6 +571,7 @@ const DataMNIST = `energyTrain,energyTest,perf,group
 const MetadataMNIST = {
   "data": DataMNIST,
   "mode": "ML",
+  "groupname": "Classifier",
   "cpu": "Core i5-12600",
   "cpupower": 10.8333333333333,
   "ncpu": 6,
@@ -595,6 +598,7 @@ const DataImageNet = `energyTrain,energyTest,perf,group
 const MetadataImageNet = {
   "data": DataImageNet,
   "mode": "ML",
+  "groupname": "Classifier",
   "cpu": "Core i5-12600",
   "cpupower": 10.8333333333333,
   "ncpu": 6,
@@ -622,6 +626,7 @@ const DataBUTTERE = `energyTrain,perf,group
 const MetadataBUTTERE = {
   "data": DataBUTTERE,
   "mode": "Non ML",
+  "groupname": "Model depth",
   "cpu": "Xeon Gold 6154",
   "cpupower": 11.1,
   "ncpu": 36,
@@ -1117,6 +1122,8 @@ function updatePlot() {
   const demoMode = document.querySelector('input[name="demoMode"]:checked')?.value;
   const isDemo = demoMode==='yes';
   document.getElementById("demo_control_scenario").style.display = isDemo?'block':'none';
+
+
   renderMatrix();
   if (isML) {
     const et = parseFloat(document.getElementById("energy_test")?.value)||0;
@@ -1264,6 +1271,8 @@ function updatePlot() {
   const sLabels=['very low','low','medium','high','very high'];
   const scoreTraces = sLabels.map((lbl,i) => traceLine(scoreXs, scoreXs.map(x=>scoreMFAt(x)[i]), lbl, SCORE_COLORS[i]));
   Plotly.react('plot_membership_score', scoreTraces, plotlyLayout('Score','μ'), plotlyConfig);
+
+  document.getElementById("bar-card").style.display = (isDemo || document.getElementById("input-file").files.length)?'block':'none';
 }
 
 /* ════════════════════════════════════════════════
@@ -1386,7 +1395,7 @@ function readUploadFileNML(evt) {
       return Math.sqrt(s.map(x=>(x-m)**2).reduce((a,b)=>a+b,0)/s.length);
     });
     const barTrace = {
-      x:Object.keys(grouped), y:means, type:'bar',
+      x:Object.keys(grouped), y:means, type:'bar', showlegend:false,
       marker:{color:means.map(s=>getScoreInfo(s).bar)},
       error_y:{type:'data',array:stds,visible:true,color:'var(--text3)',thickness:1.5,width:4}
     };
@@ -1427,7 +1436,7 @@ function readUploadFileML(evt) {
       return Math.sqrt(s.map(x=>(x-m)**2).reduce((a,b)=>a+b,0)/s.length);
     });
     const barTrace = {
-      x:Object.keys(grouped), y:means, type:'bar',
+      x:Object.keys(grouped), y:means, type:'bar', showlegend:false,
       marker:{color:means.map(s=>getScoreInfo(s).bar)},
       error_y:{type:'data',array:stds,visible:true,color:'var(--text3)',thickness:1.5,width:4}
     };
@@ -1549,13 +1558,13 @@ function readDemo() {
   updatePlot();
 
   const barTrace = {
-    x:Object.keys(grouped), y:means, type:'bar',
+    x:Object.keys(grouped), y:means, type:'bar', showlegend:false,
     marker:{color:means.map(s=>getScoreInfo(s).bar)},
     error_y:{type:'data',array:stds,visible:true,color:'var(--text3)',thickness:1.5,width:4}
   };
 document.getElementById("bar-card").style.display = 'block';
 Plotly.react('bar_scores_display', [barTrace],
-  {...plotlyLayout('Group','Score'),yaxis:{...plotlyLayout('','').yaxis,range:[0,100]}},
+  {...plotlyLayout(metadata.groupname,'Score'),yaxis:{...plotlyLayout('','').yaxis,range:[0,100]}},
   plotlyConfig);
 }
 
@@ -1632,4 +1641,5 @@ applyPreset('normal');
 
 Promise.all([loadCPUs(), loadGPUs(), loadPerformanceData()])
   .then(()=>updatePlot())
+  .then(()=>readDemo())
   .catch(err=>console.error('Init failed:', err));

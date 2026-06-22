@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>System Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
@@ -17,6 +18,25 @@
     <p>Mamdani fuzzy inference system</p>
   </div>
   <div class="sidebar-body">
+
+    <div class="field">
+      <label>Demo mode</label>
+      <div class="radio-row">
+        <label class="radio-pill"><input type="radio" name="demoMode" value="yes" checked><span>Yes</span></label>
+        <label class="radio-pill"><input type="radio" name="demoMode" value="no"><span>No</span></label>
+      </div>
+    </div>
+
+    <div class="field" id="demo_control_scenario" style="display:none;">
+      <label>Scenario</label>
+      <div class="radio-row">
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="mnist" checked><span>1</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="imagenet"><span>2</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-scratch"><span>3</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-pretrained"><span>4</span></label>
+        <label class="radio-pill"><input type="radio" name="demo_scenario" value="buttere"><span>5</span></label>
+      </div>
+    </div>
 
     <div class="field">
       <label>System Type</label>
@@ -101,25 +121,6 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Demo mode</label>
-      <div class="radio-row">
-        <label class="radio-pill"><input type="radio" name="demoMode" value="yes"><span>Yes</span></label>
-        <label class="radio-pill"><input type="radio" name="demoMode" value="no" checked><span>No</span></label>
-      </div>
-    </div>
-
-    <div class="field" id="demo_control_scenario" style="display:none;">
-      <label>Scenario</label>
-      <div class="radio-row">
-        <label class="radio-pill"><input type="radio" name="demo_scenario" value="mnist"><span>1</span></label>
-        <label class="radio-pill"><input type="radio" name="demo_scenario" value="imagenet"><span>2</span></label>
-        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-scratch"><span>3</span></label>
-        <label class="radio-pill"><input type="radio" name="demo_scenario" value="cifar-pretrained"><span>4</span></label>
-        <label class="radio-pill"><input type="radio" name="demo_scenario" value="buttere"><span>5</span></label>
-      </div>
-    </div>
-
   </div><!-- /sidebar-body -->
   <div class="sidebar-footer">
     <div class="field" style="margin-bottom:10px;">
@@ -151,6 +152,10 @@
     <button class="tab-btn"        onclick="switchTab('result')"  id="tab-result">③ Result</button>
     <!-- <button class="tab-btn"        onclick="switchTab('params')"  id="tab-params">④ Parameters</button> -->
     <div class="topbar-right">
+      <a class="button link-button" style="text-decoration: none;" 
+      href="https://anonymous.4open.science/r/frugalityscore-TSUSC/" target="_blank">🖥 Source Code</a>
+      <a class="button link-button" style="text-decoration: none;" 
+      href="https://anonymous.4open.science/r/frugalityscore-TSUSC/doc/paper.pdf" target="_blank">🖹 Paper</a>
       <button class="theme-toggle" onclick="toggleTheme()">☽ Dark</button>
     </div>
   </div>
@@ -160,10 +165,10 @@
     <!-- ── TAB 0: INFO ── -->
     <div class="panel active" id="panel-info">
       <!-- include doc.html -->
-      <div class="grid-2">
+      <!-- <div class="grid-2"> -->
           <div class="card">
               <div class="card-head"><span class="card-title">Fuzzy-Based Frugality Score</span></div>
-              <p style="font-size:14px;color:var(--text);font-style:bold;">
+              <p style="font-size:20px;color:var(--text);font-style:bold;">
                   The machine learning community is increasingly aware of the environmental impact of data processing, especially since the emergence 
                   of deep learning models. The increase power consumption to train and deploy deep leanring models has set the machine learning community
                   to consider efficiency as a key aspect of their designs. However, recent studies [1, 2, 3] and regulations [4] tend to shift the focus 
@@ -176,7 +181,7 @@
                   permits to formalize the reasoning process of the user and to compute an interpretable frugality score.
               </p>
           </div>
-          <div class="card">
+          <!-- <div class="card">
             <div class="card-head"><span class="card-title">Frugality score</span></div>
             <div class="score-hero">
               <div class="score-number" id="score-val-front" style="color:var(--accent)">—</div>
@@ -186,16 +191,9 @@
               </div>
             </div>
           </div>
-      </div>
-      <div class="info-hero-strip">
-          <div class="info-concept-card">
-              <div class="info-icon-bg" aria-hidden="true"><i class="ti ti-bolt"></i></div>
-              <span class="info-tag info-tag-efficient">Efficiency</span>
-              <h3>Performance-to-energy ratio</h3>
-              <p>Efficiency focuses on the trade-off between performance and resource use, here energy consumption. Widely present in the literature, 
-                this concept takes little to no consideration of the context of use.</p>
-          </div>
-          <div class="info-concept-card">
+      </div> -->
+      <div class="info-hero-strip" style="margin-top:12px;">
+          <div class="info-concept-card info-concept-frugal">
               <div class="info-icon-bg" aria-hidden="true"><i class="ti ti-leaf"></i></div>
               <span class="info-tag info-tag-frugal">Frugality</span>
               <h3>Context-aware sustainability</h3>
@@ -203,26 +201,33 @@
                 interpretable rules. As such, frugality questions the objectives of an application, and can lead to more sustainable, realistic, 
                 and user-centric designs.</p>
           </div>
+          <div class="info-concept-card">
+              <div class="info-icon-bg" aria-hidden="true"><i class="ti ti-bolt"></i></div>
+              <span class="info-tag info-tag-efficient">Efficiency</span>
+              <h3>Performance-to-energy ratio</h3>
+              <p>Efficiency focuses on the trade-off between performance and resource use, here energy consumption. Widely present in the literature, 
+                this concept takes little to no consideration of the context of use.</p>
+          </div>
       </div>
       <div class="card">
         <h3>How to use this dashboard?</h3>
         <div class="info-steps-grid">
           <div class="info-step-item">
             <div class="info-step-num">1</div>
-            <div class="info-step-text"><strong>System type</strong>Toggle "NON-ML" for one energy consumption along performance, or "ML" 
+            <div class="info-step-text"><strong>System type</strong>"NON-ML" for one energy consumption along performance, or "ML" 
               for energy consumptions in both training and inference.</div>
           </div>
           <div class="info-step-item">
             <div class="info-step-num">2</div>
-            <div class="info-step-text"><strong>Performance metric</strong>Select the performance metric type for classical objective parametrisation from the literature.</div>
+            <div class="info-step-text"><strong>Performance metric</strong>Select the performance metric for classical objective parametrisation from the literature.</div>
           </div>
           <div class="info-step-item">
             <div class="info-step-num">3</div>
-            <div class="info-step-text"><strong>Hardware</strong>Select CPU and GPU modeld, with power information fetched from the literature (customisable).</div>
+            <div class="info-step-text"><strong>Hardware</strong>Select CPU and GPU model, with power information fetched from the literature (customisable).</div>
           </div>
           <div class="info-step-item">
             <div class="info-step-num">4</div>
-            <div class="info-step-text"><strong>Thresholds</strong>Select time thresholds for the definition of the membership functions associated with the energy consumption. (See page "① Membership functions")</div>
+            <div class="info-step-text"><strong>Thresholds</strong>Select time thresholds for the definition of the membership functions associated with the energy consumption. (See page ①)</div>
           </div>
           <div class="info-step-item">
             <div class="info-step-num">5</div>
@@ -230,19 +235,18 @@
           </div>
           <div class="info-step-item">
             <div class="info-step-num">6</div>
-            <div class="info-step-text"><strong>Rule definition</strong>Select your wished association rules on page "② Rule base".</div>
+            <div class="info-step-text"><strong>Rule definition</strong>Select your wished association rules on page ②.</div>
           </div>
           <div class="info-step-item">
             <div class="info-step-num">7</div>
-            <div class="info-step-text"><strong>Results</strong>Select defuzzification mode and view the score <br>on "③ Result" along with rule activation outputs.</div>
+            <div class="info-step-text"><strong>Results</strong>Select defuzzification mode and view the score on page ③ along with rule activation outputs.</div>
           </div>
         </div>
       </div>
       <div class="card">
-          <div class="card-head"><span class="card-title">Demo mode</span></div>
-          <p style="font-size:14px;color:var(--text2);">
-              You can toggle DEMO MODE in the sidebar to choose an execution scenario applied on the data analysed within the linked paper.<br>
-              These scenarii are: <br>
+          <!-- <div class="card-head"><span class="card-title">Demo mode</span></div> -->
+          <p style="font-size:20px;color:var(--text2);">
+              You can toggle <strong>DEMO MODE</strong> in the sidebar to choose an execution scenario applied on the data analysed within the linked paper.<br>
               1. Training of non-neural-network based classification methods on MNIST <br>
               2. Training of benchmark neural networks on ImageNet from scratch <br>
               3. Training of benchmark neural networks on CIFAR100 from scratch <br>
@@ -252,7 +256,7 @@
       </div>
       <div class="card" style="margin-top:12px;">
           <div class="card-head"><span class="card-title">References</span></div>
-          <p style="font-size:14px;color:var(--text2);">
+          <p style="font-size:15px;color:var(--text2);">
               [1] N. Girdhar, A. Raj, D. Sharma, V. Singh, A. Doucet, and M. Renz, “A comprehensive review of frugal artificial intelligence: challenges, 
               applications, and the road to sustainable AI,” Soft Computing, vol. 29, pp. 4823–4856, July 2025. <br>
               [2] R. Basu, P. Banerjee, and E. Sweeny, “Frugal Innovation: Core Competencies to Address Global Sustainability,” Journal of Management for 
@@ -348,10 +352,10 @@
           <div class="card-head"><span class="card-title">Energy memberships</span></div>
           <div class="mf-trio">
             <div class="mf-mini"><div class="mf-mini-label">Low</div><div class="mf-mini-val" id="e-low">—</div></div>
-            <div class="mf-mini"><div class="mf-mini-label">Med</div><div class="mf-mini-val" id="e-med">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">Medium</div><div class="mf-mini-val" id="e-med">—</div></div>
             <div class="mf-mini"><div class="mf-mini-label">High</div><div class="mf-mini-val" id="e-high">—</div></div>
             <div class="mf-mini" id="etest-low-card" style="display:none;"><div class="mf-mini-label">Low Test</div><div class="mf-mini-val" id="etest-low">—</div></div>
-            <div class="mf-mini" id="etest-med-card" style="display:none;"><div class="mf-mini-label">Med Test</div><div class="mf-mini-val" id="etest-med">—</div></div>
+            <div class="mf-mini" id="etest-med-card" style="display:none;"><div class="mf-mini-label">Medium Test</div><div class="mf-mini-val" id="etest-med">—</div></div>
             <div class="mf-mini" id="etest-hig-card" style="display:none;"><div class="mf-mini-label">High Test</div><div class="mf-mini-val" id="etest-high">—</div></div>
           </div>
         </div>
@@ -359,7 +363,7 @@
           <div class="card-head"><span class="card-title">Performance memberships</span></div>
           <div class="mf-trio">
             <div class="mf-mini"><div class="mf-mini-label">Low</div><div class="mf-mini-val" id="p-low">—</div></div>
-            <div class="mf-mini"><div class="mf-mini-label">Med</div><div class="mf-mini-val" id="p-med">—</div></div>
+            <div class="mf-mini"><div class="mf-mini-label">Medium</div><div class="mf-mini-val" id="p-med">—</div></div>
             <div class="mf-mini"><div class="mf-mini-label">High</div><div class="mf-mini-val" id="p-high">—</div></div>
           </div>
         </div>

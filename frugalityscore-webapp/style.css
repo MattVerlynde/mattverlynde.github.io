@@ -144,6 +144,13 @@ input[type=number].compact { width: 52px; padding: 6px 6px; font-family: var(--m
   transition: background .12s;
 }
 .theme-toggle:hover { background: var(--surface2); }
+.link-button {
+  padding: 6px 12px; font-size: 11px; font-family: var(--sans);
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--input-bg); color: var(--text2); cursor: pointer;
+  transition: background .12s;
+}
+.link-button:hover { background: var(--surface2); }
 
 .content { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px; }
 .panel { display: none; }
@@ -279,14 +286,16 @@ input[type=number].compact { width: 52px; padding: 6px 6px; font-family: var(--m
 .info-tag-efficient { background: #E6F1FB; color: #0C447C; }
 [data-theme="dark"] .info-tag-frugal { background: #064e3b; color: #6ee7b7; }
 [data-theme="dark"] .info-tag-efficient { background: #1e3a5f; color: #93c5fd; }
-.info-concept-card h3 {font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px;}
-.info-concept-card p {font-size: 13px; color: var(--text2); line-height: 1.6;}
+.info-concept-card h3 {font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 6px;}
+.info-concept-card p {font-size: 20px; color: var(--text2); line-height: 1.6;}
+.info-concept-frugal { background: #E1F5EE;}
+[data-theme="dark"] .info-concept-frugal { background: #064e3b;}
 
 .info-steps-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px;  margin-bottom: 12px; }
 .info-step-item { display: flex; gap: 10px; align-items: flex-start; }
 .info-step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--surface2); border: 0.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; color: var(--text3); flex-shrink: 0; margin-top: 1px; }
-.info-step-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
-.info-step-text strong { display: block; font-weight: 500; color: var(--text); font-size: 13px; margin-bottom: 1px; }
+.info-step-text { font-size: 15px; color: var(--text2); line-height: 1.5; }
+.info-step-text strong { display: block; font-weight: 500; color: var(--text); font-size: 15px; margin-bottom: 1px; }
 
 
 /* scrollbar */
