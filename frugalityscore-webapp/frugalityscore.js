@@ -1153,10 +1153,6 @@ function updatePlot() {
   const badge = document.getElementById("score-badge");
   badge.textContent = info.label;
   badge.className = 'score-badge ' + info.cls;
-  // document.getElementById("score-val-front").textContent = score.toFixed(1);
-  // const badgefront = document.getElementById("score-badge-front");
-  // badgefront.textContent = info.label;
-  // badgefront.className = 'score-badge ' + info.cls;
 
   // ── MF cards ──
   // const eLow = zmf(safeE,[tl*( cpuFactor*cores+gpuFactor*ngpu),tm*(cpuFactor*cores+gpuFactor*ngpu)]);
