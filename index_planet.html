@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matt Verlynde</title>
+<meta name="description" content="Academic resume of Matt Verlynde, PhD student at LISTIC, as a small planet you can explore.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Newsreader:ital,wght@0,400;1,400&display=swap">
+<link rel="stylesheet" href="style.css">
+<script type="importmap">
+{"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+             "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<header><h1 id="name">Matt Verlynde</h1><p id="tagline"></p></header>
+<nav id="nav" aria-label="Sections"></nav>
+<div id="labels"></div>
+<button id="prompt" hidden></button>
+<p class="hint">Drag to turn the planet. Steer the ship with arrow keys or WASD, press E to land. Or click a continent.</p>
+<aside id="panel" aria-live="polite"></aside>
+<noscript><p style="position:fixed;top:5rem;left:1.4rem;max-width:30rem">This page is an interactive 3D planet and needs JavaScript. My work is on <a href="https://github.com/MattVerlynde" style="color:#f2c14e">GitHub</a>.</p></noscript>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { buildLandmarks } from './landmarks.js';
+
+const [content, regions] = await Promise.all(['content.json', 'assets/regions.json'].map(u => fetch(u).then(r => r.json())));
+const sections = content.sections;
+const $ = id => document.getElementById(id);
+$('name').textContent = content.name;
+$('tagline').textContent = content.tagline;
+
+// ---- mask lookup: the continent id is stored in the red channel of mask.png
+const maskImg = await new Promise(res => { const i = new Image(); i.onload = () => res(i); i.src = 'assets/mask.png'; });
+const mc = document.createElement('canvas');
+mc.width = maskImg.width; mc.height = maskImg.height;
+const mx = mc.getContext('2d', { willReadFrequently: true });
+mx.drawImage(maskImg, 0, 0);
+const regionAt = (u, v) => mx.getImageData(Math.min(mc.width - 1, u * mc.width | 0), Math.min(mc.height - 1, (1 - v) * mc.height | 0), 1, 1).data[0];
+
+// lat/lon (degrees) <-> point on the unit sphere, matching three's SphereGeometry UVs
+const toVec = (lat, lon, r = 1) => {
+  const p = (lon + 180) / 360 * 2 * Math.PI, la = lat * Math.PI / 180, c = Math.cos(la);
+  return new THREE.Vector3(-Math.cos(p) * c, Math.sin(la), Math.sin(p) * c).multiplyScalar(r);
+};
+const toUV = v => { let u = Math.atan2(v.z, -v.x) / (2 * Math.PI); if (u < 0) u += 1; return [u, Math.asin(v.y) / Math.PI + .5]; };
+
+// ---- scene
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+document.body.prepend(renderer.domElement);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, .1, 200);
+camera.position.set(.6, .8, 4);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false; controls.enableDamping = true; controls.minDistance = 1.9; controls.maxDistance = 7;
+
+const tex = new THREE.TextureLoader().load('assets/texture.png');
+tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+const planet = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), new THREE.MeshStandardMaterial({ map: tex, roughness: 1 }));
+scene.add(planet);
+scene.add(new THREE.AmbientLight(0x8fa3c4, 1.1));
+const sun = new THREE.DirectionalLight(0xfff0d8, 2.4); sun.position.set(5, 3, 4); scene.add(sun);
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.09, 64, 48), new THREE.ShaderMaterial({
+  transparent: true, side: THREE.BackSide, blending: THREE.AdditiveBlending, depthWrite: false,
+  vertexShader: 'varying vec3 n;void main(){n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader: 'varying vec3 n;void main(){float i=pow(.72-dot(n,vec3(0.,0.,1.)),3.);gl_FragColor=vec4(.35,.7,.95,1.)*i;}' })));
+const starPos = new Float32Array(3 * 1500);
+for (let i = 0; i < starPos.length; i += 3) new THREE.Vector3().randomDirection().multiplyScalar(60 + Math.random() * 30).toArray(starPos, i);
+const stars = new THREE.BufferGeometry(); stars.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(stars, new THREE.PointsMaterial({ color: 0xffffff, size: .35, sizeAttenuation: true })));
+
+const lm = buildLandmarks({ regions, toVec, toUV, regionAt });
+scene.add(lm.root);
+
+// ---- ship
+const ship = new THREE.Mesh(new THREE.ConeGeometry(.025, .075, 12).rotateX(-Math.PI / 2),
+  new THREE.MeshStandardMaterial({ color: 0xf2c14e, emissive: 0x6b4a00 }));
+scene.add(ship);
+const pos = toVec(regions[0].lat, regions[0].lon);
+const fwd = new THREE.Vector3().crossVectors(pos, new THREE.Vector3(0, 1, 0)).normalize();
+
+// ---- labels, nav buttons, panel
+const labels = regions.map(r => {
+  const b = document.createElement('button');
+  b.className = 'label'; b.textContent = sections[r.id - 1].title;
+  b.onclick = () => enter(r.id);
+  $('labels').append(b);
+  return { r, b, v: toVec(r.lat, r.lon, 1.14) };
+});
+sections.forEach((s, i) => {
+  const b = document.createElement('button');
+  b.textContent = s.title; b.onclick = () => enter(i + 1);
+  $('nav').append(b);
+});
+
+const el = (tag, text, parent) => { const e = document.createElement(tag); if (text) e.textContent = text; parent?.append(e); return e; };
+function openPanel(s) {
+  const p = $('panel'); p.replaceChildren();
+  const x = el('button', '×', p); x.className = 'close'; x.setAttribute('aria-label', 'Close'); x.onclick = () => p.classList.remove('open');
+  el('h2', s.title, p);
+  for (const it of s.items) {
+    const a = el('article', '', p), h = el('h3', '', a);
+    if (it.url) { const l = el('a', it.title, h); l.href = it.url; } else h.textContent = it.title;
+    if (it.meta) el('p', it.meta, a).className = 'meta';
+    if (it.text) el('p', it.text, a);
+  }
+  p.classList.add('open'); p.scrollTop = 0;
+}
+
+let fly = 0, flyTarget = null;
+function enter(id) {
+  if (!id) return;
+  const r = regions[id - 1];
+  flyTarget = toVec(r.lat, r.lon); fly = 1.4;
+  openPanel(sections[id - 1]);
+}
+
+// ---- click on the planet: raycast -> uv -> mask
+const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+let down = null;
+renderer.domElement.addEventListener('pointerdown', e => down = [e.clientX, e.clientY]);
+renderer.domElement.addEventListener('pointerup', e => {
+  if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) return;
+  ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  ray.setFromCamera(ptr, camera);
+  const hit = ray.intersectObjects([planet, lm.root], true)[0];
+  if (hit) enter(hit.object.userData.region ?? regionAt(hit.uv.x, hit.uv.y));
+});
+
+// ---- keyboard: steer the ship
+const keys = {};
+addEventListener('keydown', e => { keys[e.code] = true; if (e.code === 'KeyE' || e.code === 'Enter') enter(current); if (e.code === 'Escape') $('panel').classList.remove('open'); });
+addEventListener('keyup', e => keys[e.code] = false);
+$('prompt').onclick = () => enter(current);
+
+let current = 0;
+const glide = (target, k, dist) => {
+  const d = dist ?? camera.position.length();
+  camera.position.copy(camera.position.clone().normalize().lerp(target, k).normalize().multiplyScalar(d));
+};
+const hidden = p => {  // true when the planet sits between the camera and point p
+  const d = p.clone().sub(camera.position), t = THREE.MathUtils.clamp(-camera.position.dot(d) / d.lengthSq(), 0, 1);
+  return camera.position.clone().addScaledVector(d, t).length() < 1;
+};
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), .05);
+  const turn = (keys.ArrowLeft || keys.KeyA ? 1 : 0) - (keys.ArrowRight || keys.KeyD ? 1 : 0);
+  const go = (keys.ArrowUp || keys.KeyW ? 1 : 0) - (keys.ArrowDown || keys.KeyS ? .5 : 0);
+  fwd.applyAxisAngle(pos, turn * 2.2 * dt);
+  if (go) {
+    const axis = new THREE.Vector3().crossVectors(pos, fwd).normalize();
+    pos.applyAxisAngle(axis, go * .55 * dt); fwd.applyAxisAngle(axis, go * .55 * dt);
+  }
+  pos.normalize(); fwd.addScaledVector(pos, -fwd.dot(pos)).normalize();
+  const right = new THREE.Vector3().crossVectors(fwd, pos);
+  ship.position.copy(pos).multiplyScalar(1.02);
+  ship.setRotationFromMatrix(new THREE.Matrix4().makeBasis(right, pos, fwd.clone().negate()));
+
+  const now = regionAt(...toUV(pos));
+  if (now !== current) {
+    current = now;
+    $('prompt').hidden = !current;
+    if (current) $('prompt').textContent = 'Land on ' + sections[current - 1].title + ' (E)';
+  }
+
+  if (fly > 0) { fly -= dt; glide(flyTarget, 1 - Math.exp(-3.5 * dt), THREE.MathUtils.lerp(camera.position.length(), 2.7, .05)); }
+  else if (go || turn) glide(pos, 1 - Math.exp(-1.5 * dt));
+  controls.update();
+  lm.update(clock.elapsedTime);
+
+  for (const l of labels) {
+    const w = l.r.key === 'contact' ? lm.satellite.position : l.v, vis = !hidden(w);
+    l.b.style.visibility = vis ? 'visible' : 'hidden';
+    if (vis) { const p = w.clone().project(camera); l.b.style.transform = `translate(${(p.x * .5 + .5) * innerWidth}px, ${(-p.y * .5 + .5) * innerHeight}px) translate(-50%,-50%)`; }
+  }
+  renderer.render(scene, camera);
+});
+
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+</script>
+</body>
+</html>

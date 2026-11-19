@@ -1,0 +1,58 @@
+{
+  "name": "Matt Verlynde",
+  "tagline": "PhD student, remote sensing and frugal machine learning",
+  "sections": [
+    {
+      "key": "current-work", "title": "Current work",
+      "items": [
+        {"title": "Weakly supervised and frugal classification of image time series",
+         "meta": "PhD thesis, LISTIC, Université Savoie Mont Blanc",
+         "text": "Remote-sensing image time series, with few labels and a small compute budget. Supervised by Ammar Mian and Yajing Yan."},
+        {"title": "Riemannian clustering of hyperspectral covariance matrices",
+         "meta": "Ongoing project",
+         "text": "Comparing distance metrics, Riemannian ones included, in k-means on covariance matrices computed from hyperspectral images."}
+      ]
+    },
+    {
+      "key": "publications", "title": "Publications",
+      "items": [
+        {"title": "TODO: paper title", "meta": "TODO: authors, venue, year",
+         "text": "Replace with your IEEE TSC paper and others.", "url": "https://hal.science/"}
+      ]
+    },
+    {
+      "key": "history", "title": "History",
+      "items": [
+        {"title": "PhD student, LISTIC", "meta": "TODO: dates",
+         "text": "Université Savoie Mont Blanc, Annecy."},
+        {"title": "TODO: previous degree", "meta": "TODO: dates", "text": "TODO"}
+      ]
+    },
+    {
+      "key": "projects", "title": "Projects",
+      "items": [
+        {"title": "frugalityscore web app", "meta": "Web app",
+         "text": "Evaluate the frugality of machine-learning methods with a fuzzy inference system.",
+         "url": "frugalityscore-webapp/"},
+        {"title": "frugalityscore", "meta": "Python package",
+         "text": "The package behind the frugality score.",
+         "url": "https://github.com/MattVerlynde/frugalityscore"}
+      ]
+    },
+    {
+      "key": "contact", "title": "Contact",
+      "items": [
+        {"title": "GitHub", "meta": "", "text": "Code and packages.", "url": "https://github.com/MattVerlynde"},
+        {"title": "Email", "meta": "", "text": "TODO: your address"}
+      ]
+    },
+    {
+      "key": "interests", "title": "Interests",
+      "items": [
+        {"title": "Nature", "meta": "", "text": "TODO: a line about it."},
+        {"title": "Video games", "meta": "", "text": "TODO: a line about it."},
+        {"title": "Paleontology", "meta": "", "text": "TODO: a line about it."}
+      ]
+    }
+  ]
+}
